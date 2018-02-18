@@ -10,7 +10,7 @@ windows application made with electron to modify all of your file in a specified
 Do you have feature request? then let's check this repository [issues](https://github.com/dhanyn10/multiple-file-manager)
 
 ## How to Use
-Just wait for several time, development for this application is still going. We'll surprise you soon!
+Just wait for several time, development for this application is still going. I'll surprise you soon!
   
 ## License
 this project is developed under [MIT License](LICENSE)
