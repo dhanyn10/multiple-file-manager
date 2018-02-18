@@ -1,12 +1,12 @@
 document.getElementById('execute').addEventListener('click', function(){
     document.getElementById('result-status').innerHTML = null;
     var location  = document.getElementById('location').value;
-    var rename    = document.getElementsByName('manage');
-    for(i = 0; i < rename.length; i++)
+    var manage    = document.getElementsByName('manage');
+    for(i = 0; i < manage.length; i++)
     {
-        if(rename[i].checked)
+        if(manage[i].checked)
         {
-            option = rename[i].value;
+            option = manage[i].value;
         }
     }
     var fs          = require('fs');
