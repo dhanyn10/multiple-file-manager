@@ -4,6 +4,7 @@
 windows application made with electron to modify all of your file in a specified folder  
 ![npm](https://img.shields.io/badge/npm-5.6.0-blue.svg) 
 ![build](https://img.shields.io/badge/build-notready-red.svg) 
+![version](https://img.shields.io/badge/latest-1.1.0-lightgrey.svg) 
 </div>
 
 ## Contribution
