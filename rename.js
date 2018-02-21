@@ -23,152 +23,96 @@ document.getElementById('execute').addEventListener('click', function(){
     loclength       = location.length;
     loclastindex    = location.substring(loclength-1, loclength);
 
-    if(loclastindex != "/")
+    if(loclength  == 0)
     {
-        location += "/";
-    }
-
-    var fulldir     = location;
-
-    //file system function to read the directory
-    fs.readdir(fulldir, function (error, files) {
-        if (error)
-        {
-            document.getElementById("result-status").innerHTML =
-            '<div class="card">' +
-                '<div class="card-header bg-red static text-white">Error</div>' +
-                '<div class="card-content">' +
-                    '<div class="card-content-text" style="word-wrap:break-word;">' +
-                        '<pre>' +
-                            '<code style="overflow:auto">' +
-                                error +
-                            '</code>' +
-                        '</pre>' +
-                    '</div>' +
+        document.getElementById("result-status").innerHTML =
+        '<div class="card">' +
+            '<div class="card-header bg-red static text-white">Error</div>' +
+            '<div class="card-content">' +
+                '<div class="card-content-text" style="word-wrap:break-word;">' +
+                    'Directory is empty' +
                 '</div>' +
             '</div>' +
-            '<div class="block" style="margin-bottom:2px"></div>' +
-            document.getElementById("result-status").innerHTML;
+        '</div>' +
+        '<div class="block" style="margin-bottom:2px"></div>' +
+        document.getElementById("result-status").innerHTML;
+    }
+    else
+    {
+
+        if(loclastindex != "/")
+        {
+            location += "/";
         }
     
-        //reset notification every click to the button
-        document.getElementById('success-count').value = 0;
-
-        newfile         = "";
-        deletechar      = document.getElementsByName('delete-character')[0].value;
-        replacefind     = document.getElementsByName('replace-find')[0].value;
-        replacewith     = document.getElementsByName('replace-with')[0].value;
-        insertbefore    = document.getElementsByName('insert-before')[0].value;
-        insertafter     = document.getElementsByName('insert-after')[0].value;
-
-        files.forEach(function (filename)
+        var fulldir     = location;
+    
+        //file system function to read the directory
+        fs.readdir(fulldir, function (error, files)
         {
-            arrname       = filename.split(".");
-            //assumtion file name including extension has written like as follow
-            //loremipsum.pdf
-            filenameonly  = arrname[0];
-            
-            /* for option 4, insert all of the file name to array "arrfile"
-             * we will get all file name first then sort it
-            */
-            arrfile.push(filenameonly);
-
-            fileextension = "." + arrname[arrname.length-1];
-
-            //function for rename file
-            if(option >= 1 && option <= 3)
+            if (error)
             {
-                //function for deleting character
-                if(option == 1)
-                {
-                    newfile = filename.replace(deletechar, "");
-                }
-                //function for replacing character
-                if(option == 2)
-                {
-                    newfile = filename.replace(changefind, changewith);
-                }
-                //function for inserting character
-                if(option == 3)
-                {
-                    newfile = insertbefore + filenameonly + insertafter + fileextension;
-                }
-                //filesystem action for function 1 to 3
-                fs.rename(fulldir + filename, fulldir + newfile, function (error)
-                {
-                    if (error)
-                    {
-                        document.getElementById("result-status").innerHTML =
-                        '<div class="card">' +
-                            '<div class="card-header bg-red static text-white">Error</div>' +
-                            '<div class="card-content">' +
-                                '<div class="card-content-text" style="word-wrap:break-word;">' +
-                                    'Filename : ' + filename + "<br/>" +
-                                    '<pre>' +
-                                        '<code style="overflow:auto">' +
-                                            error +
-                                        '</code>' +
-                                    '</pre>' +
-                                '</div>' +
-                            '</div>' +
+                document.getElementById("result-status").innerHTML =
+                '<div class="card">' +
+                    '<div class="card-header bg-red static text-white">Error</div>' +
+                    '<div class="card-content">' +
+                        '<div class="card-content-text" style="word-wrap:break-word;">' +
+                            '<pre>' +
+                                '<code style="overflow:auto">' +
+                                    error +
+                                '</code>' +
+                            '</pre>' +
                         '</div>' +
-                        '<div class="block" style="margin-bottom:2px"></div>' +
-                        document.getElementById("result-status").innerHTML;
-                    }
-                    else
-                    {
-                        successcount = document.getElementById('success-count').value;
-                        successcount = Number(successcount);
-                        successcount++;
-                        document.getElementById('success-count').value = successcount;
-                    }
-                });
+                    '</div>' +
+                '</div>' +
+                '<div class="block" style="margin-bottom:2px"></div>' +
+                document.getElementById("result-status").innerHTML;
             }
-        });
-        //function for delete duplicated file
-        if(option == 4)
-        {
-            //sort all file name in current directory
-            arrfile = arrfile.sort();
-            for(a = 0; a < arrfile.length; a++)
+        
+            //reset notification every click to the button
+            document.getElementById('success-count').value = 0;
+    
+            newfile         = "";
+            deletechar      = document.getElementsByName('delete-character')[0].value;
+            replacefind     = document.getElementsByName('replace-find')[0].value;
+            replacewith     = document.getElementsByName('replace-with')[0].value;
+            insertbefore    = document.getElementsByName('insert-before')[0].value;
+            insertafter     = document.getElementsByName('insert-after')[0].value;
+    
+            files.forEach(function (filename)
             {
-                duplicatedfile = false;
-                for(c = 0; c < arrfileun.length; c++)
+                arrname       = filename.split(".");
+                //assumtion file name including extension has written like as follow
+                //loremipsum.pdf
+                filenameonly  = arrname[0];
+                
+                /* for option 4, insert all of the file name to array "arrfile"
+                 * we will get all file name first then sort it
+                */
+                arrfile.push(filenameonly);
+    
+                fileextension = "." + arrname[arrname.length-1];
+    
+                //function for rename file
+                if(option >= 1 && option <= 3)
                 {
-                    /* if result indexOf return > -1, means that there's any
-                     * similarity in filename
-                     */
-                    if(arrfile[a].indexOf(arrfileun[c]) > -1)
+                    //function for deleting character
+                    if(option == 1)
                     {
-                        duplicatedfile = true;
+                        newfile = filename.replace(deletechar, "");
                     }
-                }
-                //dont find any duplication in filename
-                if(duplicatedfile == false)
-                {
-                    //insert filename into array
-                    arrfileun.push(arrfile[a]);
-                }
-            }
-            files.forEach(function(filename){
-                deletethisfile = true;
-                for(a = 0; a < arrfileun.length; a++)
-                {
-                    //split filename with dot (.)
-                    arrname       = filename.split(".");
-                    //get file name extension
-                    fileextension = "." + arrname[arrname.length-1];
-                    //uset value for uniquefilename
-                    uniquefilename = arrfileun[a] + fileextension;
-                    //if filename and uniquefilename is same
-                    if(filename === uniquefilename)
+                    //function for replacing character
+                    if(option == 2)
                     {
-                        deletethisfile = false;
+                        newfile = filename.replace(changefind, changewith);
                     }
-                }
-                if(deletethisfile == true)
-                {
-                    fs.unlink(fulldir + filename, function (error)
+                    //function for inserting character
+                    if(option == 3)
+                    {
+                        newfile = insertbefore + filenameonly + insertafter + fileextension;
+                    }
+                    //filesystem action for function 1 to 3
+                    fs.rename(fulldir + filename, fulldir + newfile, function (error)
                     {
                         if (error)
                         {
@@ -199,20 +143,95 @@ document.getElementById('execute').addEventListener('click', function(){
                     });
                 }
             });
-        }
-    });
-    setTimeout(function(){
-        successcount = Number(document.getElementById('success-count').value);
-        if(successcount > 0)
-        {
-            var alertsuccess = 
-            '<div class="alert block alert-sm bg-blue static text-white">' +
-                'Success ['+ successcount + ']' +
-            '</div>' +
-            '<div class="block" style="margin-bottom:2px"></div>';
-            document.getElementById("result-status").innerHTML = alertsuccess + document.getElementById("result-status").innerHTML;
-        }
-    },500);
+            //function for delete duplicated file
+            if(option == 4)
+            {
+                //sort all file name in current directory
+                arrfile = arrfile.sort();
+                for(a = 0; a < arrfile.length; a++)
+                {
+                    duplicatedfile = false;
+                    for(c = 0; c < arrfileun.length; c++)
+                    {
+                        /* if result indexOf return > -1, means that there's any
+                         * similarity in filename
+                         */
+                        if(arrfile[a].indexOf(arrfileun[c]) > -1)
+                        {
+                            duplicatedfile = true;
+                        }
+                    }
+                    //dont find any duplication in filename
+                    if(duplicatedfile == false)
+                    {
+                        //insert filename into array
+                        arrfileun.push(arrfile[a]);
+                    }
+                }
+                files.forEach(function(filename){
+                    deletethisfile = true;
+                    for(a = 0; a < arrfileun.length; a++)
+                    {
+                        //split filename with dot (.)
+                        arrname       = filename.split(".");
+                        //get file name extension
+                        fileextension = "." + arrname[arrname.length-1];
+                        //uset value for uniquefilename
+                        uniquefilename = arrfileun[a] + fileextension;
+                        //if filename and uniquefilename is same
+                        if(filename === uniquefilename)
+                        {
+                            deletethisfile = false;
+                        }
+                    }
+                    if(deletethisfile == true)
+                    {
+                        fs.unlink(fulldir + filename, function (error)
+                        {
+                            if (error)
+                            {
+                                document.getElementById("result-status").innerHTML =
+                                '<div class="card">' +
+                                    '<div class="card-header bg-red static text-white">Error</div>' +
+                                    '<div class="card-content">' +
+                                        '<div class="card-content-text" style="word-wrap:break-word;">' +
+                                            'Filename : ' + filename + "<br/>" +
+                                            '<pre>' +
+                                                '<code style="overflow:auto">' +
+                                                    error +
+                                                '</code>' +
+                                            '</pre>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="block" style="margin-bottom:2px"></div>' +
+                                document.getElementById("result-status").innerHTML;
+                            }
+                            else
+                            {
+                                successcount = document.getElementById('success-count').value;
+                                successcount = Number(successcount);
+                                successcount++;
+                                document.getElementById('success-count').value = successcount;
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        setTimeout(function(){
+            successcount = Number(document.getElementById('success-count').value);
+            if(successcount > 0)
+            {
+                var alertsuccess = 
+                '<div class="alert block alert-sm bg-blue static text-white">' +
+                    'Success ['+ successcount + ']' +
+                '</div>' +
+                '<div class="block" style="margin-bottom:2px"></div>';
+                document.getElementById("result-status").innerHTML = alertsuccess + document.getElementById("result-status").innerHTML;
+            }
+        },500);
+    }
 });
 window.onerror = function(error, url, line) {
     var alerterror = 
