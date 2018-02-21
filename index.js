@@ -10,10 +10,10 @@ function createWindow () {
     // Create the browser window.
     win = new BrowserWindow({
         width: 800,
-        height: 450,
+        height: 500,
         center: true,
         minWidth: 800,
-        minHeight: 450,
+        minHeight: 500,
         icon: 'rename-multiple-file.ico'
     })
 
