@@ -3,15 +3,14 @@
 # Multiple File Manager
 windows application made with electron to modify all of your file in a specified folder  
 ![npm](https://img.shields.io/badge/npm-5.6.0-blue.svg) 
-![build](https://img.shields.io/badge/build-notready-red.svg) 
-![version](https://img.shields.io/badge/latest-1.1.0-lightgrey.svg) 
+![version](https://img.shields.io/badge/latest-1.1.0-brightgreen.svg) 
 </div>
 
 ## Contribution
-Do you have feature request? then let's check this repository [issues](https://github.com/dhanyn10/multiple-file-manager)
+Do you have feature request? then let's check this repository [issues](https://github.com/dhanyn10/multiple-file-manager/issues)
 
 ## How to Use
-Just wait for several time, development for this application is still going. I'll surprise you soon!
+You can check the latest version to [release page](https://github.com/dhanyn10/multiple-file-manager/releases)
   
 ## License
 this project is developed under [MIT License](LICENSE)

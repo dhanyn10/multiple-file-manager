@@ -1,6 +1,6 @@
 {
   "name": "multiple-file-manager",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "description": "windows application made with electron to rename multiple file with the same name just by single click",
   "main": "index.js",
   "scripts": {
