@@ -2,6 +2,7 @@
     <head>
         <link rel="stylesheet" href="node_modules/minikuna/css/bundle/bundle.min.css">
         <link rel="stylesheet" href="style.css">
+        <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
     </head>
     <body>
         <div class="g-md-8">
@@ -10,7 +11,7 @@
             </div>
             <div class="row mb-1">
                 <div class="card block">
-                    <div class="card-header bg-blue text-white">Option</div>
+                    <div class="card-header bg-blue text-white">Rename Multiple File</div>
                     <div class="card-content">
                         <div class="card-content-text">
                             <div class="form-wrap">
@@ -53,6 +54,20 @@
                                             <input type="text" name="insert-after" class="form block" placeholder="after">
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="card block">
+                    <div class="card-header bg-blue text-white">Manage Multiple File</div>
+                    <div class="card-content">
+                        <div class="card-content-text">
+                            <div class="form-wrap">
+                                <div class="g-sm-12">
+                                    <label class="block"><input type="radio" checked class="form" name="manage" value="4">Delete duplicated file</label>
                                 </div>
                             </div>
                         </div>
