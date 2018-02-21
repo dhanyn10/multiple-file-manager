@@ -1,6 +1,6 @@
 {
-  "name": "Rename_Multiple_File",
-  "version": "1.0.0",
+  "name": "multiple-file-manager",
+  "version": "0.1.0",
   "description": "windows application made with electron to rename multiple file with the same name just by single click",
   "main": "index.js",
   "scripts": {
@@ -9,8 +9,8 @@
     "dist": "electron-builder"
   },
   "build": {
-    "appId": "Rename Multiple File",
-    "icon": "rename-multiple-file.ico"
+    "appId": "Multiple File Manager",
+    "icon": "multiple-file-manager.ico"
   },
   "keywords": [
     "file",
