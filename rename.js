@@ -4,7 +4,7 @@ document.getElementById('execute').addEventListener('click', function(){
     var manage      = document.getElementsByName('manage');
     //variable for option 4
     var arrfile     = [];//array to capture filename
-    var arrfiledup  = [];
+    var arrfileun   = [];
     for(i = 0; i < manage.length; i++)
     {
         if(manage[i].checked)
@@ -120,25 +120,25 @@ document.getElementById('execute').addEventListener('click', function(){
             for(a = 0; a < arrfile.length; a++)
             {
                 duplicatedfile = false;
-                for(c = 0; c < arrfiledup.length; c++)
+                for(c = 0; c < arrfileun.length; c++)
                 {
-                    if(arrfile[a].indexOf(arrfiledup[c]) > -1)
+                    if(arrfile[a].indexOf(arrfileun[c]) > -1)
                     {
                         duplicatedfile = true;
                     }
                 }
                 if(duplicatedfile == false)
                 {
-                    arrfiledup.push(arrfile[a]);
+                    arrfileun.push(arrfile[a]);
                 }
             }
             files.forEach(function(filename){
                 deletethisfile = true;
-                for(a = 0; a < arrfiledup.length; a++)
+                for(a = 0; a < arrfileun.length; a++)
                 {
                     arrname       = filename.split(".");
                     fileextension = "." + arrname[arrname.length-1];
-                    uniquefilename = arrfiledup[a] + fileextension;
+                    uniquefilename = arrfileun[a] + fileextension;
                     if(filename === uniquefilename)
                     {
                         deletethisfile = false;
