@@ -131,9 +131,52 @@ document.getElementById('execute').addEventListener('click', function(){
                 {
                     arrfiledup.push(arrfile[a]);
                 }
-
             }
-            console.info(arrfiledup);
+            files.forEach(function(filename){
+                deletethisfile = true;
+                for(a = 0; a < arrfiledup.length; a++)
+                {
+                    arrname       = filename.split(".");
+                    fileextension = "." + arrname[arrname.length-1];
+                    uniquefilename = arrfiledup[a] + fileextension;
+                    if(filename === uniquefilename)
+                    {
+                        deletethisfile = false;
+                    }
+                }
+                if(deletethisfile == true)
+                {
+                    fs.unlink(fulldir + filename, function (error)
+                    {
+                        if (error)
+                        {
+                            document.getElementById("result-status").innerHTML =
+                            '<div class="card">' +
+                                '<div class="card-header bg-red static text-white">Error</div>' +
+                                '<div class="card-content">' +
+                                    '<div class="card-content-text" style="word-wrap:break-word;">' +
+                                        'Filename : ' + filename + "<br/>" +
+                                        '<pre>' +
+                                            '<code style="overflow:auto">' +
+                                                error +
+                                            '</code>' +
+                                        '</pre>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="block" style="margin-bottom:2px"></div>' +
+                            document.getElementById("result-status").innerHTML;
+                        }
+                        else
+                        {
+                            successcount = document.getElementById('success-count').value;
+                            successcount = Number(successcount);
+                            successcount++;
+                            document.getElementById('success-count').value = successcount;
+                        }
+                    });
+                }
+            });
         }
     });
     setTimeout(function(){
