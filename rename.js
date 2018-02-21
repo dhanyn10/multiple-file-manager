@@ -1,23 +1,28 @@
 document.getElementById('execute').addEventListener('click', function(){
     document.getElementById('result-status').innerHTML = null;
+    //location -> file directory in explorer with absolute path
     var location    = document.getElementById('location').value;
+    //retrieve user function option with html attribute "name" with value "manage"
     var manage      = document.getElementsByName('manage');
     //variable for option 4
-    var arrfile     = [];//array to capture filename
-    var arrfileun   = [];
+    var arrfile     = [];//array to store filename
+    var arrfileun   = [];//array to store unique filename
     for(i = 0; i < manage.length; i++)
     {
+        //get ckecked radio input to specify which function will used
         if(manage[i].checked)
         {
             option = manage[i].value;
         }
     }
+    //system require nodejs filesystem
     var fs          = require('fs');
+    //converting backward slash to forward slash
     location        = location.replace(/\\/g, "/");
-
     //insert forward slash to reduce user mistake in writting a slash
     loclength       = location.length;
     loclastindex    = location.substring(loclength-1, loclength);
+
     if(loclastindex != "/")
     {
         location += "/";
@@ -25,6 +30,7 @@ document.getElementById('execute').addEventListener('click', function(){
 
     var fulldir     = location;
 
+    //file system function to read the directory
     fs.readdir(fulldir, function (error, files) {
         if (error)
         {
@@ -45,6 +51,7 @@ document.getElementById('execute').addEventListener('click', function(){
             document.getElementById("result-status").innerHTML;
         }
     
+        //reset notification every click to the button
         document.getElementById('success-count').value = 0;
 
         newfile         = "";
@@ -68,21 +75,25 @@ document.getElementById('execute').addEventListener('click', function(){
 
             fileextension = "." + arrname[arrname.length-1];
 
+            //function for rename file
             if(option >= 1 && option <= 3)
             {
-
+                //function for deleting character
                 if(option == 1)
                 {
                     newfile = filename.replace(deletechar, "");
                 }
+                //function for replacing character
                 if(option == 2)
                 {
                     newfile = filename.replace(changefind, changewith);
                 }
+                //function for inserting character
                 if(option == 3)
                 {
                     newfile = insertbefore + filenameonly + insertafter + fileextension;
                 }
+                //filesystem action for function 1 to 3
                 fs.rename(fulldir + filename, fulldir + newfile, function (error)
                 {
                     if (error)
@@ -114,21 +125,28 @@ document.getElementById('execute').addEventListener('click', function(){
                 });
             }
         });
+        //function for delete duplicated file
         if(option == 4)
         {
+            //sort all file name in current directory
             arrfile = arrfile.sort();
             for(a = 0; a < arrfile.length; a++)
             {
                 duplicatedfile = false;
                 for(c = 0; c < arrfileun.length; c++)
                 {
+                    /* if result indexOf return > -1, means that there's any
+                     * similarity in filename
+                     */
                     if(arrfile[a].indexOf(arrfileun[c]) > -1)
                     {
                         duplicatedfile = true;
                     }
                 }
+                //dont find any duplication in filename
                 if(duplicatedfile == false)
                 {
+                    //insert filename into array
                     arrfileun.push(arrfile[a]);
                 }
             }
@@ -136,9 +154,13 @@ document.getElementById('execute').addEventListener('click', function(){
                 deletethisfile = true;
                 for(a = 0; a < arrfileun.length; a++)
                 {
+                    //split filename with dot (.)
                     arrname       = filename.split(".");
+                    //get file name extension
                     fileextension = "." + arrname[arrname.length-1];
+                    //uset value for uniquefilename
                     uniquefilename = arrfileun[a] + fileextension;
+                    //if filename and uniquefilename is same
                     if(filename === uniquefilename)
                     {
                         deletethisfile = false;
