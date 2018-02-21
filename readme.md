@@ -1,7 +1,7 @@
 <div align="center">
 
 # Multiple File Manager
-windows application made with electron to modify all of your file in a specified folder
+windows application made with electron to modify all of your file in a specified folder  
 ![npm](https://img.shields.io/badge/npm-5.6.0-blue.svg) 
 ![build](https://img.shields.io/badge/build-notready-red.svg) 
 </div>
