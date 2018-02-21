@@ -23,7 +23,7 @@ document.getElementById('execute').addEventListener('click', function(){
     loclength       = location.length;
     loclastindex    = location.substring(loclength-1, loclength);
 
-    if(loclength  == 0)
+    if(loclength == 0)
     {
         document.getElementById("result-status").innerHTML =
         '<div class="card">' +
