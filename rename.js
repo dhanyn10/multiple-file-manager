@@ -104,7 +104,7 @@ document.getElementById('execute').addEventListener('click', function(){
                     //function for replacing character
                     if(option == 2)
                     {
-                        newfile = filename.replace(changefind, changewith);
+                        newfile = filename.replace(replacefind, replacewith);
                     }
                     //function for inserting character
                     if(option == 3)
