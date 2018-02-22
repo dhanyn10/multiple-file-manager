@@ -3,7 +3,7 @@
 # Multiple File Manager
 windows application made with electron to modify all of your file in a specified folder  
 ![npm](https://img.shields.io/badge/npm-5.6.0-blue.svg) 
-![version](https://img.shields.io/badge/latest-1.1.0-brightgreen.svg) 
+![version](https://img.shields.io/badge/latest-1.1.1-brightgreen.svg) 
 </div>
 
 ## Contribution
