@@ -1,3 +1,29 @@
+let remote  = require('electron').remote;
+let dialog  = remote.dialog;
+let mainapp = remote.require('./index');
+let btn     = document.getElementById('browse-directory');
+
+const url   = require('url');
+const path  = require('path');
+
+btn.addEventListener('click', ()=>{
+    //show open directory window
+    dialog.showOpenDialog({
+        properties: ['openDirectory']
+    },
+    //display folder position result in absolute path with alert
+    (folderposition)=>{
+        if(folderposition !== undefined)
+        {
+            document.getElementById('location').value = folderposition;
+        }
+        else
+        {
+            document.getElementById('location').value = null;
+        }
+    });
+})
+
 document.getElementById('execute').addEventListener('click', function(){
     document.getElementById('result-status').innerHTML = null;
     //location -> file directory in explorer with absolute path
