@@ -11,20 +11,27 @@ btn.addEventListener('click', ()=>{
     dialog.showOpenDialog({
         properties: ['openDirectory']
     },
-    //display folder position result in absolute path with alert
+    //display folder position result in absolute path
     (folderposition)=>{
         if(folderposition !== undefined)
         {
+            //when user confirm submit folder name
+            //set input field with attributes id location with result of selected directory
             document.getElementById('location').value = folderposition;
         }
         else
         {
+            /* when user cancel submit folder name
+             * set input field with attributes id location with null. So, in application
+             * will only display the placeholder value of this element
+             */
             document.getElementById('location').value = null;
         }
     });
 })
 
 document.getElementById('execute').addEventListener('click', function(){
+    //format result status element with null/empty
     document.getElementById('result-status').innerHTML = null;
     //location -> file directory in explorer with absolute path
     var location    = document.getElementById('location').value;
