@@ -11,6 +11,9 @@ Do you have feature request? then let's check this repository [issues](https://g
 
 ## Download
 You can check the latest version to [release page](https://github.com/dhanyn10/multiple-file-manager/releases)
+
+## How it Work
+Before you decided to use this application, make sure you've read this [wiki](https://github.com/dhanyn10/multiple-file-manager/wiki#features)
   
 ## License
 this project is developed under [MIT License](LICENSE)
