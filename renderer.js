@@ -3,9 +3,6 @@ let dialog  = remote.dialog;
 let mainapp = remote.require('./index');
 let btn     = document.getElementById('browse-directory');
 
-const url   = require('url');
-const path  = require('path');
-
 btn.addEventListener('click', ()=>{
     //show open directory window
     dialog.showOpenDialog({
