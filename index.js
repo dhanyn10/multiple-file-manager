@@ -14,7 +14,8 @@ function createWindow () {
         center: true,
         minWidth: 800,
         minHeight: 500,
-        icon: 'rename-multiple-file.ico'
+        icon: 'rename-multiple-file.ico',
+        title: 'Multiple File Manager'
     })
 
     // and load the index.html of the app.
