@@ -9,7 +9,7 @@
     "dist": "electron-builder"
   },
   "build": {
-    "appId": "Multiple File Manager",
+    "productName": "Multiple File Manager",
     "icon": "multiple-file-manager.ico"
   },
   "keywords": [
