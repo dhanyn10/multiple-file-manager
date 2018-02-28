@@ -2,6 +2,15 @@ let remote  = require('electron').remote;
 let dialog  = remote.dialog;
 let mainapp = remote.require('./index');
 let btn     = document.getElementById('browse-directory');
+let shell   = require('electron').shell
+
+//open all link to default browser
+document.addEventListener('click', function (event) {
+    if (event.target.tagName === 'A' && event.target.href.startsWith('http')) {
+        event.preventDefault()
+        shell.openExternal(event.target.href)
+    }
+})
 
 btn.addEventListener('click', ()=>{
     //show open directory window
