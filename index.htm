@@ -4,6 +4,19 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <nav class="nav nav-g-sm bg-blue nav-sm">
+            <ul class="navbar navnav text-white">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/dhanyn10/multiple-file-manager">Visit Page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/dhanyn10/multiple-file-manager/issues">Help</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/dhanyn10/multiple-file-manager/wiki">Wiki</a>
+                </li>
+            </ul>
+        </nav>
         <div class="g-md-8">
             <div class="row mt-1 mb-1">
                 <div class="g-sm-9">
@@ -90,7 +103,7 @@
                 </div>
             </div>
         </div>
-        <div class="g-md-4" style="height:100%;max-height:100%; overflow:auto;border-left:1px dashed #E0E0E0" id="status">
+        <div class="g-md-4" style="height:calc(100% - 50px);max-height:calc(100% - 50px); overflow:auto;border-left:1px dashed #E0E0E0" id="status">
             <input type="hidden" id="success-count" value="0">
             <div id="result-status">
                 <h6 id="note-status" class="text-dark static">
