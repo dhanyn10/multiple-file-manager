@@ -12,13 +12,13 @@ document.addEventListener('click', function (event) {
     }
 })
 
-btn.addEventListener('click', ()=>{
+btn.addEventListener('click', () => {
     //show open directory window
     dialog.showOpenDialog({
         properties: ['openDirectory']
     },
     //display folder position result in absolute path
-    (folderposition)=>{
+    (folderposition) => {
         if(folderposition !== undefined)
         {
             //when user confirm submit folder name
@@ -263,8 +263,10 @@ document.getElementById('execute').addEventListener('click', function(){
             if(successcount > 0)
             {
                 var alertsuccess = 
-                '<div class="alert block alert-sm bg-blue static text-white">' +
-                    'Success ['+ successcount + ']' +
+                '<div class="card">' +
+                    '<div class="card-header bg-green text-white">' +
+                        'Success ['+ successcount + ']' +
+                    '</div>' +
                 '</div>' +
                 '<div class="block" style="margin-bottom:2px"></div>';
                 document.getElementById("result-status").innerHTML = alertsuccess + document.getElementById("result-status").innerHTML;
