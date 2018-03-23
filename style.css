@@ -8,14 +8,14 @@ body{
 }
 #subs{
     position: relative;
-    margin: 10px 0;
     font-size: 12px;
+    margin: 10px 0;
 }
 #status{
-    height:calc(100% - 50px);
+    border-left:1px dashed black;
     max-height:calc(100% - 50px);
+    height:calc(100% - 50px);
     overflow:auto;
-    border-left:1px dashed black
 }
 #result-status
 {
@@ -23,6 +23,6 @@ body{
 }
 #note-status
 {
-    margin-top:200px;
     text-align: center;
+    margin-top:200px;
 }
