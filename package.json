@@ -21,9 +21,8 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^1.8.3",
-    "electron-builder": "^20.4.0"
+    "electron-builder": "^20.4.0",
+    "minikuna": "^0.6.0"
   },
-  "dependencies": {
-    "minikuna": "^0.5.0"
-  }
+  "dependencies": {}
 }
