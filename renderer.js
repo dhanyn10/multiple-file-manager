@@ -67,7 +67,7 @@ document.getElementById('execute').addEventListener('click', function(){
         document.getElementById("result-status").innerHTML =
         '<div class="card">' +
             '<div class="card-header bg-red static text-white">Error</div>' +
-            '<div class="card-content">' +
+            '<div class="card-content bg-white">' +
                 '<div class="card-content-text" style="word-wrap:break-word;">' +
                     'Directory is empty' +
                 '</div>' +
@@ -94,7 +94,7 @@ document.getElementById('execute').addEventListener('click', function(){
                 document.getElementById("result-status").innerHTML =
                 '<div class="card">' +
                     '<div class="card-header bg-red static text-white">Error</div>' +
-                    '<div class="card-content">' +
+                    '<div class="card-content bg-white">' +
                         '<div class="card-content-text" style="word-wrap:break-word;">' +
                             '<pre>' +
                                 '<code style="overflow:auto">' +
@@ -158,7 +158,7 @@ document.getElementById('execute').addEventListener('click', function(){
                             document.getElementById("result-status").innerHTML =
                             '<div class="card">' +
                                 '<div class="card-header bg-red static text-white">Error</div>' +
-                                '<div class="card-content">' +
+                                '<div class="card-content bg-white">' +
                                     '<div class="card-content-text" style="word-wrap:break-word;">' +
                                         'Filename : ' + filename + "<br/>" +
                                         '<pre>' +
@@ -232,7 +232,7 @@ document.getElementById('execute').addEventListener('click', function(){
                                 document.getElementById("result-status").innerHTML =
                                 '<div class="card">' +
                                     '<div class="card-header bg-red static text-white">Error</div>' +
-                                    '<div class="card-content">' +
+                                    '<div class="card-content bg-white">' +
                                         '<div class="card-content-text" style="word-wrap:break-word;">' +
                                             'Filename : ' + filename + "<br/>" +
                                             '<pre>' +
@@ -278,7 +278,7 @@ window.onerror = function(error, url, line) {
     var alerterror = 
         '<div class="card">' +
             '<div class="card-header bg-red static text-white">Error</div>' +
-            '<div class="card-content">' +
+            '<div class="card-content bg-white">' +
                 '<div class="card-content-text" style="word-wrap:break-word;">' +
                     '<pre>' +
                         '<code style="overflow:auto">' +
