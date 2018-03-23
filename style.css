@@ -1,7 +1,21 @@
+body{
+    background: #fafafa;
+}
 .static
 {
     user-select: none;
     cursor: default;
+}
+#subs{
+    position: relative;
+    margin: 10px 0;
+    font-size: 12px;
+}
+#status{
+    height:calc(100% - 50px);
+    max-height:calc(100% - 50px);
+    overflow:auto;
+    border-left:1px dashed black
 }
 #result-status
 {
