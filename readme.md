@@ -4,6 +4,7 @@
 windows application made with electron to modify all of your file in a specified folder  
 [![Gitter chat](https://badges.gitter.im/dhanyn10/multiple-file-manager.png)](https://gitter.im/multiple-file-manager/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 [![Build Status](https://travis-ci.org/dhanyn10/multiple-file-manager.svg?branch=master)](https://travis-ci.org/dhanyn10/multiple-file-manager)
+![dependency status](https://david-dm.org/dhanyn10/multiple-file-manager.svg)
 ![npm](https://img.shields.io/badge/npm-5.6.0-blue.svg)
 [![version](https://img.shields.io/badge/latest-1.1.2-brightgreen.svg)](https://github.com/dhanyn10/multiple-file-manager/releases/tag/v1.1.2)
 </div>
