@@ -25,7 +25,7 @@ function createWindow () {
         slashes: true
     }))
 
-    win.setMenu(null)
+    // win.setMenu(null)
     //Open the DevTools.
     // win.webContents.openDevTools()
 
