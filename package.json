@@ -21,8 +21,10 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "1.8.4",
-    "electron-builder": "20.8.0",
-    "minikuna": "0.6.0"
+    "electron-builder": "20.8.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.3.1"
+  }
 }
