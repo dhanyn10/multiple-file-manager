@@ -1,107 +1,62 @@
 <html>
     <head>
-        <link rel="stylesheet" href="node_modules/minikuna/css/bundle/bundle.min.css">
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="style.css">
+        <script>
+        if(typeof module === 'object')
+        {
+            window.module = module;
+            module = undefined;
+        }
+        </script>
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <script>
+        if(window.module)
+        {
+            module = window.module;
+        }
+        </script>
+        <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <div class="g-md-8">
-            <div class="row mt-1 mb-1">
-                <div class="g-sm-9">
-                    <input type="text" id="location" class="form form-sm block" placeholder="set folder location" readonly/>
+        <div class="container-fluid">
+            <div class="row mt-1">
+                <div class="col-sm-9">
+                    <input type="text" id="location" class="form-control" placeholder="set folder location" readonly>
                 </div>
-                <div class="g-sm-3">
-                    <button class="btn btn-sm block bg-blue text-white" id="browse-directory">browse</button>
+                <div class="col-sm-3">
+                    <button class="btn btn-info btn-block">browse</button>
                 </div>
             </div>
-            <div class="row mb-1">
-                <div class="g-lg-12">
-                    <div class="card block">
-                        <div class="card-header bg-dark text-white">Rename Multiple File</div>
-                        <div class="card-content bg-white">
-                            <div class="card-content-text">
-                                <div class="form-wrap">
-                                    <div class="g-sm-3">
-                                        <label class="block"><input type="radio" class="form" name="manage" value="1">Delete</label>
-                                    </div>
-                                    <div class="g-sm-9">
-                                        <div class="row">
-                                            <div class="g-lg-12">
-                                                <input type="text" name="delete-character" class="form block" placeholder="type here">
-                                            </div>
-                                        </div>
-                                    </div>
+            <div class="row mt-1">
+                <div class="col-lg-12">
+                    <div class="panel panel-info">
+                        <div class="panel-body">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#rename">Rename File</a></li>
+                                <li><a data-toggle="tab" href="#manage">Manage File</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="rename" class="tab-pane fade in active">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">Delete Character</li>
+                                        <li class="list-group-item">..</li>
+                                        <li class="list-group-item">..</li>
+                                    </ul>
                                 </div>
-                                <div class="form-wrap">
-                                    <div class="g-sm-3">
-                                        <label class="block"><input type="radio" class="form" name="manage" value="2">Replace</label>
-                                    </div>
-                                    <div class="g-sm-9">
-                                        <div class="row">
-                                            <div class="g-sm-6">
-                                                <input type="text" name="replace-find" placeholder="find" class="form block">
-                                            </div>
-                                            <div class="g-sm-6">
-                                                <input type="text" name="replace-with" placeholder="with" class="form block">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-wrap">
-                                    <div class="g-sm-3">
-                                        <label class="block"><input type="radio" class="form" name="manage" value="3">Insert</label>
-                                    </div>
-                                    <div class="g-sm-9">
-                                        <div class="row">
-                                            <div class="g-sm-6">
-                                                <input type="text" name="insert-before" class="form block" placeholder="before">
-                                            </div>
-                                            <div class="g-sm-6">
-                                                <input type="text" name="insert-after" class="form block" placeholder="after">
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div id="manage" class="tab-pane fade">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">Delete Duplicated File</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row mb-1">
-                <div class="g-lg-12">
-                    <div class="card block">
-                        <div class="card-header bg-dark text-white">Manage Multiple File</div>
-                        <div class="card-content bg-white">
-                            <div class="card-content-text">
-                                <div class="form-wrap">
-                                    <div class="g-sm-12">
-                                        <label class="block"><input type="radio" class="form" name="manage" value="4">Delete duplicated file</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="g-lg-12">
-                    <center>
-                        <button class="btn btn-sm bg-blue block text-white" id="execute">APPLY</button>
-                    </center>
-                </div>
-            </div>
-        </div>
-        <div class="g-md-4" id="status">
-            <input type="hidden" id="success-count" value="0">
-            <div id="result-status">
-                <h6 id="note-status" class="text-dark static">
-                    application action status
-                    <br/>
-                    will displayed here
-                </h6>
             </div>
         </div>
         <script>
-            require('./renderer.js')
+            // require('./renderer.js')
         </script>
     </body>
 </html>
