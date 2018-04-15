@@ -13,7 +13,7 @@ function createWindow () {
         height: 540,
         center: true,
         minWidth: 800,
-        minHeight: 540,
+        minHeight: 500,
         icon: 'rename-multiple-file.ico',
         title: 'Multiple File Manager'
     })
