@@ -1,3 +1,10 @@
+.panel-heading a{
+    text-decoration: none;
+    color: black;
+}
+.panel-heading.active{
+    background: #5bc0de;
+}
 #subs{
     position: relative;
     font-size: 12px;
@@ -20,4 +27,7 @@
 }
 .mt-1{
     margin-top: 1rem;
+}
+.block{
+    display: block;
 }
