@@ -2,9 +2,12 @@
     max-height: 260px;
     overflow: auto;
 }
-.panel-heading a{
+.panel a{
     text-decoration: none;
     color: black;
+}
+.panel-heading:hover{
+    background: #5bc0de;
 }
 .panel-heading.active-function{
     background: #5bc0de;
