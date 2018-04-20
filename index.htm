@@ -44,7 +44,7 @@
                                                 <a class="block" data-toggle="collapse" href="#delete-character">Delete Character</a>
                                             </div>
                                             <div id="delete-character" class="panel-body panel-collapse collapse">
-                                                <input type="text" class="form-control">
+                                                <input type="text" id="input-delete-character" class="form-control" placeholder="type here ...">
                                             </div>
                                         </div>
                                         <div class="rename panel panel-default">
@@ -52,27 +52,46 @@
                                                 <a class="block" data-toggle="collapse" href="#replace-character">Replace Character</a>
                                             </div>
                                             <div id="replace-character" class="panel-body panel-collapse collapse">
-                                                <input type="text" class="form-control">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <input type="text" id="input-replace-character-from" class="form-control" placeholder="from">
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" id="input-replace-character-to" class="form-control" placeholder="to">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="rename panel panel-default">
                                             <div class="panel-heading">
-                                                <a class="block" data-toggle="collapse" href="#insert-character">Delete Character</a>
+                                                <a class="block" data-toggle="collapse" href="#insert-character">Insert Character</a>
                                             </div>
                                             <div id="insert-character" class="panel-body panel-collapse collapse">
-                                                <input type="text" class="form-control">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <input type="text" id="input-insert-character-before" class="form-control" placeholder="before(prefix)">
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" id="input-insert-character-after" class="form-control" placeholder="after(suffix)">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div id="manage" class="tab-pane fade">
-                                    <ul class="list-group">
-                                        <li class="list-group-item">Delete Duplicated File</li>
-                                    </ul>
+                                    <div class="panel-group">
+                                        <div class="rename panel panel-default">
+                                            <div class="panel-heading">
+                                                <a class="block" data-toggle="collapse" href="#delete-duplicated-file">Delete Duplicated File</a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <button class="btn btn-info btn-block">APPLY</button>
                 </div>
             </div>
         </div>
