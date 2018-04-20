@@ -4,9 +4,9 @@ let mainapp = remote.require('./index');
 let btn     = document.getElementById('browse-directory');
 
 $('.panel-heading a').click(function() {
-    $('.panel-heading').removeClass('active');
+    $('.panel-heading').removeClass('active-function');
     if(!$(this).closest('.panel').find('.panel-collapse').hasClass('in'))
-        $(this).parents('.panel-heading').addClass('active');
+        $(this).parents('.panel-heading').addClass('active-function');
 });
 
 btn.addEventListener('click', () => {
@@ -33,6 +33,17 @@ btn.addEventListener('click', () => {
     });
 })
 
+$("#apply").click(()=>{
+    a = $(".active-function").children().attr('href');
+    if(a == null)
+    {
+        alert("kosong");
+    }
+    else
+    {
+        alert(a);
+    }
+});
 // document.getElementById('execute').addEventListener('click', function(){
 //     //format result status element with null/empty
 //     document.getElementById('result-status').innerHTML = null;
