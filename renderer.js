@@ -3,10 +3,10 @@ let dialog  = remote.dialog;
 let mainapp = remote.require('./index');
 let btn     = document.getElementById('browse-directory');
 
-$('.panel-heading a').click(function() {
+$('.panel-heading').click(function() {
     $('.panel-heading').removeClass('active-function');
     if(!$(this).closest('.panel').find('.panel-collapse').hasClass('in'))
-        $(this).parents('.panel-heading').addClass('active-function');
+        $(this).addClass('active-function');
 });
 
 btn.addEventListener('click', () => {
