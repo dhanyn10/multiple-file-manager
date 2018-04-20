@@ -31,17 +31,34 @@ btn.addEventListener('click', () => {
             document.getElementById('location').value = null;
         }
     });
-})
+});
 
 $("#apply").click(()=>{
     a = $(".active-function").children().attr('href');
-    if(a == null)
+    if(a != null)
     {
-        alert("kosong");
+        a = a.substring(1);
+        alert(a);
     }
     else
     {
-        alert(a);
+        bootbox.confirm({
+            size: "small",
+            title: "Alert",
+            message:"Input still empty",
+            buttons: {
+                cancel: {
+                    className: "hide"
+                },
+                confirm: {
+                    label: "Ok",
+                    className: "btn-info"
+                }
+            },
+            callback: function(){
+                //none
+            }
+        });
     }
 });
 // document.getElementById('execute').addEventListener('click', function(){
@@ -281,21 +298,21 @@ $("#apply").click(()=>{
 //             }
 //         },500);
 //     }
-// });
-window.onerror = function(error, url, line) {
-    var alerterror = 
-        '<div class="card">' +
-            '<div class="card-header bg-red static text-white">Error</div>' +
-            '<div class="card-content bg-white">' +
-                '<div class="card-content-text" style="word-wrap:break-word;">' +
-                    '<pre>' +
-                        '<code style="overflow:auto">' +
-                            error +
-                        '</code>' +
-                    '</pre>' +
-                '</div>' +
-            '</div>' +
-        '</div>' +
-        '<div class="block" style="margin-bottom:2px"></div>';
-        document.getElementById("result-status").innerHTML = alerterror + document.getElementById("result-status").innerHTML;
-};
+// // });
+// window.onerror = function(error, url, line) {
+//     var alerterror = 
+//         '<div class="card">' +
+//             '<div class="card-header bg-red static text-white">Error</div>' +
+//             '<div class="card-content bg-white">' +
+//                 '<div class="card-content-text" style="word-wrap:break-word;">' +
+//                     '<pre>' +
+//                         '<code style="overflow:auto">' +
+//                             error +
+//                         '</code>' +
+//                     '</pre>' +
+//                 '</div>' +
+//             '</div>' +
+//         '</div>' +
+//         '<div class="block" style="margin-bottom:2px"></div>';
+//         document.getElementById("result-status").innerHTML = alerterror + document.getElementById("result-status").innerHTML;
+// };
