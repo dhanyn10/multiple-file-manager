@@ -45,7 +45,7 @@ $("#apply").click(()=>{
         bootbox.confirm({
             size: "small",
             title: "Alert",
-            message:"Input still empty",
+            message:"Please choose a function first",
             buttons: {
                 cancel: {
                     className: "hide"
