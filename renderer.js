@@ -34,7 +34,7 @@ btn.addEventListener('click', () => {
 });
 
 $("#apply").click(()=>{
-    a = $(".active-function").children().attr('href');
+    a = $(".active-function").attr('href');
     if(a != null)
     {
         a = a.substring(1);
