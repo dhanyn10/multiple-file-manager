@@ -51,7 +51,6 @@ $("#apply").click(function(){
         // retrieve selected function name, so when it has "#function", then will get "function"
         selected_function   = selected_function.substring(1);
 
-
         // converting backward slash to forward slash
         directory_location  = directory_location.replace(/\\/g, "/");
         //count location length value
@@ -102,6 +101,51 @@ $("#apply").click(function(){
                         }
                     });
                 }
+                //no error found
+                else
+                {
+                    //initiate variable to store new file name
+                    newfilename             = "";
+
+                    delete_character        = $("#input-delete-character").val();
+                    replace_character_from  = $("#input-replace-character-from").val();
+                    replace_character_to    = $("#input-replace-character-to").val();
+                    insert_character_before = $("#input-insert-character-before").val();
+                    insert_character_after  = $("#input-insert-character-after").val();
+
+                    //execution to each file at recent directory
+                    file.forEach(function(filename){
+
+                        /**
+                         * =========================================================================
+                         * get file name without it's extension, assuming file has complete name
+                         * like mytext.pdf, so we will get filename : "mytext" without pdf extension
+                         * =========================================================================
+                         */
+                        temporaryfilename   = filename.split(".");
+                        filenameonly        = temporaryfilename[0];
+
+                        /**
+                         * =========================================================================
+                         * for function "delete duplicated file" we need to insert all file name to
+                         * >>arrfilename<< then sort it when usen need to run the function
+                         * =========================================================================
+                         */
+                        arrfilename.push(filenameonly);
+
+                        //set file extension
+                        file_extension      = "." + temporaryfilename[temporaryfilename.length - 1];
+
+                        //function for rename file
+                        if(selected_function == "delete-character")
+                        {
+                            //replace character all file in current directory with nothing
+                            newfilename = filename.replace(delete_character, "");
+                            //run rename
+                            rename(selected_function, fs, directory_location, filename, newfilename);
+                        }
+                    });
+                }
             });
         }
     }
@@ -119,3 +163,42 @@ $("#apply").click(function(){
         });
     } 
 });
+
+function rename(selectedfunction, fs, fulldir, filename, newfile)
+{
+    fs.rename(fulldir + filename, fulldir + newfile, function(error){
+        if(error)
+        {
+            swal({
+                title: "Error",
+                text: "Description: "+ error,
+                buttons: {
+                    confirm: {
+                        text: "Okey",
+                        visible: true,
+                        className: "btn-danger"
+                    }
+                }
+            });
+        }
+        else
+        {
+            ms = null;
+            if(selectedfunction == "delete-character")
+            {
+                ms = "delete character success";
+            }
+            swal({
+                title: "Success",
+                text: ms,
+                buttons: {
+                    confirm: {
+                        text: "Okey",
+                        visible: true,
+                        className: "btn-success"
+                    }
+                }
+            });
+        }
+    });
+}
