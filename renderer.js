@@ -34,6 +34,12 @@ btn.addEventListener('click', () => {
 });
 
 $("#apply").click(function(){
+    //initiate array to store filename
+    arrfilename         = [];
+
+    //initiate array to store unique filename
+    arrfileunique       = [];
+
     //retrieve value selected function
     selected_function   = $(".active-function").attr('href');
 
