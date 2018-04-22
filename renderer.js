@@ -68,9 +68,36 @@ $("#apply").click(function(){
         else
         {
             //insert forward slash at the end of directory name
-            loclastindex    = location.substring(loclength-1, loclength);
-        }
+            loclastindex    = directory_location.substring(loclength-1, loclength);
 
+            if(loclastindex != "/")
+            {
+                directory_location += "/";
+            }
+
+            //initiate electron filesystem
+            fs = require('fs');
+
+            //filesystem use function read current directory
+            fs.readdir(directory_location, function(error, file){
+
+                //error status
+                if(error)
+                {
+                    swal({
+                        title: "Error",
+                        text: "Description: "+ error + "<br/> File: " + file,
+                        buttons: {
+                            confirm: {
+                                text: "Okey",
+                                visible: true,
+                                className: "btn-danger"
+                            }
+                        }
+                    });
+                }
+            });
+        }
     }
     else
     {
