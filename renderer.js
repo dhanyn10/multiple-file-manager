@@ -144,7 +144,55 @@ $("#apply").click(function(){
                             //run rename
                             rename(selected_function, fs, directory_location, filename, newfilename);
                         }
+                        if(selected_function == "replace-character")
+                        {
+                            newfilename = filename.replace(replace_character_from, replace_character_to);
+                            //run rename
+                            rename(selected_function, fs, directory_location, filename, newfilename);
+                        }
+                        if(selected_function == "insert-character")
+                        {
+                            newfilename = insert_character_before + filenameonly + insert_character_after + file_extension;
+                            //run rename
+                            rename(selected_function, fs, directory_location, filename, newfilename);
+                        }
                     });
+                    if(selected_function == "delete-duplicated-file")
+                    {
+                        //sort all file name in current directory
+                        arrfilename = arrfilename.sort();
+                        for(a = 0; a < arrfilename.length; a++)
+                        {
+                            duplicatedfile = false;
+                            for(c = 0; c < arrfileunique.length; c++)
+                            {
+                                /**
+                                 * ============================================================================
+                                 * Looking for any similarity in filename with javascript >>indexOf<< function.
+                                 * if this indexOf function return value with > -1, then it's mean there is any
+                                 * similarity in filename and set boolean:duplicatedfile to "true"
+                                 * ============================================================================
+                                 */
+                                if(arrfilename[a].indexOf(arrfileunique[c]) > -1)
+                                {
+                                    duplicatedfile = true;
+                                }
+                            }
+                            /**
+                             * ================================================================================
+                             * at the rest of above loop to find any duplicated file. If system don't
+                             * find any dupplicated file based on filename, current filename will be stored
+                             * into >>arrfileunique<<
+                             * ================================================================================
+                             */
+                            if(duplicatedfile == false)
+                            {
+                                arrfileunique.push(arrfilename[a]);
+                            }
+                        }
+                        //function delete duplicated file
+                        deleteduplicatedfile(fs, directory_location, file, arrfilename, arrfileunique);
+                    }
                 }
             });
         }
@@ -178,7 +226,8 @@ function rename(selectedfunction, fs, fulldir, filename, newfile)
                         visible: true,
                         className: "btn-danger"
                     }
-                }
+                },
+                closeOnClickOutside: false
             });
         }
         else
@@ -187,6 +236,14 @@ function rename(selectedfunction, fs, fulldir, filename, newfile)
             if(selectedfunction == "delete-character")
             {
                 ms = "delete character success";
+            }
+            else if(selected_function == "replace-character")
+            {
+                ms = "replace character success";
+            }
+            else if(selected_function == "insert-character")
+            {
+                ms = "insert character success";
             }
             swal({
                 title: "Success",
@@ -197,8 +254,80 @@ function rename(selectedfunction, fs, fulldir, filename, newfile)
                         visible: true,
                         className: "btn-success"
                     }
+                },
+                closeOnClickOutside: false
+            });
+        }
+    });
+}
+function deleteduplicatedfile(fs, fulldir, file, arrfilename, arrfileunique)
+{
+    file.forEach(function(filename){
+        deletethisfile = true;
+        for(a = 0; a < arrfileunique.length; a++)
+        {
+            //split filename with dot (.)
+            arrname         = filename.split(".");
+            //get file name extension
+            fileextension       = "." + arrname[arrname.length-1];
+            //set value for uniquefilename
+            uniquefilename      = arrfileunique[a] + fileextension;
+            //if filename and uniquefilename is same
+            if(filename == uniquefilename)
+            {
+                deletethisfile = false;
+            }
+        }
+        if(deletethisfile == true)
+        {
+            fs.unlink(fulldir + filename, function (error)
+            {
+                if (error)
+                {
+                    swal({
+                        title: "Error",
+                        text: "Description: "+ error,
+                        buttons: {
+                            confirm: {
+                                text: "Okey",
+                                visible: true,
+                                className: "btn-danger"
+                            }
+                        },
+                        closeOnClickOutside: false
+                    });
+                }
+                else
+                {
+                    swal({
+                        title: "Success",
+                        text: "Success deleting your duplicated file",
+                        buttons: {
+                            confirm: {
+                                text: "Okey",
+                                visible: true,
+                                className: "btn-success"
+                            }
+                        },
+                        closeOnClickOutside: false
+                    });
                 }
             });
         }
+    });
+}
+
+window.onerror = function(error, url, line) {
+    swal({
+        title: "Error",
+        text: "Description: \n" + error + "\n Line: " + line,
+        buttons: {
+            confirm: {
+                text: "Okey",
+                visible: true,
+                className: "btn-danger"
+            }
+        },
+        closeOnClickOutside: false
     });
 }
