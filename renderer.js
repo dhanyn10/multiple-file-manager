@@ -212,7 +212,16 @@ $("#apply").click(function(){
     } 
 });
 
-function rename(selectedfunction, fs, fulldir, filename, newfile)
+
+/**
+ * 
+ * @param fn : "selected function"
+ * @param fs : electron filesystem
+ * @param fulldir   : full directory with absolute path
+ * @param filename  : file name
+ * @param newfile   : new file name
+ */
+function rename(fn, fs, fulldir, filename, newfile)
 {
     fs.rename(fulldir + filename, fulldir + newfile, function(error){
         if(error)
@@ -233,15 +242,15 @@ function rename(selectedfunction, fs, fulldir, filename, newfile)
         else
         {
             ms = null;
-            if(selectedfunction == "delete-character")
+            if(fn == "delete-character")
             {
                 ms = "delete character success";
             }
-            else if(selected_function == "replace-character")
+            else if(fn == "replace-character")
             {
                 ms = "replace character success";
             }
-            else if(selected_function == "insert-character")
+            else if(fn == "insert-character")
             {
                 ms = "insert character success";
             }
