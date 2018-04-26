@@ -26,6 +26,6 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "jquery": "^3.3.1",
-    "sweetalert": "^2.1.0"
+    "sweetalert2": "^7.19.1"
   }
 }
