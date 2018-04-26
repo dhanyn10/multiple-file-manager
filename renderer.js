@@ -142,19 +142,19 @@ $("#apply").click(function(){
                             //replace character all file in current directory with nothing
                             newfilename = filename.replace(delete_character, "");
                             //run rename
-                            rename(selected_function, fs, directory_location, filename, newfilename);
+                            rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
                         }
                         if(selected_function == "replace-character")
                         {
                             newfilename = filename.replace(replace_character_from, replace_character_to);
                             //run rename
-                            rename(selected_function, fs, directory_location, filename, newfilename);
+                            rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
                         }
                         if(selected_function == "insert-character")
                         {
                             newfilename = insert_character_before + filenameonly + insert_character_after + file_extension;
                             //run rename
-                            rename(selected_function, fs, directory_location, filename, newfilename);
+                            rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
                         }
                     });
                     if(selected_function == "delete-duplicated-file")
@@ -221,51 +221,85 @@ $("#apply").click(function(){
  * @param filename  : file name
  * @param newfile   : new file name
  */
-function rename(fn, fs, fulldir, filename, newfile)
+function rename(fn, fs, fulldir, arrfilename, filename, newfile)
 {
-    fs.rename(fulldir + filename, fulldir + newfile, function(error){
-        if(error)
+    swal({
+        title: "Attention",
+        text: "Here're the list of file that will be executed",
+        buttons: {
+            cancel: "Cancel",
+            catch: {
+                text: "Execute",
+                visible: true,
+                className: "btn-danger",
+                value: "run"
+            }
+        },
+        closeOnClickOutside: false
+    }).then((value) => {
+        switch(value)
         {
-            swal({
-                title: "Error",
-                text: "Description: "+ error,
-                buttons: {
-                    confirm: {
-                        text: "Okey",
-                        visible: true,
-                        className: "btn-danger"
+            case "run":
+                fs.rename(fulldir + filename, fulldir + newfile, function(error){
+                    if(error)
+                    {
+                        swal({
+                            title: "Error",
+                            text: "Description: "+ error,
+                            buttons: {
+                                confirm: {
+                                    text: "Okey",
+                                    visible: true,
+                                    className: "btn-danger"
+                                }
+                            },
+                            closeOnClickOutside: false
+                        });
                     }
-                },
-                closeOnClickOutside: false
-            });
-        }
-        else
-        {
-            ms = null;
-            if(fn == "delete-character")
-            {
-                ms = "delete character success";
-            }
-            else if(fn == "replace-character")
-            {
-                ms = "replace character success";
-            }
-            else if(fn == "insert-character")
-            {
-                ms = "insert character success";
-            }
-            swal({
-                title: "Success",
-                text: ms,
-                buttons: {
-                    confirm: {
-                        text: "Okey",
-                        visible: true,
-                        className: "btn-success"
+                    else
+                    {
+                        ms = null;
+                        if(fn == "delete-character")
+                        {
+                            ms = "delete character success";
+                        }
+                        else if(fn == "replace-character")
+                        {
+                            ms = "replace character success";
+                        }
+                        else if(fn == "insert-character")
+                        {
+                            ms = "insert character success";
+                        }
+                        swal({
+                            title: "Success",
+                            text: ms,
+                            buttons: {
+                                confirm: {
+                                    text: "Okey",
+                                    visible: true,
+                                    className: "btn-success"
+                                }
+                            },
+                            closeOnClickOutside: false
+                        });
                     }
-                },
-                closeOnClickOutside: false
-            });
+                });
+            break;
+            default:
+                swal({
+                    title: "Info",
+                    text: "Execution canceled",
+                    buttons: {
+                        confirm: {
+                            text: "Okey",
+                            visible: true,
+                            className: "btn-success"
+                        }
+                    },
+                    closeOnClickOutside: false
+                });
+            break;
         }
     });
 }
