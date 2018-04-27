@@ -59,15 +59,20 @@ $("#apply").click(function(){
         // error handler if user haven't choose any directory yet
         if(loclength == 0)
         {
-            swal("Directory cannot be empty",{
+            bootbox.dialog({
+                size: "small",
+                title: "Attention",
+                message: "Directory cannot be empty",
                 buttons: {
-                    cancel: {
-                        text: "Okey",
-                        visible: true,
+                    confirm: {
+                        label: "Okay",
                         className: "btn-danger"
                     }
                 },
-                closeOnClickOutside: false
+                closeButton: false,
+                callback: function (result) {
+                    //none
+                }
             });
         }
         else
@@ -89,15 +94,18 @@ $("#apply").click(function(){
                 //error status
                 if(error)
                 {
-                    swal({
+                    bootbox.dialog({
                         title: "Error",
-                        text: "Description: "+ error + "<br/> File: " + file,
+                        message: "Description :\n" + error + "\n" + "File :\n" + file,
                         buttons: {
                             confirm: {
-                                text: "Okey",
-                                visible: true,
+                                label: "Okay",
                                 className: "btn-danger"
                             }
+                        },
+                        closeButton: false,
+                        callback: function (result) {
+                            //none
                         }
                     });
                 }
@@ -199,19 +207,23 @@ $("#apply").click(function(){
     }
     else
     {
-        swal("Please choose a function first",{
+        bootbox.dialog({
+            size: "small",
+            title: "Attention",
+            message: "Please choose a function first",
             buttons: {
-                cancel: {
-                    text: "Okey",
-                    visible: true,
+                confirm: {
+                    label: "Okay",
                     className: "btn-danger"
                 }
             },
-            closeOnClickOutside: false
+            closeButton: false,
+            callback: function (result) {
+                //none
+            }
         });
     } 
 });
-
 
 /**
  * 
@@ -223,90 +235,76 @@ $("#apply").click(function(){
  */
 function rename(fn, fs, fulldir, arrfilename, filename, newfile)
 {
-    swal({
+    bootbox.dialog({
         title: "Attention",
-        text: "Here're the list of file that will be executed",
+        message: "Here're the list of file that will be executed",
         buttons: {
-            cancel: "Cancel",
-            catch: {
-                text: "Execute",
-                visible: true,
-                className: "btn-danger",
-                value: "run"
+            confirm: {
+                label: "Continue",
+                className: "btn-success",
+                callback: function(result){
+                    fs.rename(fulldir + filename, fulldir + newfile, function(error){
+                        if(error)
+                        {
+                            bootbox.dialog({
+                                title: "Error",
+                                message: "Description: \n" + error,
+                                buttons: {
+                                    confirm: {
+                                        label: "Okay",
+                                        className: "btn-default"
+                                    }
+                                },
+                                closeButton: false,
+                                callback: function (result) {
+                                    //none
+                                }
+                            });
+                        }
+                        else
+                        {
+                            ms = null;
+                            if(fn == "delete-character")
+                            {
+                                ms = "delete character success";
+                            }
+                            else if(fn == "replace-character")
+                            {
+                                ms = "replace character success";
+                            }
+                            else if(fn == "insert-character")
+                            {
+                                ms = "insert character success";
+                            }
+                            bootbox.dialog({
+                                title: "Success",
+                                message: ms,
+                                buttons: {
+                                    confirm: {
+                                        label: "Okay"
+                                    }
+                                },
+                                closeButton: false,
+                                callback: function (result) {
+                                    //none
+                                }
+                            });
+                        }
+                    });
+                }
             }
         },
-        closeOnClickOutside: false
-    }).then((value) => {
-        switch(value)
-        {
-            case "run":
-                fs.rename(fulldir + filename, fulldir + newfile, function(error){
-                    if(error)
-                    {
-                        swal({
-                            title: "Error",
-                            text: "Description: "+ error,
-                            buttons: {
-                                confirm: {
-                                    text: "Okey",
-                                    visible: true,
-                                    className: "btn-danger"
-                                }
-                            },
-                            closeOnClickOutside: false
-                        });
-                    }
-                    else
-                    {
-                        ms = null;
-                        if(fn == "delete-character")
-                        {
-                            ms = "delete character success";
-                        }
-                        else if(fn == "replace-character")
-                        {
-                            ms = "replace character success";
-                        }
-                        else if(fn == "insert-character")
-                        {
-                            ms = "insert character success";
-                        }
-                        swal({
-                            title: "Success",
-                            text: ms,
-                            buttons: {
-                                confirm: {
-                                    text: "Okey",
-                                    visible: true,
-                                    className: "btn-success"
-                                }
-                            },
-                            closeOnClickOutside: false
-                        });
-                    }
-                });
-            break;
-            default:
-                swal({
-                    title: "Info",
-                    text: "Execution canceled",
-                    buttons: {
-                        confirm: {
-                            text: "Okey",
-                            visible: true,
-                            className: "btn-success"
-                        }
-                    },
-                    closeOnClickOutside: false
-                });
-            break;
-        }
+        closeButton: false
     });
 }
 function deleteduplicatedfile(fs, fulldir, file, arrfilename, arrfileunique)
 {
+    //reset value of success count
+    $("#success-count").val(0);
+    array_error_report  = [];
     file.forEach(function(filename){
-        deletethisfile = true;
+        value_success   = $("#success-count").val();
+        deletethisfile  = true;
         for(a = 0; a < arrfileunique.length; a++)
         {
             //split filename with dot (.)
@@ -327,50 +325,46 @@ function deleteduplicatedfile(fs, fulldir, file, arrfilename, arrfileunique)
             {
                 if (error)
                 {
-                    swal({
-                        title: "Error",
-                        text: "Description: "+ error,
-                        buttons: {
-                            confirm: {
-                                text: "Okey",
-                                visible: true,
-                                className: "btn-danger"
-                            }
-                        },
-                        closeOnClickOutside: false
-                    });
+                    array_error_report.push(error);
                 }
                 else
                 {
-                    swal({
-                        title: "Success",
-                        text: "Success deleting your duplicated file",
-                        buttons: {
-                            confirm: {
-                                text: "Okey",
-                                visible: true,
-                                className: "btn-success"
-                            }
-                        },
-                        closeOnClickOutside: false
-                    });
+                    value_success++;
+                    $("#success-count").val(value_success);
                 }
             });
+        }
+    });
+    value_success = $("#success-count").val();
+    bootbox.dialog({
+        title: "Result",
+        message: "Error Description :<br/>" + array_error_report + "<br/>Success : " + value_success,
+        buttons: {
+            confirm: {
+                label: "Okay",
+                className: "btn-success"
+            }
+        },
+        closeButton: false,
+        callback: function (result) {
+            //none
         }
     });
 }
 
 window.onerror = function(error, url, line) {
-    swal({
+    bootbox.dialog({
         title: "Error",
-        text: "Description: \n" + error + "\n Line: " + line,
+        message: "Description: \n" + error + "\n Line: " + line,
         buttons: {
             confirm: {
-                text: "Okey",
-                visible: true,
+                label: "Okay",
                 className: "btn-danger"
             }
         },
-        closeOnClickOutside: false
+        closeButton: false,
+        callback: function (result) {
+            //none
+        }
     });
 }
