@@ -24,8 +24,8 @@
     "electron-builder": "20.10.0"
   },
   "dependencies": {
+    "bootbox": "^4.4.0",
     "bootstrap": "^3.3.7",
-    "jquery": "^3.3.1",
-    "sweetalert2": "^7.19.1"
+    "jquery": "^3.3.1"
   }
 }
