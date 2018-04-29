@@ -263,6 +263,13 @@ function rename(fn, fs, fulldir, arrfilename, filename, newfile)
                         }
                         else
                         {
+                            /**
+                             * ===============================================================
+                             * ms is variable to store message value that will displayed
+                             * into bootbox dialog message when user has successfully change
+                             * their filename with this rename function
+                             * ===============================================================
+                             */
                             ms = null;
                             if(fn == "delete-character")
                             {
