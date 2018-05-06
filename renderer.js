@@ -308,9 +308,9 @@ function deleteduplicatedfile(fs, fulldir, file, arrfilename, arrfileunique)
 {
     //reset value of success count
     $("#success-count").val(0);
+    success_count       = 0;
     array_error_report  = [];
     file.forEach(function(filename){
-        value_success   = $("#success-count").val();
         deletethisfile  = true;
         for(a = 0; a < arrfileunique.length; a++)
         {
@@ -333,30 +333,33 @@ function deleteduplicatedfile(fs, fulldir, file, arrfilename, arrfileunique)
                 if (error)
                 {
                     array_error_report.push(error);
+                    $("#error-report").val(array_error_report);
                 }
                 else
                 {
-                    value_success++;
-                    $("#success-count").val(value_success);
+                    success_count++;
+                    $("#success-count").val(success_count);
                 }
             });
         }
     });
-    value_success = $("#success-count").val();
-    bootbox.dialog({
-        title: "Result",
-        message: "Error Description :<br/>" + array_error_report + "<br/>Success : " + value_success,
-        buttons: {
-            confirm: {
-                label: "Okay",
-                className: "btn-success"
+
+    setTimeout(function(){
+        bootbox.dialog({
+            title: "Result",
+            message: "Error Description :<br/>" + $("#error-report").val() + "<br/>Success : " + $("#success-count").val(),
+            buttons: {
+                confirm: {
+                    label: "Okay",
+                    className: "btn-success"
+                }
+            },
+            closeButton: false,
+            callback: function (result) {
+                //none
             }
-        },
-        closeButton: false,
-        callback: function (result) {
-            //none
-        }
-    });
+        });
+    }, 500);
 }
 
 window.onerror = function(error, url, line) {
