@@ -345,9 +345,22 @@ function deleteduplicatedfile(fs, fulldir, file, arrfilename, arrfileunique)
     });
 
     setTimeout(function(){
+        
+        errorReport     = $("#error-report").val();
+        successCount    = $("#success-count").val();
+        reportMessage   = "";
+
+        if(errorReport > 0)
+        {
+            reportMessage += "Error Description: \n" + errorReport + "\n";
+        }
+        if(successCount > 0)
+        {
+            reportMessage += "Success executing: " + successCount + " files";
+        }
         bootbox.dialog({
             title: "Result",
-            message: "Error Description :<br/>" + $("#error-report").val() + "<br/>Success : " + $("#success-count").val(),
+            message: reportMessage,
             buttons: {
                 confirm: {
                     label: "Okay",
