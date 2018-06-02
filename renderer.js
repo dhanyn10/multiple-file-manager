@@ -62,7 +62,7 @@ $("#apply").click(function(){
             bootbox.dialog({
                 size: "small",
                 title: "Attention",
-                message: "Directory cannot be empty",
+                message: "Directory cannot be empty, please click browse button to locate your file",
                 buttons: {
                     confirm: {
                         label: "Okay",
