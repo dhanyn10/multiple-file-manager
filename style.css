@@ -21,20 +21,3 @@
 .hide{
     display: none;
 }
-.blink-effect{
-    animation-duration: 600ms;
-    animation-name: blink;
-    -webkit-animation-iteration-count: 5;
-    animation-direction: normal;
-}
-@-webkit-keyframes blink
-{
-    from
-    {
-        background: white;
-    }
-    to
-    {
-        background: #ff1744;
-    }
-}
