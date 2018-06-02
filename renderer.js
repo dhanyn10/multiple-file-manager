@@ -121,50 +121,88 @@ $("#apply").click(function(){
                     insert_character_before = $("#input-insert-character-before").val();
                     insert_character_after  = $("#input-insert-character-after").val();
 
-                    //execution to each file at recent directory
+                    arraydisplayfilename = [];
+                    /**
+                     * this function is only used to get file name so system can
+                     * display list of file name that will be executed
+                     */
                     file.forEach(function(filename){
-
-                        /**
-                         * =========================================================================
-                         * get file name without it's extension, assuming file has complete name
-                         * like mytext.pdf, so we will get filename : "mytext" without pdf extension
-                         * =========================================================================
-                         */
-                        temporaryfilename   = filename.split(".");
-                        filenameonly        = temporaryfilename[0];
-
-                        /**
-                         * =========================================================================
-                         * for function "delete duplicated file" we need to insert all file name to
-                         * >>arrfilename<< then sort it when usen need to run the function
-                         * =========================================================================
-                         */
-                        arrfilename.push(filenameonly);
-
-                        //set file extension
-                        file_extension      = "." + temporaryfilename[temporaryfilename.length - 1];
-
-                        //function for rename file
-                        if(selected_function == "delete-character")
-                        {
-                            //replace character all file in current directory with nothing
-                            newfilename = filename.replace(delete_character, "");
-                            //run rename
-                            rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
-                        }
-                        if(selected_function == "replace-character")
-                        {
-                            newfilename = filename.replace(replace_character_from, replace_character_to);
-                            //run rename
-                            rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
-                        }
-                        if(selected_function == "insert-character")
-                        {
-                            newfilename = insert_character_before + filenameonly + insert_character_after + file_extension;
-                            //run rename
-                            rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
-                        }
+                        getfilename = filename.split(".");
+                        arraydisplayfilename.push(getfilename[0]);
                     });
+
+                    /**
+                     * create html list of filename with combobox
+                     * so user can select and deselect some filename
+                     */
+
+                    htmldisplayfilename = "<div style='max-height:200px;overflow:auto'>";
+                    for(c = 0; c < arraydisplayfilename.length; c++)
+                    {
+                        htmldisplayfilename += "<input type='checkbox' value='"+ arraydisplayfilename[c] +"' checked>" + arraydisplayfilename[c] + "<br/>";
+                    }
+                    htmldisplayfilename+= "</div>";
+                    
+                    bootbox.dialog({
+                        title: "Attention",
+                        message: "Here're the list of your file, all checked file will be executed: <br/>" + htmldisplayfilename,
+                        buttons: {
+                            confirm: {
+                                label: "Continue",
+                                className: "btn-danger"
+                            },
+                            cancel: {
+                                label: "Cancel",
+                                className: "btn-default"
+                            }
+                        },
+                        closeButton: false
+                    });
+                    //execution to each file at recent directory
+                    
+                    // file.forEach(function(filename){
+
+                    //     /**
+                    //      * =========================================================================
+                    //      * get file name without it's extension, assuming file has complete name
+                    //      * like mytext.pdf, so we will get filename : "mytext" without pdf extension
+                    //      * =========================================================================
+                    //      */
+                    //     temporaryfilename   = filename.split(".");
+                    //     filenameonly        = temporaryfilename[0];
+
+                    //     /**
+                    //      * =========================================================================
+                    //      * for function "delete duplicated file" we need to insert all file name to
+                    //      * >>arrfilename<< then sort it when usen need to run the function
+                    //      * =========================================================================
+                    //      */
+                    //     arrfilename.push(filenameonly);
+
+                    //     //set file extension
+                    //     file_extension      = "." + temporaryfilename[temporaryfilename.length - 1];
+
+                    //     //function for rename file
+                    //     if(selected_function == "delete-character")
+                    //     {
+                    //         //replace character all file in current directory with nothing
+                    //         newfilename = filename.replace(delete_character, "");
+                    //         //run rename
+                    //         rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
+                    //     }
+                    //     if(selected_function == "replace-character")
+                    //     {
+                    //         newfilename = filename.replace(replace_character_from, replace_character_to);
+                    //         //run rename
+                    //         rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
+                    //     }
+                    //     if(selected_function == "insert-character")
+                    //     {
+                    //         newfilename = insert_character_before + filenameonly + insert_character_after + file_extension;
+                    //         //run rename
+                    //         rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
+                    //     }
+                    // });
                     if(selected_function == "delete-duplicated-file")
                     {
                         //sort all file name in current directory
@@ -235,73 +273,60 @@ $("#apply").click(function(){
  */
 function rename(fn, fs, fulldir, arrfilename, filename, newfile)
 {
-    bootbox.dialog({
-        title: "Attention",
-        message: "Here're the list of file that will be executed",
-        buttons: {
-            confirm: {
-                label: "Continue",
-                className: "btn-success",
-                callback: function(result){
-                    fs.rename(fulldir + filename, fulldir + newfile, function(error){
-                        if(error)
-                        {
-                            bootbox.dialog({
-                                title: "Error",
-                                message: "Description: \n" + error,
-                                buttons: {
-                                    confirm: {
-                                        label: "Okay",
-                                        className: "btn-default"
-                                    }
-                                },
-                                closeButton: false,
-                                callback: function (result) {
-                                    //none
-                                }
-                            });
-                        }
-                        else
-                        {
-                            /**
-                             * ===============================================================
-                             * ms is variable to store message value that will displayed
-                             * into bootbox dialog message when user has successfully change
-                             * their filename with this rename function
-                             * ===============================================================
-                             */
-                            ms = null;
-                            if(fn == "delete-character")
-                            {
-                                ms = "delete character success";
-                            }
-                            else if(fn == "replace-character")
-                            {
-                                ms = "replace character success";
-                            }
-                            else if(fn == "insert-character")
-                            {
-                                ms = "insert character success";
-                            }
-                            bootbox.dialog({
-                                title: "Success",
-                                message: ms,
-                                buttons: {
-                                    confirm: {
-                                        label: "Okay"
-                                    }
-                                },
-                                closeButton: false,
-                                callback: function (result) {
-                                    //none
-                                }
-                            });
-                        }
-                    });
+    fs.rename(fulldir + filename, fulldir + newfile, function(error){
+        if(error)
+        {
+            bootbox.dialog({
+                title: "Error",
+                message: "Description: \n" + error,
+                buttons: {
+                    confirm: {
+                        label: "Okay",
+                        className: "btn-default"
+                    }
+                },
+                closeButton: false,
+                callback: function (result) {
+                    //none
                 }
+            });
+        }
+        else
+        {
+            /**
+             * ===============================================================
+             * ms is variable to store message value that will displayed
+             * into bootbox dialog message when user has successfully change
+             * their filename with this rename function
+             * ===============================================================
+             */
+            ms = null;
+            if(fn == "delete-character")
+            {
+                ms = "delete character success";
             }
-        },
-        closeButton: false
+            else if(fn == "replace-character")
+            {
+                ms = "replace character success";
+            }
+            else if(fn == "insert-character")
+            {
+                ms = "insert character success";
+            }
+            bootbox.dialog({
+                title: "Success",
+                message: ms,
+                buttons: {
+                    confirm: {
+                        label: "Okay"
+                    }
+                },
+                closeButton: false,
+                callback: function (result) {
+                    //none
+                }
+            });
+        }
     });
 }
 function deleteduplicatedfile(fs, fulldir, file, arrfilename, arrfileunique)
