@@ -122,18 +122,18 @@ $("#apply").click(function(){
                     insert_character_after  = $("#input-insert-character-after").val();
 
                     arraydisplayfilename = [];
+
                     /**
                      * this function is only used to get file name so system can
                      * display list of file name that will be executed
                      */
                     file.forEach(function(filename){
-                        getfilename = filename.split(".");
-                        arraydisplayfilename.push(getfilename[0]);
+                        arraydisplayfilename.push(filename);
                     });
 
                     /**
-                     * create html list of filename with combobox
-                     * so user can select and deselect some filename
+                     * create html list of filename with checkbox
+                     * so user can select or deselect some filename
                      */
 
                     htmldisplayfilename = "<div style='max-height:200px;overflow:auto'>";
