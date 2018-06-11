@@ -149,7 +149,89 @@ $("#apply").click(function(){
                         buttons: {
                             confirm: {
                                 label: "Continue",
-                                className: "btn-danger"
+                                className: "btn-danger",
+                                callback: function(){
+                                    //execution to each file at recent directory                     
+                                    file.forEach(function(filename){
+
+                                        /**
+                                         * =========================================================================
+                                         * get file name without it's extension, assuming file has complete name
+                                         * like mytext.pdf, so we will get filename : "mytext" without pdf extension
+                                         * =========================================================================
+                                         */
+                                        temporaryfilename   = filename.split(".");
+                                        filenameonly        = temporaryfilename[0];
+
+                                        /**
+                                         * =========================================================================
+                                         * for function "delete duplicated file" we need to insert all file name to
+                                         * >>arrfilename<< then sort it when usen need to run the function
+                                         * =========================================================================
+                                         */
+                                        arrfilename.push(filenameonly);
+
+                                        //set file extension
+                                        file_extension      = "." + temporaryfilename[temporaryfilename.length - 1];
+
+                                        //function for rename file
+                                        if(selected_function == "delete-character")
+                                        {
+                                            //replace character all file in current directory with nothing
+                                            newfilename = filename.replace(delete_character, "");
+                                            //run rename
+                                            rename(selected_function, fs, directory_location, filename, newfilename);
+                                        }
+                                        if(selected_function == "replace-character")
+                                        {
+                                            newfilename = filename.replace(replace_character_from, replace_character_to);
+                                            //run rename
+                                            rename(selected_function, fs, directory_location, filename, newfilename);
+                                        }
+                                        if(selected_function == "insert-character")
+                                        {
+                                            newfilename = insert_character_before + filenameonly + insert_character_after + file_extension;
+                                            //run rename
+                                            rename(selected_function, fs, directory_location, filename, newfilename);
+                                        }
+                                    });
+                                    if(selected_function == "delete-duplicated-file")
+                                    {
+                                        //sort all file name in current directory
+                                        arrfilename = arrfilename.sort();
+                                        for(a = 0; a < arrfilename.length; a++)
+                                        {
+                                            duplicatedfile = false;
+                                            for(c = 0; c < arrfileunique.length; c++)
+                                            {
+                                                /**
+                                                 * ============================================================================
+                                                 * Looking for any similarity in filename with javascript >>indexOf<< function.
+                                                 * if this indexOf function return value with > -1, then it's mean there is any
+                                                 * similarity in filename and set boolean:duplicatedfile to "true"
+                                                 * ============================================================================
+                                                 */
+                                                if(arrfilename[a].indexOf(arrfileunique[c]) > -1)
+                                                {
+                                                    duplicatedfile = true;
+                                                }
+                                            }
+                                            /**
+                                             * ================================================================================
+                                             * at the rest of above loop to find any duplicated file. If system don't
+                                             * find any dupplicated file based on filename, current filename will be stored
+                                             * into >>arrfileunique<<
+                                             * ================================================================================
+                                             */
+                                            if(duplicatedfile == false)
+                                            {
+                                                arrfileunique.push(arrfilename[a]);
+                                            }
+                                        }
+                                        //function delete duplicated file
+                                        deleteduplicatedfile(fs, directory_location, file, arrfilename, arrfileunique);
+                                    }
+                                }
                             },
                             cancel: {
                                 label: "Cancel",
@@ -158,87 +240,6 @@ $("#apply").click(function(){
                         },
                         closeButton: false
                     });
-                    //execution to each file at recent directory
-                    
-                    // file.forEach(function(filename){
-
-                    //     /**
-                    //      * =========================================================================
-                    //      * get file name without it's extension, assuming file has complete name
-                    //      * like mytext.pdf, so we will get filename : "mytext" without pdf extension
-                    //      * =========================================================================
-                    //      */
-                    //     temporaryfilename   = filename.split(".");
-                    //     filenameonly        = temporaryfilename[0];
-
-                    //     /**
-                    //      * =========================================================================
-                    //      * for function "delete duplicated file" we need to insert all file name to
-                    //      * >>arrfilename<< then sort it when usen need to run the function
-                    //      * =========================================================================
-                    //      */
-                    //     arrfilename.push(filenameonly);
-
-                    //     //set file extension
-                    //     file_extension      = "." + temporaryfilename[temporaryfilename.length - 1];
-
-                    //     //function for rename file
-                    //     if(selected_function == "delete-character")
-                    //     {
-                    //         //replace character all file in current directory with nothing
-                    //         newfilename = filename.replace(delete_character, "");
-                    //         //run rename
-                    //         rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
-                    //     }
-                    //     if(selected_function == "replace-character")
-                    //     {
-                    //         newfilename = filename.replace(replace_character_from, replace_character_to);
-                    //         //run rename
-                    //         rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
-                    //     }
-                    //     if(selected_function == "insert-character")
-                    //     {
-                    //         newfilename = insert_character_before + filenameonly + insert_character_after + file_extension;
-                    //         //run rename
-                    //         rename(selected_function, fs, directory_location, arrfilename, filename, newfilename);
-                    //     }
-                    // });
-                    if(selected_function == "delete-duplicated-file")
-                    {
-                        //sort all file name in current directory
-                        arrfilename = arrfilename.sort();
-                        for(a = 0; a < arrfilename.length; a++)
-                        {
-                            duplicatedfile = false;
-                            for(c = 0; c < arrfileunique.length; c++)
-                            {
-                                /**
-                                 * ============================================================================
-                                 * Looking for any similarity in filename with javascript >>indexOf<< function.
-                                 * if this indexOf function return value with > -1, then it's mean there is any
-                                 * similarity in filename and set boolean:duplicatedfile to "true"
-                                 * ============================================================================
-                                 */
-                                if(arrfilename[a].indexOf(arrfileunique[c]) > -1)
-                                {
-                                    duplicatedfile = true;
-                                }
-                            }
-                            /**
-                             * ================================================================================
-                             * at the rest of above loop to find any duplicated file. If system don't
-                             * find any dupplicated file based on filename, current filename will be stored
-                             * into >>arrfileunique<<
-                             * ================================================================================
-                             */
-                            if(duplicatedfile == false)
-                            {
-                                arrfileunique.push(arrfilename[a]);
-                            }
-                        }
-                        //function delete duplicated file
-                        deleteduplicatedfile(fs, directory_location, file, arrfilename, arrfileunique);
-                    }
                 }
             });
         }
@@ -271,25 +272,12 @@ $("#apply").click(function(){
  * @param filename  : file name
  * @param newfile   : new file name
  */
-function rename(fn, fs, fulldir, arrfilename, filename, newfile)
+function rename(fn, fs, fulldir, filename, newfile)
 {
     fs.rename(fulldir + filename, fulldir + newfile, function(error){
         if(error)
         {
-            bootbox.dialog({
-                title: "Error",
-                message: "Description: \n" + error,
-                buttons: {
-                    confirm: {
-                        label: "Okay",
-                        className: "btn-default"
-                    }
-                },
-                closeButton: false,
-                callback: function (result) {
-                    //none
-                }
-            });
+            $("#resultdetails").append(errorlist);
         }
         else
         {
@@ -313,19 +301,7 @@ function rename(fn, fs, fulldir, arrfilename, filename, newfile)
             {
                 ms = "insert character success";
             }
-            bootbox.dialog({
-                title: "Success",
-                message: ms,
-                buttons: {
-                    confirm: {
-                        label: "Okay"
-                    }
-                },
-                closeButton: false,
-                callback: function (result) {
-                    //none
-                }
-            });
+            $("#resultdetails").append(ms);
         }
     });
 }
