@@ -13,7 +13,7 @@ windows application made with electron to modify all of your file in a specified
 You can check the latest version to [release page](https://github.com/dhanyn10/multiple-file-manager/releases)
 
 ## How it Work
-Before you decided to use this application, make sure you've read this [wiki](https://github.com/dhanyn10/multiple-file-manager/wiki#features)
+You can find the explanation for every function in multiple file manager from this [wiki](https://github.com/dhanyn10/multiple-file-manager/wiki#features) page
 
 ## Contribution
 Do you find an error or have feature request? then let's check this repository [issues](https://github.com/dhanyn10/multiple-file-manager/issues)
