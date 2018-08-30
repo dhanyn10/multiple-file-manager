@@ -301,7 +301,12 @@ function rename(fn, fs, fulldir, filename, newfile)
             {
                 ms = "insert character success";
             }
-            $("#resultdetails").append(ms);
+            bootsalert({
+                className: "success",
+                message: ms,
+                container: "resultdetails",
+                closebtn: true
+            });
         }
     });
 }
