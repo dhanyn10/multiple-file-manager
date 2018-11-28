@@ -46,49 +46,24 @@
                             </ul>
                             <div class="tab-content">
                                 <div id="rename" class="tab-pane active">
-                                    <div class="rename card">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="card-body">
-                                                        <button class="btn btn-block btn-outline-primary" id="delete-c">
-                                                            Delete
-                                                        </button>
-                                                    </div>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <div class="col-sm-4">
+                                                    Choose Option
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    <select id="rename-options" class="form-control">
+                                                        <option value="delete">Delete</option>
+                                                        <option value="replace">Replace</option>
+                                                        <option value="insert">Insert</option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="card-body">
-                                                        <button class="btn btn-block btn-outline-primary" id="replace-c">
-                                                            Replace
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                            <div class="form-group rename visible" id="delete-c">
+                                                <input type="text" id="input-delete-character" class="form-control" placeholder="type here ...">
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="card-body">
-                                                    <div class="card-body">
-                                                        <button class="btn btn-block btn-outline-primary" id="insert-c">
-                                                            Insert
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- <div class="card-group">
-                                        <div class="rename card">
-                                            <a class="card-header" data-toggle="collapse" href="#delete-character">Delete Character</a>
-                                            <div class="card-body">
-                                                <div class="card-body card-collapse collapse">
-                                                    <input type="text" id="input-delete-character" class="form-control" placeholder="type here ...">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="rename card">
-                                            <a class="card-header" data-toggle="collapse" href="#replace-character">Replace Character</a>
-                                            <div id="replace-character" class="card-body card-collapse collapse">
+                                            <div class="form-group rename" id="replace-c">
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <input type="text" id="input-replace-character-from" class="form-control" placeholder="from">
@@ -98,10 +73,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="rename card">
-                                            <a class="card-header" data-toggle="collapse" href="#insert-character">Insert Character</a>
-                                            <div id="insert-character" class="card-body card-collapse collapse">
+                                            <div class="form-group rename" id="insert-c">
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <input type="text" id="input-insert-character-before" class="form-control" placeholder="before(prefix)">
@@ -112,11 +84,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div> -->
+                                    </div>
                                 </div>
                                 <div id="manage" class="tab-pane fade">
                                     <div class="card-group">
-                                        <div class="rename card card-default">
+                                        <div class="card card-default">
                                             <a class="card-header block" data-toggle="collapse" href="#delete-duplicated-file">Delete Duplicated File</a>
                                         </div>
                                     </div>
@@ -135,6 +107,7 @@
             </div>
         </div>
         <script src="./node_modules/bootsalert/bootsalert.js"></script>
+        <script src="apps.js"></script>
         <script>
             require('./renderer.js')
         </script>

@@ -15,9 +15,9 @@
 .mt-1{
     margin-top: 1rem;
 }
-.block{
-    display: block;
-}
-.hide{
+.rename{
     display: none;
+}
+.visible{
+    display:block !important;
 }
