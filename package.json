@@ -21,7 +21,7 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "2.0.8",
-    "electron-builder": "20.28.3"
+    "electron-builder": "20.38.4"
   },
   "dependencies": {
     "bootbox": "^4.4.0",
