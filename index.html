@@ -21,6 +21,9 @@
     </head>
     <body>
         <div class="container-fluid">
+            <div class="form-group" id="top-message"></div>
+        </div>
+        <div class="container-fluid">
             <div class="row mt-1">
                 <div class="col-sm-9">
                     <input type="text" id="location" class="form-control" placeholder="set folder location" readonly>
@@ -46,7 +49,7 @@
                             </ul>
                             <div class="tab-content">
                                 <div id="rename" class="tab-pane active">
-                                    <div class="card">
+                                    <div class="card rounded-0">
                                         <div class="card-body">
                                             <div class="form-group row">
                                                 <div class="col-sm-4">
@@ -54,9 +57,9 @@
                                                 </div>
                                                 <div class="col-sm-8">
                                                     <select id="rename-options" class="form-control">
-                                                        <option value="delete">Delete</option>
-                                                        <option value="replace">Replace</option>
-                                                        <option value="insert">Insert</option>
+                                                        <option value="delete-character">Delete</option>
+                                                        <option value="replace-character">Replace</option>
+                                                        <option value="insert-character">Insert</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -83,18 +86,20 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <button type="button" class="btn btn-primary btn-block" id="apply">APPLY</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="manage" class="tab-pane fade">
+                                <div id="manage" class="tab-pane">
+                                    <div class="card rounded-0">
+                                        <div class="card-body" id="manage-file">
+                                            <button type="button" class="btn btn-primary btn-block" id="apply">APPLY</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="result" class="tab-pane">
                                     <div class="card-group">
-                                        <div class="card card-default">
-                                            <a class="card-header block" data-toggle="collapse" href="#delete-duplicated-file">Delete Duplicated File</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="result" class="tab-pane fade">
-                                    <div class="card-group" id="resultdetails">
+                                        <ul class="list-group" id="resultdetails"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -102,7 +107,6 @@
                     </div>
                     <input type="hidden" id="error-report">
                     <input type="hidden" id="success-count">
-                    <button type="button" class="btn btn-primary btn-block" id="apply">APPLY</button>
                 </div>
             </div>
         </div>
