@@ -2,5 +2,4 @@
 /release-builds
 /multiple-file-manager-win32-ia32
 /installer
-package-lock.json
 yarn.lock
