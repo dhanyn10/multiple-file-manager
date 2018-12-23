@@ -28,5 +28,13 @@
     "bootsalert": "^0.1.0",
     "bootstrap": "^4.1.3",
     "jquery": "^3.3.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhanyn10/multiple-file-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dhanyn10/multiple-file-manager/issues"
+  },
+  "homepage": "https://github.com/dhanyn10/multiple-file-manager#readme"
 }
