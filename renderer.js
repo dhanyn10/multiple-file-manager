@@ -27,13 +27,7 @@ btn.addEventListener('click', () => {
     });
 });
 
-$("#apply").click(function(){
-    //initiate array to store filename
-    arrfilename         = [];
-
-    //initiate array to store unique filename
-    arrfileunique       = [];
-
+$("#apply-rename").click(function(){
     /** 
      * retrieve value selected function
      * the value will become : delete, replace, insert
@@ -109,14 +103,6 @@ $("#apply").click(function(){
                         temporaryfilename   = filename.split(".");
                         filenameonly        = temporaryfilename[0];
 
-                        /**
-                            * =========================================================================
-                            * for function "delete duplicated file" we need to insert all file name to
-                            * >>arrfilename<< then sort it when usen need to run the function
-                            * =========================================================================
-                            */
-                        arrfilename.push(filenameonly);
-
                         //set file extension
                         file_extension      = "." + temporaryfilename[temporaryfilename.length - 1];
 
@@ -141,6 +127,74 @@ $("#apply").click(function(){
                             rename(selected_function, fs, directory_location, filename, newfilename);
                         }
                     });
+                }
+            });
+        }
+    }
+});
+$("#apply-manage").click(function(){
+    //initiate array to store filename
+    arrfilename         = [];
+
+    //initiate array to store unique filename
+    arrfileunique       = [];
+
+    /** 
+     * retrieve value selected function
+     * the value will become : delete, replace, insert
+    */
+    selected_function   = $("#manage-options").val();
+
+    //get file location
+    directory_location  = $("#location").val();
+
+    if(selected_function != null)
+    {
+        // converting backward slash to forward slash
+        directory_location  = directory_location.replace(/\\/g, "/");
+        //count location length value
+        loclength           = directory_location.length;
+
+        // error handler if user haven't choose any directory yet
+        if(loclength == 0)
+        {
+            bootsalert({
+                className: "danger",
+                message: "Directory cannot be empty, please click browse button to locate your file",
+                container: "top-message",
+                closebtn: true
+            });
+        }
+        else
+        {
+            //insert forward slash at the end of directory name
+            loclastindex    = directory_location.substring(loclength-1, loclength);
+            if(loclastindex != "/")
+            {
+                directory_location += "/";
+            }
+
+            //initiate electron filesystem
+            fs = require('fs');
+
+            //filesystem use function read current directory
+            fs.readdir(directory_location, function(error, file){
+
+                //error status
+                if(error)
+                {
+                    bootsalert({
+                        className: "danger",
+                        message: "Error: " + file,
+                        container: "top-message",
+                        closebtn: true
+                    });
+                }
+                //no error found
+                else
+                {
+                    //initiate variable to store new file name
+                    newfilename             = "";
                     if(selected_function == "delete-duplicated-file")
                     {
                         //sort all file name in current directory
@@ -182,7 +236,6 @@ $("#apply").click(function(){
         }
     }
 });
-
 /**
  * 
  * @param fn : "selected function"
@@ -202,8 +255,9 @@ function rename(fn, fs, fulldir, filename, newfile)
         else
         {
             fn = fn.replace('-', ' ');
-            htmlresult = "<li class='list-group-item'>" + fn + filename + " success</li>";
-            $("#resultdetails").append(htmlresult);
+            listgroup   = document.getElementById('resultdetails');
+            htmlresult  = "<li class='result-item list-group-item'>" + fn + " : [" + filename + "] <i class='fas fa-angle-double-right'></i> [" + newfile + "] success</li>";
+            $(htmlresult).insertBefore(listgroup);
         }
     });
 }
