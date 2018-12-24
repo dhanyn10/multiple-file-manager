@@ -21,3 +21,7 @@
 .visible{
     display:block !important;
 }
+#resultpage{
+    max-height: 280px;
+    overflow: auto;
+}
