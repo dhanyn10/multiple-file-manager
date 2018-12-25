@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "package-win": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=win32 --arch=ia32 --icon=multiple-file-manager.ico  --version-string.CompanyName=DhanyN --version-string.FileDescription=DhanyN --version-string.ProductName=\"Multiple File Manager\"",
-    "dist": "electron-builder"
+    "dist": "electron-builder --publish=never"
   },
   "build": {
     "productName": "Multiple File Manager",
