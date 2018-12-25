@@ -345,7 +345,7 @@ window.onerror = function(error, url, line) {
         "LI",   //created element
         "list-group-item text-danger", //element class name
         "Error", //function name
-        " : [" + error + "]", //text node
+        "Error : [" + error + "] Line: ["+ line +"]", //text node
         "resultdetails" //target element
     );
 }
