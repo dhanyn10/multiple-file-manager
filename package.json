@@ -24,7 +24,6 @@
     "electron-packager": "^13.0.1"
   },
   "dependencies": {
-    "bootbox": "^4.4.0",
     "bootsalert": "^0.1.0",
     "bootstrap": "^4.2.1",
     "jquery": "^3.3.1"
