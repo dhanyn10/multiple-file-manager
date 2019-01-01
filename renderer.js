@@ -91,6 +91,34 @@ $("#apply-rename").click(function(){
                     insert_character_before = $("#input-insert-character-before").val();
                     insert_character_after  = $("#input-insert-character-after").val();
 
+                    arrfilename = [];
+                    file.forEach(function(filename){
+                        arrfilename.push(filename);
+                    });
+
+                    htmlfilename = '<div id="file-list">';
+                    for(let j = 0; j < arrfilename.length; j++)
+                    {
+                        htmlfilename += '<div class="form-check">'+
+                                '<input class="form-check-input" type="checkbox" value="'+ arrfilename[j] +'" checked>'+
+                                '<label class="form-check-label">'+
+                                    arrfilename[j] +
+                                '</label>'+
+                            '</div>'
+                    }
+                    htmlfilename += '</div>';
+
+                    bootbox.dialog({
+                        title: 'This checked file will be executed',
+                        message: htmlfilename,
+                        closeButton: false,
+                        buttons: {
+                            cancel: {
+                                label: "Cancel",
+                                className: 'btn-secondary'
+                            }
+                        }
+                    });
                     //execution to each file at recent directory                     
                     file.forEach(function(filename){
 

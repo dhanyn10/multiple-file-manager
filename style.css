@@ -21,6 +21,10 @@
 .visible{
     display:block !important;
 }
+#file-list{
+    max-height: 150px;
+    overflow: auto;
+}
 #resultpage{
     max-height: 280px;
     overflow: auto;
