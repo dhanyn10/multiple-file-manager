@@ -9,8 +9,7 @@
     "dist": "electron-builder --publish=never"
   },
   "build": {
-    "productName": "Multiple File Manager",
-    "icon": "multiple-file-manager.ico"
+    "productName": "Multiple File Manager"
   },
   "keywords": [
     "file",
