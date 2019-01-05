@@ -3,6 +3,7 @@ matrix:
   - os: linux
     sudo: required
   - os: osx
+  - os: windows
 cache:
   yarn: true
 branches:
