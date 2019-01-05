@@ -4,8 +4,6 @@ matrix:
     sudo: required
   - os: osx
   - os: windows
-directories:
-  - node_modules
 branches:
   - platforms
 language: node_js
@@ -16,7 +14,7 @@ node_js:
 install:
   - npm install
 script:
-  - if ["$TRAVIS_OS_NAME" == "windows"]; then npm run package-win;
-  - if ["$TRAVIS_OS_NAME" == "linux"]; then npm run package-linux;
-  - if ["$TRAVIS_OS_NAME" == "osx"]; then npm run package-mac;
+  - npm run package-win
+  - npm run package-linux
+  - npm run package-mac
   - npm run dist
