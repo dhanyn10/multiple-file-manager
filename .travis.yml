@@ -1,10 +1,11 @@
 os:
   - windows
+  - linux
+  - osx
 language: node_js
 node_js:
   - "8"
 install:
   - npm install
 script:
-  - npm run package-win
   - npm run dist
