@@ -6,6 +6,8 @@ matrix:
   - os: windows
 cache:
   yarn: true
+directories:
+  - node_modules
 branches:
   - platforms
 language: node_js
