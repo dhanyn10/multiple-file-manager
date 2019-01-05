@@ -1,12 +1,15 @@
-os:
-  - windows
-  - linux
-  - osx
+matrix:
+  include:
+  - os: linux
+    sudo: required
+  - os: osx
+cache:
+  yarn: true
 branches:
   - platforms
-sudo:
-  - false
 language: node_js
+notifications:
+  email: false
 node_js:
   - "8"
 install:
