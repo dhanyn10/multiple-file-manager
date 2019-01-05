@@ -4,8 +4,6 @@ matrix:
     sudo: required
   - os: osx
   - os: windows
-cache:
-  yarn: true
 directories:
   - node_modules
 branches:
