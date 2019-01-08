@@ -1,6 +1,9 @@
 let remote  = require('electron').remote;
 let dialog  = remote.dialog;
 
+//initiate electron filesystem
+fs = require('fs');
+
 $("#browse-directory").click(function(){
     //show open directory window
     dialog.showOpenDialog({
@@ -60,9 +63,6 @@ $("#apply-rename").click(function(){
             {
                 directory_location += "/";
             }
-
-            //initiate electron filesystem
-            fs = require('fs');
 
             //filesystem use function read current directory
             fs.readdir(directory_location, function(error, file){
@@ -171,9 +171,6 @@ $("#apply-manage").click(function(){
             {
                 directory_location += "/";
             }
-
-            //initiate electron filesystem
-            fs = require('fs');
 
             //filesystem use function read current directory
             fs.readdir(directory_location, function(error, file){
