@@ -3,7 +3,7 @@ let dialog  = remote.dialog;
 let mainapp = remote.require('./index');
 let btn     = document.getElementById('browse-directory');
 
-btn.addEventListener('click', () => {
+$("#browse-directory").click(function(){
     //show open directory window
     dialog.showOpenDialog({
         properties: ['openDirectory']
