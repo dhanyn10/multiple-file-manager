@@ -1,7 +1,5 @@
 let remote  = require('electron').remote;
 let dialog  = remote.dialog;
-let mainapp = remote.require('./index');
-let btn     = document.getElementById('browse-directory');
 
 $("#browse-directory").click(function(){
     //show open directory window
