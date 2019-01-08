@@ -91,10 +91,6 @@ $("#apply-rename").click(function(){
                     insert_character_before = $("#input-insert-character-before").val();
                     insert_character_after  = $("#input-insert-character-after").val();
 
-                    arrfilename = [];
-                    file.forEach(function(filename){
-                        arrfilename.push(filename);
-                    });
                     //execution to each file at recent directory                     
                     file.forEach(function(filename){
 
