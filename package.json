@@ -7,8 +7,7 @@
     "start": "electron .",
     "package-win": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=win32 --arch=ia32 --icon=multiple-file-manager.ico  --version-string.CompanyName=DhanyN --version-string.ProductName=\"Multiple File Manager\"",
     "package-linux": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=linux --arch=x64 --icon=multiple-file-manager.ico  --version-string.CompanyName=DhanyN --version-string.ProductName=\"Multiple File Manager\"",
-    "package-mac": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=darwin --arch=x64 --icon=multiple-file-manager.ico  --version-string.CompanyName=DhanyN --version-string.ProductName=\"Multiple File Manager\"",
-    "dist": "electron-builder --publish=never"
+    "package-mac": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=darwin --arch=ia32 --icon=multiple-file-manager.ico  --version-string.CompanyName=DhanyN --version-string.ProductName=\"Multiple File Manager\""
   },
   "build": {
     "productName": "Multiple File Manager"
@@ -21,17 +20,15 @@
   "author": "Dhany Nurdiansyah",
   "license": "MIT",
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "5.6.3",
     "electron": "2.0.17",
     "electron-builder": "20.38.5",
     "electron-packager": "13.0.1"
   },
   "dependencies": {
-    "bootbox": "^4.4.0",
     "bootsalert": "^0.1.0",
     "bootstrap": "^4.2.1",
     "jquery": "^3.3.1",
-    "popper.js": "^1.14.6"
+    "popper.js": "^1.14.7"
   },
   "repository": {
     "type": "git",
