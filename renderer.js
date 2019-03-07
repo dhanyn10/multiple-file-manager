@@ -1,6 +1,14 @@
 let remote  = require('electron').remote;
 let dialog  = remote.dialog;
 
+//open all link to default browser, marked the link by "a" tag
+let shell = require('electron').shell
+document.addEventListener('click', function (event) {
+    if (event.target.tagName === 'A' && event.target.href.startsWith('http')) {
+        event.preventDefault()
+        shell.openExternal(event.target.href)
+    }
+})
 //initiate electron filesystem
 fs = require('fs');
 
