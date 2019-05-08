@@ -14,7 +14,7 @@ function createWindow () {
         center: true,
         minWidth: 800,
         minHeight: 500,
-        icon: 'rename-multiple-file.ico',
+        icon: path.join(__dirname, 'icon/multiple-file-manager.png'),
         title: 'Multiple File Manager',
         webPreferences:
         {

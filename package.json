@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "package-win": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=win32 --arch=ia32 --icon=icon/multiple-file-manager.ico  --version-string.CompanyName=DhanyN --version-string.ProductName=\"Multiple File Manager\"",
-    "package-linux": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=linux --arch=x64 --icon=icon/multiple-file-manager.ico  --version-string.CompanyName=DhanyN --version-string.ProductName=\"Multiple File Manager\"",
+    "package-linux": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=linux --arch=x64 --icon=icon/multiple-file-manager.png  --version-string.CompanyName=DhanyN --version-string.ProductName=\"Multiple File Manager\"",
     "package-mac": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=darwin --arch=x64 --icon=icon/multiple-file-manager.icns  --version-string.CompanyName=DhanyN --version-string.ProductName=\"Multiple File Manager\""
   },
   "build": {
