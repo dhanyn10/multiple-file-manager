@@ -20,7 +20,7 @@
   "author": "Dhany Nurdiansyah",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^5.0.1",
+    "electron": "5.0.1",
     "electron-packager": "13.0.1"
   },
   "dependencies": {
