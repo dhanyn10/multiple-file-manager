@@ -19,3 +19,4 @@ script:
   - if ["$TRAVIS_OS_NAME" == "windows"]; then npm run package-win; fi
   - if ["$TRAVIS_OS_NAME" == "linux"]; then npm run package-linux; fi
   - if ["$TRAVIS_OS_NAME" == "osx"]; then npm run package-mac; fi
+  
