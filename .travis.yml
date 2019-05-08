@@ -8,7 +8,6 @@ directories:
   - node_modules
 branches:
   - master
-  - electron5
 language: node_js
 notifications:
   email: false
