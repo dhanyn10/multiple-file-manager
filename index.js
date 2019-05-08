@@ -15,11 +15,7 @@ function createWindow () {
         minWidth: 800,
         minHeight: 500,
         icon: path.join(__dirname, 'icon/multiple-file-manager.png'),
-        title: 'Multiple File Manager',
-        webPreferences:
-        {
-            preload: path.join(__dirname, 'renderer.js')
-        }
+        title: 'Multiple File Manager'
     })
 
     // and load the index.html of the app.
