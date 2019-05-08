@@ -7,7 +7,7 @@ matrix:
 directories:
   - node_modules
 branches:
-  - platforms
+  - master
 language: node_js
 notifications:
   email: false
