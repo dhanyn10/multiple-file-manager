@@ -27,7 +27,7 @@
     "bootsalert": "^0.1.0",
     "bootstrap": "^4.2.1",
     "jquery": "^3.4.1",
-    "popper.js": "^1.14.7"
+    "popper.js": "^1.16.0"
   },
   "repository": {
     "type": "git",
