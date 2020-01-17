@@ -1,6 +1,6 @@
 {
   "name": "multiple-file-manager",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "application made with electron to modify all of your file in a specified folder",
   "main": "index.js",
   "scripts": {
