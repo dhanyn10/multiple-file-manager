@@ -22,7 +22,7 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "7.1.2",
-    "electron-packager": "13.0.1"
+    "electron-builder": "22.3.2"
   },
   "dependencies": {
     "bootsalert": "^0.1.0",
