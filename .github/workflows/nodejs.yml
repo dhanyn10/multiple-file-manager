@@ -23,6 +23,6 @@ jobs:
     - name: npm install, build
       run: |
         npm install
-        npm run dist
+        npm run test-dist
       env:
         CI: true
