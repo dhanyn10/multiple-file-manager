@@ -1,15 +1,15 @@
 {
   "name": "multiple-file-manager",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "application made with electron to modify all of your file in a specified folder",
   "main": "index.js",
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder",
     "test-dist": "electron-builder --publish=never",
-    "package-win": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=win32 --arch=ia32 --icon=icon/multiple-file-manager.ico  --version-string.CompanyName=DhanyN --version-string.ProductName=\"Multiple File Manager\"",
-    "package-linux": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=linux --arch=x64 --icon=icon/multiple-file-manager.png  --version-string.CompanyName=DhanyN --version-string.ProductName=\"Multiple File Manager\"",
-    "package-mac": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=darwin --arch=x64 --icon=icon/multiple-file-manager.icns  --version-string.CompanyName=DhanyN --version-string.ProductName=\"Multiple File Manager\""
+    "package-win": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=win32 --arch=ia32 --icon=icon/multiple-file-manager.ico  --version-string.CompanyName=dhanyn10 --version-string.ProductName=\"Multiple File Manager\"",
+    "package-linux": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=linux --arch=x64 --icon=icon/multiple-file-manager.png  --version-string.CompanyName=dhanyn10 --version-string.ProductName=\"Multiple File Manager\"",
+    "package-mac": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=darwin --arch=x64 --icon=icon/multiple-file-manager.icns  --version-string.CompanyName=dhanyn10 --version-string.ProductName=\"Multiple File Manager\""
   },
   "build": {
     "productName": "Multiple File Manager"
