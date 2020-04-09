@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "electron .",
+    "postinstall": "electron-builder install-app-deps",
+    "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "test-dist": "electron-builder --publish=never",
     "package-win": "electron-packager . multiple-file-manager --overwrite --asar=true --platform=win32 --arch=ia32 --icon=icon/multiple-file-manager.ico  --version-string.CompanyName=dhanyn10 --version-string.ProductName=\"Multiple File Manager\"",
@@ -23,7 +25,8 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "7.1.2",
-    "electron-builder": "22.3.2"
+    "electron-builder": "22.3.2",
+    "electron-packager": "^14.2.1"
   },
   "dependencies": {
     "bootsalert": "^0.1.0",
