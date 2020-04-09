@@ -17,8 +17,8 @@ $("#browse-directory").click( ()=> {
     dialog.showOpenDialog({
         properties: ['openDirectory']
     }).then( result => {
-        console.log(result.canceled)
-        console.log(result.filePaths)
+        //insert result of filepath to #location
+        $("#location").val(result.filePaths)
     }).catch( error => {
         reportresult(
             "LI",   //created element
