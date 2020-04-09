@@ -1,6 +1,8 @@
-const {app, BrowserWindow} = require('electron')
+const electron = require('electron')
+const app = electron.app
 const path = require('path')
 const url = require('url')
+const BrowserWindow = electron.BrowserWindow
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -11,15 +13,15 @@ function createWindow () {
     win = new BrowserWindow({
         width: 800,
         height: 540,
+        webPreferences:
+        {
+            nodeIntegration: true
+        },
         center: true,
         minWidth: 800,
         minHeight: 500,
         icon: path.join(__dirname, 'icon/multiple-file-manager.png'),
-        title: 'Multiple File Manager',
-        webPreferences:
-        {
-            nodeIntegration: true
-        }
+        title: 'Multiple File Manager'
     })
 
     // and load the index.html of the app.
