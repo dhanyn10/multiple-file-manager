@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-form>
+        <b-form class="mb-4">
             <b-form-row description="browse directory here">
                 <b-col cols="8">
                     <b-form-input disabled></b-form-input>
