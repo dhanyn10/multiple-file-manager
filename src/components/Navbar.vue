@@ -11,17 +11,13 @@
 
 <script>
 import Vue from 'vue'
-import { BNavbar, BNavbarNav, BNavbarItem } from 'bootstrap-vue'
+import { BNavbar, BNavbarNav, BNavItem } from 'bootstrap-vue'
 
 Vue.component('b-navbar', BNavbar)
 Vue.component('b-navbar-nav', BNavbarNav)
-Vue.component('b-navbar-item', BNavbarItem)
+Vue.component('b-nav-item', BNavItem)
 
 export default {
     name: 'Navbar'
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
