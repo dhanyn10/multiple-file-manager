@@ -4,6 +4,7 @@
         <b-container>
             <FormSearch/>
             <ListFile/>
+            <Footer/>
         </b-container>
     </div>
 </template>
@@ -14,6 +15,7 @@ import Vue from 'vue'
 import Navbar from './components/Navbar.vue'
 import FormSearch from './components/FormSearch.vue'
 import ListFile from './components/ListFile.vue'
+import Footer from './components/Footer.vue'
 
 import { BContainer } from 'bootstrap-vue'
 
@@ -24,7 +26,8 @@ export default {
     components: {
         Navbar,
         FormSearch,
-        ListFile
+        ListFile,
+        Footer
     }
 }
 </script>
