@@ -2,11 +2,11 @@
     <div>
         <b-form class="mb-4">
             <b-form-row description="browse directory here">
-                <b-col cols="8">
+                <b-col cols="9">
                     <b-form-input disabled></b-form-input>
                 </b-col>
-                <b-col cols="4">
-                    <b-button block variant="info">browse</b-button>
+                <b-col cols="3">
+                    <b-btn block variant="info">browse</b-btn>
                 </b-col>
             </b-form-row>
         </b-form>
@@ -20,7 +20,7 @@ import { BForm, BFormGroup, BFormInput, BButton } from 'bootstrap-vue'
 Vue.component('b-form', BForm)
 Vue.component('b-form-group', BFormGroup)
 Vue.component('b-form-input', BFormInput)
-Vue.component('b-button', BButton)
+Vue.component('b-btn', BButton)
 
 export default {
     name: 'FormSearch'
