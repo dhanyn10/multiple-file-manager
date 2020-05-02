@@ -1,12 +1,10 @@
 <template>
-    <div>
-        <b-navbar toggleable="sm" type="dark" variant="info" class="mb-4">
-            <b-navbar-nav class="ml-auto">
-                <b-nav-item href="#">link 1</b-nav-item>
-                <b-nav-item href="#">link 2</b-nav-item>
-            </b-navbar-nav>
-        </b-navbar>
-    </div>
+    <b-navbar toggleable="sm" type="dark" variant="info" class="mb-4">
+        <b-navbar-nav class="ml-auto">
+            <b-nav-item href="#">link 1</b-nav-item>
+            <b-nav-item href="#">link 2</b-nav-item>
+        </b-navbar-nav>
+    </b-navbar>
 </template>
 
 <script>
