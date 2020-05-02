@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-list-group>
+        <b-list-group class="mb-4">
             <b-list-group-item>list 1</b-list-group-item>
             <b-list-group-item>list 2</b-list-group-item>
             <b-list-group-item>list 3</b-list-group-item>
