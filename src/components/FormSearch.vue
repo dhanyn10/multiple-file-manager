@@ -6,7 +6,7 @@
                     <b-form-input disabled></b-form-input>
                 </b-col>
                 <b-col cols="3">
-                    <b-btn block variant="info">browse</b-btn>
+                    <b-btn squared block variant="info">browse</b-btn>
                 </b-col>
             </b-form-row>
         </b-form>
