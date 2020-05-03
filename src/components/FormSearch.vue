@@ -6,7 +6,7 @@
                     <b-form-input disabled></b-form-input>
                 </b-col>
                 <b-col cols="3">
-                    <b-btn squared block variant="info">browse</b-btn>
+                    <b-btn squared block variant="info" v-on:click="browse">browse</b-btn>
                 </b-col>
             </b-form-row>
         </b-form>
@@ -22,8 +22,24 @@ Vue.component('b-form-group', BFormGroup)
 Vue.component('b-form-input', BFormInput)
 Vue.component('b-btn', BButton)
 
+//electron
+const electron = require('electron')
+let remote = electron.remote
+let dialog = remote.dialog
+
 export default {
-    name: 'FormSearch'
+    name: 'FormSearch',
+    methods: {
+        browse: function () {
+            dialog.showOpenDialog({
+                properties: ['openDirectory']
+            }).then(result => {
+                console.log(result.filePaths)
+            }).catch( error => {
+                console.log(error)
+            })
+        }
+    }
 }
 </script>
 
