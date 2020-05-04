@@ -2,9 +2,9 @@
     <div>
         <Navbar/>
         <b-container>
-            <FormSearch/>
+            <FormSearch @formData="outFormData"/>
             <ListFile/>
-            <Footer/>
+            <Footer :footerData="outFooterData"/>
         </b-container>
     </div>
 </template>
@@ -28,6 +28,16 @@ export default {
         FormSearch,
         ListFile,
         Footer
+    },
+    data: function () {
+        return {
+            outFooterData: ""
+        }
+    },
+    methods: {
+        outFormData (variable) {
+            this.outFooterData = variable
+        }
     }
 }
 </script>
