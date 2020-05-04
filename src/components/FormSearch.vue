@@ -39,9 +39,11 @@ export default {
             dialog.showOpenDialog({
                 properties: ['openDirectory']
             }).then(result => {
-                this.dirLocation = result.filePaths[0]
+                let filePaths = result.filePaths[0]
+                this.dirLocation = filePaths
+                this.$emit("filepaths", filePaths)
             }).catch( error => {
-                this.$emit("formData", error)
+                this.$emit("errorData", error)
                 console.log(error)
             })
         }
