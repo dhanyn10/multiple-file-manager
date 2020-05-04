@@ -3,7 +3,7 @@
         <b-form class="mb-4">
             <b-form-row description="browse directory here">
                 <b-col cols="9">
-                    <b-form-input v-model="form.directory" disabled></b-form-input>
+                    <b-form-input v-model="dirLocation" disabled></b-form-input>
                 </b-col>
                 <b-col cols="3">
                     <b-btn squared block variant="info" v-on:click="browse">browse</b-btn>
@@ -31,9 +31,7 @@ export default {
     name: 'FormSearch',
     data () {
         return {
-            form: {
-                directory: ''
-            }
+            dirLocation: ""
         }
     },
     methods: {
@@ -41,8 +39,9 @@ export default {
             dialog.showOpenDialog({
                 properties: ['openDirectory']
             }).then(result => {
-                this.form.directory = result.filePaths[0]
+                this.dirLocation = result.filePaths[0]
             }).catch( error => {
+                this.$emit("formData", error)
                 console.log(error)
             })
         }
