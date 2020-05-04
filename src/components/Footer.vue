@@ -1,7 +1,8 @@
 <template>
     <b-navbar toggleable="sm" type="dark" variant="info" class="mb-4">
         <b-navbar-nav>
-            <b-nav-text>Status : </b-nav-text>
+            <b-nav-text>Status :
+            </b-nav-text>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
             <b-nav-text>Action : </b-nav-text>
@@ -32,6 +33,7 @@ Vue.component('b-nav-text', BNavText)
 Vue.component('b-nav-item', BNavItem)
 Vue.component('b-form-select', BFormSelect)
 Vue.component('b-btn', BButton)
+
 export default {
     name: 'Footer',
     data()
@@ -46,6 +48,6 @@ export default {
 
             ]
         }
-    },
+    }
 }
 </script>
