@@ -12,10 +12,10 @@
 <script>
 import Vue from 'vue'
 
-import Navbar from './components/Navbar.vue'
-import FormSearch from './components/FormSearch.vue'
-import ListFile from './components/ListFile.vue'
-import Footer from './components/Footer.vue'
+import Navbar from './components/Navbar'
+import FormSearch from './components/FormSearch'
+import ListFile from './components/ListFile'
+import Footer from './components/Footer'
 
 import { BContainer } from 'bootstrap-vue'
 
