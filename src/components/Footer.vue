@@ -1,7 +1,7 @@
 <template>
     <b-navbar toggleable="sm" type="dark" variant="info" class="mb-4">
-        <b-navbar-nav>
-            <b-nav-text>Status :
+        <b-navbar-nav>            
+            <b-nav-text>Status : {{statusData}}
             </b-nav-text>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
@@ -36,9 +36,15 @@ Vue.component('b-btn', BButton)
 
 export default {
     name: 'Footer',
+    props: {
+        footerData: {
+            type: String
+        }
+    },
     data()
     {
         return {
+            statusData: null,
             selected: null,
             options: [
                 { value: null, text: 'select an option' },
@@ -47,6 +53,11 @@ export default {
                 { value: '3', text: 'Rename File: insert' },
 
             ]
+        }
+    },
+    watch: {
+        footerData: function () {
+            this.statusData = this.footerData
         }
     }
 }
