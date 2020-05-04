@@ -2,8 +2,8 @@
     <div>
         <Navbar/>
         <b-container>
-            <FormSearch @formData="outFormData"/>
-            <ListFile/>
+            <FormSearch @filepaths="outfilepaths" @errorData="outErrorData"/>
+            <ListFile :listData="outListData"/>
             <Footer :footerData="outFooterData"/>
         </b-container>
     </div>
@@ -31,12 +31,16 @@ export default {
     },
     data: function () {
         return {
-            outFooterData: ""
+            outFooterData: null,
+            outListData: null
         }
     },
     methods: {
-        outFormData (variable) {
-            this.outFooterData = variable
+        outErrorData (error) {
+            this.outFooterData = error
+        },
+        outfilepaths (filepaths) {
+            this.outListData = filepaths
         }
     }
 }
