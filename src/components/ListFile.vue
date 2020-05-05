@@ -1,8 +1,12 @@
 <template>
     <div>
         <b-list-group id="listfile" class="mb-4">
-            <b-list-group-item v-for="item in listfile" :key="item">
-                {{item}}
+            <b-list-group-item
+                v-for="(item, index) in listfile" :key="index"
+                v-on:click="itemHandler(item)"
+                v-bind:class="{ active: item.selected }"
+            >
+                {{item.name}}
             </b-list-group-item>
         </b-list-group>
     </div>
@@ -34,10 +38,17 @@ export default {
             var dirLocation = this.listData.replace(/\\/g, "/")
             fs.readdir(dirLocation, (err, file)=> {
                 file.forEach( (filename) => {
-                    this.listfile.push(filename)
-                    console.log(filename)
+                    this.listfile.push({name: filename, selected: false})
                 })
             })
+        }
+    },
+    methods: {
+        itemHandler(item) {
+            if(item.selected == true)
+                item.selected = false
+            else
+                item.selected = true
         }
     }
 }
