@@ -26,13 +26,15 @@ export default {
             type: String
         }
     },
-    data() {
+    data ()
+    {
         return {
             listfile: []
         }
     },
     watch: {
-        listData: function () {            
+        listData ()
+        {            
             //electron filesystem
             let fs = require('fs')
             var dirLocation = this.listData.replace(/\\/g, "/")
@@ -44,7 +46,8 @@ export default {
         }
     },
     methods: {
-        itemHandler(item) {
+        itemHandler (item)
+        {
             if(item.selected == true)
                 item.selected = false
             else
