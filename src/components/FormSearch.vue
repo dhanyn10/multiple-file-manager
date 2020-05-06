@@ -44,7 +44,7 @@ export default {
                 this.dirLocation = filePaths
                 this.$emit("filepaths", filePaths)
             }).catch( error => {
-                this.$emit("errorData", error)
+                this.$emit("error", error)
                 console.log(error)
             })
         }

@@ -2,7 +2,10 @@
     <div>
         <Navbar/>
         <b-container>
-            <FormSearch @filepaths="outfilepaths" @errorData="outErrorData"/>
+            <FormSearch
+                @filepaths="filepathsVal"
+                @error="errorData"
+            />
             <ListFile :listData="outListData"/>
             <Footer :footerData="outFooterData"/>
         </b-container>
@@ -37,11 +40,11 @@ export default {
         }
     },
     methods: {
-        outErrorData (error)
+        errorData (error)
         {
             this.outFooterData = error
         },
-        outfilepaths (filepaths)
+        filepathsVal (filepaths)
         {
             this.outListData = filepaths
         }
