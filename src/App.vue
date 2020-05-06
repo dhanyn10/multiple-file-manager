@@ -4,7 +4,7 @@
         <b-container>
             <FormSearch
                 @filepaths="filepathsVal"
-                @error="errorData"
+                @error="errordataVal"
             />
             <ListFile :listData="listData"/>
             <Footer :footerData="footerData"/>
@@ -39,7 +39,7 @@ export default {
         }
     },
     methods: {
-        errorData (error) {
+        errordataVal (error) {
             this.footerData = error
         },
         filepathsVal (filepaths) {
