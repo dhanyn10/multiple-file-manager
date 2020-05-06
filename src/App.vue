@@ -32,20 +32,17 @@ export default {
         ListFile,
         Footer
     },
-    data ()
-    {
+    data () {
         return {
             footerData: null,
             listData: null
         }
     },
     methods: {
-        errorData (error)
-        {
+        errorData (error) {
             this.footerData = error
         },
-        filepathsVal (filepaths)
-        {
+        filepathsVal (filepaths) {
             this.listData = filepaths
         }
     }

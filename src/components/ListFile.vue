@@ -45,8 +45,7 @@ export default {
             type: String
         }
     },
-    data ()
-    {
+    data () {
         return {
             listfile: [],
             isActive: false,
@@ -54,8 +53,7 @@ export default {
         }
     },
     watch: {
-        listData ()
-        {            
+        listData () {
             //electron filesystem
             let fs = require('fs')
             var dirLocation = this.listData.replace(/\\/g, "/")
@@ -68,15 +66,13 @@ export default {
         }
     },
     methods: {
-        itemHandler (item)
-        {
+        itemHandler (item) {
             if(item.selected == true)
                 item.selected = false
             else
                 item.selected = true
         },
-        toggleSelectAll ()
-        {
+        toggleSelectAll () {
             this.isActive = !this.isActive
             if(this.isActive)
             {

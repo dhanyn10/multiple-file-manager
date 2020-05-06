@@ -35,8 +35,7 @@ export default {
         }
     },
     methods: {
-        browse ()
-        {
+        browse () {
             dialog.showOpenDialog({
                 properties: ['openDirectory']
             }).then(result => {
