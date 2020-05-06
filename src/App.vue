@@ -6,8 +6,8 @@
                 @filepaths="filepathsVal"
                 @error="errorData"
             />
-            <ListFile :listData="outListData"/>
-            <Footer :footerData="outFooterData"/>
+            <ListFile :listData="listData"/>
+            <Footer :footerData="footerData"/>
         </b-container>
     </div>
 </template>
@@ -35,18 +35,18 @@ export default {
     data ()
     {
         return {
-            outFooterData: null,
-            outListData: null
+            footerData: null,
+            listData: null
         }
     },
     methods: {
         errorData (error)
         {
-            this.outFooterData = error
+            this.footerData = error
         },
         filepathsVal (filepaths)
         {
-            this.outListData = filepaths
+            this.listData = filepaths
         }
     }
 }
