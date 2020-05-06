@@ -1,5 +1,19 @@
 <template>
     <div>
+        <div v-show="isDataExist">
+            <b-btn
+                variant="info rounded-0"
+                v-on:click="toggleSelectAll"
+                v-show="isActive"
+            >Select None
+            </b-btn>
+            <b-btn
+                variant="secondary rounded-0"
+                v-on:click="toggleSelectAll"
+                v-show="!isActive"
+            >Select All
+            </b-btn>
+        </div>
         <b-list-group id="listfile" class="mb-4">
             <b-list-group-item
                 v-for="(item, index) in listfile" :key="index"
@@ -14,10 +28,15 @@
 
 <script>
 import Vue from 'vue'
-import { BListGroup, BListGroupItem } from 'bootstrap-vue'
+import {
+    BListGroup,
+    BListGroupItem,
+    BButton
+    } from 'bootstrap-vue'
 
 Vue.component('b-list-group', BListGroup)
 Vue.component('b-list-group-item', BListGroupItem)
+Vue.component('b-btn', BButton)
 
 export default {
     name: 'ListFile',
@@ -29,7 +48,9 @@ export default {
     data ()
     {
         return {
-            listfile: []
+            listfile: [],
+            isActive: false,
+            isDataExist: false
         }
     },
     watch: {
@@ -43,6 +64,7 @@ export default {
                     this.listfile.push({name: filename, selected: false})
                 })
             })
+            this.isDataExist = true
         }
     },
     methods: {
@@ -52,6 +74,28 @@ export default {
                 item.selected = false
             else
                 item.selected = true
+        },
+        toggleSelectAll ()
+        {
+            this.isActive = !this.isActive
+            if(this.isActive)
+            {
+                //get listfile length
+                const dataLength = this.listfile.length
+                for(var j = 0; j < dataLength; j++)
+                {
+                    this.listfile[j].selected = true
+                }
+            }
+            else
+            {
+                //get listfile length
+                const dataLength = this.listfile.length
+                for(var k = 0; k < dataLength; k++)
+                {
+                    this.listfile[k].selected = false
+                }
+            }
         }
     }
 }
