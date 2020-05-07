@@ -39,9 +39,12 @@ export default {
             dialog.showOpenDialog({
                 properties: ['openDirectory']
             }).then(result => {
-                let filePaths = result.filePaths[0]
-                this.dirLocation = filePaths
-                this.$emit("filepaths", filePaths)
+                if(result.canceled == false) //make sure user doesnt cancel opendirectory
+                {
+                    let filePaths = result.filePaths[0]
+                    this.dirLocation = filePaths
+                    this.$emit("filepaths", filePaths)
+                }
             }).catch( error => {
                 this.$emit("error", error)
                 console.log(error)
