@@ -31,7 +31,7 @@ export default {
     name: 'FormSearch',
     data () {
         return {
-            dirLocation: ""
+            dirLocation: null
         }
     },
     methods: {
