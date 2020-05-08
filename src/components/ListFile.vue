@@ -57,6 +57,7 @@ export default {
     data () {
         return {
             listfile: [],
+            countfile: 0,
             isActive: false,
             isDataExist: false
         }
@@ -69,6 +70,7 @@ export default {
             //electron filesystem
             const fs = require('fs')
             var dirLocation = this.listData.replace(/\\/g, "/")
+<<<<<<< HEAD
             var rdir = fs.readdirSync(dirLocation)
             rdir.forEach((filename) => {
                 this.listfile.push({name: filename, selected: false})
@@ -80,6 +82,22 @@ export default {
             }
         },
         deep: true
+=======
+            //reset value
+            this.countfile  = 0
+            this.listfile   = []
+            fs.readdir(dirLocation, (err, file)=> {
+                file.forEach( (filename) => {
+                    this.listfile.push({name: filename, selected: false})
+                    this.countfile++;
+                    if(this.countfile > 0)
+                    {
+                        this.isDataExist = true
+                    }
+                })
+            })
+        }
+>>>>>>> eec5c73... reset the data everytime browse clicked
     },
     methods: {
         itemHandler (item) {
