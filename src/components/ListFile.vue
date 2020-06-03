@@ -38,6 +38,15 @@ Vue.component('b-list-group', BListGroup)
 Vue.component('b-list-group-item', BListGroupItem)
 Vue.component('b-btn', BButton)
 
+function getInitialData()
+{
+    return {
+        listfile: [],
+        isActive: false,
+        isDataExist: false
+    }
+}
+
 export default {
     name: 'ListFile',
     props: {
@@ -53,17 +62,20 @@ export default {
         }
     },
     watch: {
-        listData () {
+        listData: function () {
             //electron filesystem
-            let fs = require('fs')
+            const fs = require('fs')
             var dirLocation = this.listData.replace(/\\/g, "/")
-            fs.readdir(dirLocation, (err, file)=> {
+            console.log(dirLocation)
+            fs.readdir(dirLocation, (err, file) => {
                 file.forEach( (filename) => {
                     this.listfile.push({name: filename, selected: false})
                 })
             })
-            this.isDataExist = true
-        }
+            this.isDataExist = true;
+            Object.assign(this.$data, getInitialData());
+        },
+        deep: true
     },
     methods: {
         itemHandler (item) {

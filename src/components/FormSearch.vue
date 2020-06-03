@@ -6,7 +6,7 @@
                     <b-form-input v-model="dirLocation" disabled></b-form-input>
                 </b-col>
                 <b-col cols="3">
-                    <b-btn squared block variant="info" v-on:click="browse">browse</b-btn>
+                    <b-btn squared block variant="info" @click="browse">browse</b-btn>
                 </b-col>
             </b-form-row>
         </b-form>
