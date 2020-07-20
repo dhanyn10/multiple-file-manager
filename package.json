@@ -27,7 +27,7 @@
   "dependencies": {
     "bootsalert": "^0.1.0",
     "bootstrap": "^4.2.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "popper.js": "^1.14.7"
   },
   "repository": {
