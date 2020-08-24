@@ -43,8 +43,7 @@ function getInitialData()
     return {
         listfile: [],
         isActive: false,
-        isDataExist: false,
-        countfile: 0
+        isDataExist: false
     }
 }
 
@@ -59,27 +58,26 @@ export default {
         return {
             listfile: [],
             isActive: false,
-            isDataExist: false,
-            countfile: 0
+            isDataExist: false
         }
     },
     watch: {
         listData: function () {
+            //reset data from previous action
+            Object.assign(this.$data, getInitialData())
+
             //electron filesystem
             const fs = require('fs')
             var dirLocation = this.listData.replace(/\\/g, "/")
-            fs.readdir(dirLocation, (err, file) => {
-                file.forEach( (filename) => {
-                    this.listfile.push({name: filename, selected: false})
-                })
-                // console.log(this.listfile.length)
-                this.countfile = this.listfile.length
-                
-                if(this.countfile > 0)
-                    this.isDataExist = true
-
+            var rdir = fs.readdirSync(dirLocation)
+            rdir.forEach((filename) => {
+                this.listfile.push({name: filename, selected: false})
             })
-            Object.assign(this.$data, getInitialData())
+
+            if(this.listfile.length > 0)
+            {
+                this.isDataExist = true
+            }
         },
         deep: true
     },
