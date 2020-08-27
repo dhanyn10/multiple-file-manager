@@ -1,7 +1,6 @@
 <template>
     <div>
-        <Navbar/>
-        <b-container>
+        <b-container class="mt-4">
             <FormSearch
                 @filepaths="filepathsVal"
                 @error="errordataVal"
@@ -15,7 +14,6 @@
 <script>
 import Vue from 'vue'
 
-import Navbar from './components/Navbar'
 import FormSearch from './components/FormSearch'
 import ListFile from './components/ListFile'
 import Footer from './components/Footer'
@@ -27,7 +25,6 @@ Vue.component('b-container', BContainer)
 export default {
     name: 'App',
     components: {
-        Navbar,
         FormSearch,
         ListFile,
         Footer
