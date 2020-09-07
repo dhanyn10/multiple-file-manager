@@ -7,10 +7,15 @@
         <b-navbar-nav class="ml-auto">
             <b-nav-text>Action : </b-nav-text>
             <b-nav-item>
-                <b-form-select size="sm" v-model="selected" :options="options" id="actions"></b-form-select>
+                <b-form-select
+                size="sm"
+                v-model="selected"
+                v-on:change="onChange($event)"
+                :options="options"
+                id="actions"></b-form-select>
             </b-nav-item>
             <b-nav-item>
-                <b-btn size="sm">Go</b-btn>
+                <b-btn size="sm" v-on:click="run">Go</b-btn>
             </b-nav-item>
         </b-navbar-nav>
     </b-navbar>
@@ -51,13 +56,21 @@ export default {
                 { value: '1', text: 'Rename File: delete' },
                 { value: '2', text: 'Rename File: replace' },
                 { value: '3', text: 'Rename File: insert' },
-
             ]
         }
     },
     watch: {
         footerData: function () {
             this.statusData = this.footerData
+        }
+    },
+    methods: {
+        onChange: function(event) {
+            console.log(event)
+            this.selected = event
+        },
+        run: function () {
+            console.log(this.selected)
         }
     }
 }
