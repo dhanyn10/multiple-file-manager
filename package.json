@@ -15,7 +15,7 @@
   "main": "background.js",
   "dependencies": {
     "bootstrap": "^4.4.1",
-    "bootstrap-vue": "^2.13.0",
+    "bootstrap-vue": "^2.17.3",
     "core-js": "^3.6.4",
     "custom-electron-titlebar": "^3.2.4",
     "vue": "^2.6.12"
