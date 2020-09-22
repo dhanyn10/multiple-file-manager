@@ -32,6 +32,8 @@ import {
     BButton
     } from 'bootstrap-vue'
 
+import { Rename } from "../scripts/Rename.js"
+
 Vue.component('b-navbar', BNavbar)
 Vue.component('b-navbar-nav', BNavbarNav)
 Vue.component('b-nav-text', BNavText)
@@ -44,6 +46,9 @@ export default {
     props: {
         footerData: {
             type: String
+        },
+        listDataHandler: {
+            type: Array
         }
     },
     data()
@@ -66,11 +71,10 @@ export default {
     },
     methods: {
         onChange: function(event) {
-            console.log(event)
             this.selected = event
         },
         run: function () {
-            console.log(this.selected)
+            Rename.deleteFunc(this.listDataHandler)
         }
     }
 }
