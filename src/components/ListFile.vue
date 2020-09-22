@@ -80,6 +80,12 @@ export default {
                 this.isDataExist = true
             }
         },
+        listfile: {
+            handler: function () {
+                this.$emit("listDataValue", this.listfile)
+            },
+            deep: true
+        },
         deep: true
     },
     methods: {

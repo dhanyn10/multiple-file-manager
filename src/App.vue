@@ -5,8 +5,14 @@
                 @filepaths="filepathsVal"
                 @error="errordataVal"
             />
-            <ListFile :listData="listData"/>
-            <Footer :footerData="footerData"/>
+            <ListFile
+                @listDataValue="listdataVal"
+                :listData="listData"
+            />
+            <Footer
+                :footerData="footerData"
+                :listDataHandler="listDataHandler"
+            />
         </b-container>
     </div>
 </template>
@@ -32,15 +38,27 @@ export default {
     data () {
         return {
             footerData: null,
-            listData: null
+            listData: null,
+            listDataHandler: null
         }
     },
     methods: {
+        /*
+        * error return the error details that happen from FormSearch
+        * error details data will forwarded to Footer.vue through FooterData
+        */
         errordataVal (error) {
             this.footerData = error
         },
+        /*
+        * filepaths return the data path,
+        * then listData will save the value and send it to ListFile.vue
+        */
         filepathsVal (filepaths) {
             this.listData = filepaths
+        },
+        listdataVal(listDataValue) {
+            this.listDataHandler = listDataValue
         }
     }
 }
