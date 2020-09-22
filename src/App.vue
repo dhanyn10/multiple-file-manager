@@ -10,6 +10,7 @@
                 :listData="listData"
             />
             <Footer
+                :fulldirHandler="fulldirHandler"
                 :footerData="footerData"
                 :listDataHandler="listDataHandler"
             />
@@ -39,7 +40,8 @@ export default {
         return {
             footerData: null,
             listData: null,
-            listDataHandler: null
+            listDataHandler: null,
+            fulldirHandler: null
         }
     },
     methods: {
@@ -55,7 +57,8 @@ export default {
         * then listData will save the value and send it to ListFile.vue
         */
         filepathsVal (filepaths) {
-            this.listData = filepaths
+            this.listData = filepaths,
+            this.fulldirHandler = filepaths
         },
         listdataVal(listDataValue) {
             this.listDataHandler = listDataValue
