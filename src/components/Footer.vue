@@ -49,6 +49,9 @@ export default {
         },
         listDataHandler: {
             type: Array
+        },
+        fulldirHandler: {
+            type: String
         }
     },
     data()
@@ -74,7 +77,11 @@ export default {
             this.selected = event
         },
         run: function () {
-            Rename.deleteFunc(this.listDataHandler)
+            Rename.deleteFunc({
+                fulldir: this.fulldirHandler,
+                listfile: this.listDataHandler,
+                deleteChar: ""
+            })
         }
     }
 }
