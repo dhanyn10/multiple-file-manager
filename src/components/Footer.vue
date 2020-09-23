@@ -17,7 +17,7 @@
             <b-nav-item>
                 <b-modal v-model="modaleditingshow" title="Set Editing" @ok="handleOk">
                     <form ref="form">
-                        <b-form-row>
+                        <b-form inline>
                             <div v-if="selected == 1">
                                 <b-form-input class="col-lg-12" v-model="name1" placeholder="delete"></b-form-input>
                             </div>
@@ -29,7 +29,7 @@
                                 <b-form-input class="col-sm-6" v-model="name1" placeholder="before"></b-form-input>
                                 <b-form-input class="col-sm-6" v-model="name2" placeholder="after"></b-form-input>
                             </div>
-                        </b-form-row>
+                        </b-form>
                     </form>
                 </b-modal>
                 <b-btn size="sm" v-on:click="setEditing">Go</b-btn>
@@ -45,6 +45,7 @@ import {
     BNavbarNav,
     BNavText,
     BNavItem,
+    BForm,
     BFormSelect,
     BButton,
     VBModal
@@ -56,6 +57,7 @@ Vue.component('b-navbar', BNavbar)
 Vue.component('b-navbar-nav', BNavbarNav)
 Vue.component('b-nav-text', BNavText)
 Vue.component('b-nav-item', BNavItem)
+Vue.component('b-form', BForm)
 Vue.component('b-form-select', BFormSelect)
 Vue.component('b-btn', BButton)
 Vue.directive('b-modal', VBModal)
@@ -109,6 +111,15 @@ export default {
                     fulldir: this.fulldirHandler,
                     listfile: this.listDataHandler,
                     deleteChar: this.name1
+                })
+            }
+            if(this.selected == 2)
+            {
+                Rename.replaceFunc({
+                    fulldir: this.fulldirHandler,
+                    listfile: this.listDataHandler,
+                    repfrom: this.name1,
+                    repto: this.name2
                 })
             }
         }
