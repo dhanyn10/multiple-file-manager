@@ -56,5 +56,29 @@ export const Rename = {
                 })
             }
         }
+    },
+    replaceFunc: function (val)
+    {
+        var fulldir     = val.fulldir
+        var listfile    = val.listfile
+        var repfrom     = val.repfrom
+        var repto       = val.repto
+
+        const length = listfile.length
+
+        for(var l = 0; l < length; l++)
+        {
+            if(listfile[l].selected == true)
+            {
+                var filename = listfile[l].name
+                //replace character all file in current directory with nothing
+                var newname = filename.replace(repfrom, repto)
+                this.renameFunc({
+                    fulldir: fulldir,
+                    oldname: filename,
+                    newname: newname
+                })
+            }
+        }
     }
 }
