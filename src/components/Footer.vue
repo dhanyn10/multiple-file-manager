@@ -113,13 +113,22 @@ export default {
                     deleteChar: this.name1
                 })
             }
-            if(this.selected == 2)
+            else if(this.selected == 2)
             {
                 Rename.replaceFunc({
                     fulldir: this.fulldirHandler,
                     listfile: this.listDataHandler,
                     repfrom: this.name1,
                     repto: this.name2
+                })
+            }
+            else if(this.selected == 3)
+            {
+                Rename.insertFunc({
+                    fulldir: this.fulldirHandler,
+                    listfile: this.listDataHandler,
+                    before: this.name1,
+                    after: this.name2
                 })
             }
         }

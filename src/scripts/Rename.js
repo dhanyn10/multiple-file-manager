@@ -80,5 +80,32 @@ export const Rename = {
                 })
             }
         }
+    },
+    insertFunc: function (val)
+    {
+        var fulldir     = val.fulldir
+        var listfile    = val.listfile
+        var before      = val.before
+        var after       = val.after
+        
+        const length = listfile.length
+        
+        for(var l = 0; l < length; l++)
+        {
+            if(listfile[l].selected == true)
+            {
+                var originalname = listfile[l].name
+                var tempname = originalname.split(".")
+                //assuming you file name contains only filename with single extension
+                var filename = tempname[0]
+                var completename = before + filename + after
+                var newname = originalname.replace(filename, completename)
+                this.renameFunc({
+                    fulldir: fulldir,
+                    oldname: originalname,
+                    newname: newname
+                })
+            }
+        }
     }
 }
