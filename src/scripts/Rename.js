@@ -34,7 +34,7 @@ export const Rename = {
             {
                 var filename = listfile[l].name
                 //replace character all file in current directory with nothing
-                var newname = filename.replace(deleteChar, null)
+                var newname = filename.replace(deleteChar, "")
                 this.renameFunc({
                     fulldir: fulldir,
                     oldname: filename,
