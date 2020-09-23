@@ -15,7 +15,24 @@
                 id="actions"></b-form-select>
             </b-nav-item>
             <b-nav-item>
-                <b-btn size="sm" v-on:click="run">Go</b-btn>
+                <b-modal v-model="modaleditingshow" title="Set Editing" @ok="handleOk">
+                    <form ref="form">
+                        <b-form-row>
+                            <div v-if="selected == 1">
+                                <b-form-input class="col-lg-12" v-model="name1" placeholder="delete"></b-form-input>
+                            </div>
+                            <div v-else-if="selected == 2">
+                                <b-form-input class="col-sm-6" v-model="name1" placeholder="from"></b-form-input>
+                                <b-form-input class="col-sm-6" v-model="name2" placeholder="to"></b-form-input>
+                            </div>
+                            <div v-else-if="selected == 3">
+                                <b-form-input class="col-sm-6" v-model="name1" placeholder="before"></b-form-input>
+                                <b-form-input class="col-sm-6" v-model="name2" placeholder="after"></b-form-input>
+                            </div>
+                        </b-form-row>
+                    </form>
+                </b-modal>
+                <b-btn size="sm" v-on:click="setEditing">Go</b-btn>
             </b-nav-item>
         </b-navbar-nav>
     </b-navbar>
@@ -29,7 +46,8 @@ import {
     BNavText,
     BNavItem,
     BFormSelect,
-    BButton
+    BButton,
+    VBModal
     } from 'bootstrap-vue'
 
 import { Rename } from "../scripts/Rename.js"
@@ -40,6 +58,7 @@ Vue.component('b-nav-text', BNavText)
 Vue.component('b-nav-item', BNavItem)
 Vue.component('b-form-select', BFormSelect)
 Vue.component('b-btn', BButton)
+Vue.directive('b-modal', VBModal)
 
 export default {
     name: 'Footer',
@@ -57,8 +76,11 @@ export default {
     data()
     {
         return {
-            statusData: null,
+            name1: '',
+            name2: '',
             selected: null,
+            statusData: null,
+            modaleditingshow: false,
             options: [
                 { value: null, text: 'select an option' },
                 { value: '1', text: 'Rename File: delete' },
@@ -76,12 +98,19 @@ export default {
         onChange: function(event) {
             this.selected = event
         },
-        run: function () {
-            Rename.deleteFunc({
-                fulldir: this.fulldirHandler,
-                listfile: this.listDataHandler,
-                deleteChar: ""
-            })
+        setEditing: function() {
+            if(this.selected > 0)
+                this.modaleditingshow = true
+        },
+        handleOk () {
+            if(this.selected == 1)
+            {
+                Rename.deleteFunc({
+                    fulldir: this.fulldirHandler,
+                    listfile: this.listDataHandler,
+                    deleteChar: this.name1
+                })
+            }
         }
     }
 }
