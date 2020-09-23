@@ -50,6 +50,10 @@ export default {
             this.listData = filepaths,
             this.fulldirHandler = filepaths
         },
+        /*
+        * listDataValue return the list of data from ListFile
+        * the list data will send to Footer.vue through listDataHandler
+        */
         listdataVal(listDataValue) {
             this.listDataHandler = listDataValue
         }
