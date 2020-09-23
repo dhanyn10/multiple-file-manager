@@ -3,7 +3,6 @@
         <b-container class="mt-4">
             <FormSearch
                 @filepaths="filepathsVal"
-                @error="errordataVal"
             />
             <ListFile
                 @listDataValue="listdataVal"
@@ -11,7 +10,6 @@
             />
             <Footer
                 :fulldirHandler="fulldirHandler"
-                :footerData="footerData"
                 :listDataHandler="listDataHandler"
             />
         </b-container>
@@ -38,20 +36,12 @@ export default {
     },
     data () {
         return {
-            footerData: null,
             listData: null,
             listDataHandler: null,
             fulldirHandler: null
         }
     },
     methods: {
-        /*
-        * error return the error details that happen from FormSearch
-        * error details data will forwarded to Footer.vue through FooterData
-        */
-        errordataVal (error) {
-            this.footerData = error
-        },
         /*
         * filepaths return the data path,
         * then listData will save the value and send it to ListFile.vue

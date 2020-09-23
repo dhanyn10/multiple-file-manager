@@ -1,9 +1,5 @@
 <template>
     <b-navbar toggleable="sm" type="dark" variant="info" class="mb-4">
-        <b-navbar-nav>            
-            <b-nav-text>Status : {{statusData}}
-            </b-nav-text>
-        </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
             <b-nav-text>Action : </b-nav-text>
             <b-nav-item>
@@ -81,7 +77,6 @@ export default {
             name1: '',
             name2: '',
             selected: null,
-            statusData: null,
             modaleditingshow: false,
             options: [
                 { value: null, text: 'select an option' },
@@ -89,11 +84,6 @@ export default {
                 { value: '2', text: 'Rename File: replace' },
                 { value: '3', text: 'Rename File: insert' },
             ]
-        }
-    },
-    watch: {
-        footerData: function () {
-            this.statusData = this.footerData
         }
     },
     methods: {

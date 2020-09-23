@@ -46,7 +46,6 @@ export default {
                     this.$emit("filepaths", filePaths)
                 }
             }).catch( error => {
-                this.$emit("error", error)
                 console.log(error)
             })
         }
