@@ -3,8 +3,6 @@ const fs = require('fs')
 export const Rename = {
     
 /**
- * 
- * @param fn : "selected function"
  * @param fulldir   : full directory with absolute path
  * @param filename  : file name
  * @param newfile   : new file name
@@ -47,7 +45,6 @@ export const Rename = {
             if(listfile[l].selected == true)
             {
                 var filename = listfile[l].name
-                //replace character all file in current directory with nothing
                 var newname = filename.replace(deleteChar, "")
                 this.renameFunc({
                     fulldir: fulldir,
@@ -71,7 +68,6 @@ export const Rename = {
             if(listfile[l].selected == true)
             {
                 var filename = listfile[l].name
-                //replace character all file in current directory with nothing
                 var newname = filename.replace(repfrom, repto)
                 this.renameFunc({
                     fulldir: fulldir,
