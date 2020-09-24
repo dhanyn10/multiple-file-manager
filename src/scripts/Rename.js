@@ -19,7 +19,7 @@ export const Rename = {
         //renaming file
         fs.renameSync(fulldir + oldname, fulldir + newname, function(error){
             if(error){
-                console.log(error)
+                document.getElementById('report-result').innerHTML += error + "<br/>"
             }
         })
     },
