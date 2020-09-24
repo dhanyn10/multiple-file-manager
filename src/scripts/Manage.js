@@ -1,20 +1,12 @@
 const fs = require('fs')
+import { Utils } from "../scripts/Utils.js"
 
 export const Manage = {
     deleteDuplicated: function (val) {
         var fulldir = val.fulldir
         var listfile = val.listfile
 
-        // converting backward slash to forward slash
-        fulldir = fulldir.replace(/\\/g, "/")
-        var dirlength = fulldir.length
-
-        //insert forward slash at the end of directory name
-        var dirlastindex = fulldir.substring(dirlength-1, dirlength)
-        if(dirlastindex != "/")
-        {
-            fulldir += "/"
-        }
+        fulldir = Utils.fulldirFunc(fulldir)
 
         var arrfilename = []
         var arrfileunique = []

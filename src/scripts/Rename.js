@@ -1,4 +1,5 @@
 const fs = require('fs')
+import { Utils } from "../scripts/Utils.js"
 
 export const Rename = {
     
@@ -13,16 +14,7 @@ export const Rename = {
             oldname = val.oldname,
             newname = val.newname
 
-        // converting backward slash to forward slash
-        fulldir = fulldir.replace(/\\/g, "/")
-        var dirlength = fulldir.length
-
-        //insert forward slash at the end of directory name
-        var dirlastindex = fulldir.substring(dirlength-1, dirlength)
-        if(dirlastindex != "/")
-        {
-            fulldir += "/"
-        }
+        fulldir = Utils.fulldirFunc(fulldir)
 
         //renaming file
         fs.renameSync(fulldir + oldname, fulldir + newname, function(error){
