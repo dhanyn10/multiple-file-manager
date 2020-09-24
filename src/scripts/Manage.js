@@ -62,7 +62,7 @@ export const Manage = {
                     fs.unlink(fulldir + tempdeletedname, function (error){
                         if(error)
                         {
-                            console.log(error)
+                            document.getElementById('report-result').innerHTML += error + "<br/>"
                         }
                     })
                 }
