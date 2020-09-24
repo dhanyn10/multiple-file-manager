@@ -3,12 +3,7 @@
         <b-navbar-nav class="ml-auto">
             <b-nav-text>Action : </b-nav-text>
             <b-nav-item>
-                <b-form-select
-                size="sm"
-                v-model="selected"
-                v-on:change="onChange($event)"
-                :options="options"
-                id="actions"></b-form-select>
+                <b-form-select size="sm" v-model="selected" v-on:change="onChange($event)" :options="options" id="actions"></b-form-select>
             </b-nav-item>
             <b-nav-item>
                 <b-modal v-model="modaleditingshow" title="Set Editing" @ok="handleOk">
@@ -25,6 +20,9 @@
                                 <b-form-input class="col-sm-6" v-model="name1" placeholder="before"></b-form-input>
                                 <b-form-input class="col-sm-6" v-model="name2" placeholder="after"></b-form-input>
                             </div>
+                            <div v-else-if="selected == 4">
+                                Are You Sure?
+                            </div>
                         </b-form>
                     </form>
                 </b-modal>
@@ -36,16 +34,7 @@
 
 <script>
 import Vue from 'vue'
-import {
-    BNavbar,
-    BNavbarNav,
-    BNavText,
-    BNavItem,
-    BForm,
-    BFormSelect,
-    BButton,
-    VBModal
-    } from 'bootstrap-vue'
+import { BNavbar, BNavbarNav, BNavText, BNavItem, BForm, BFormSelect, BButton, VBModal } from 'bootstrap-vue'
 
 import { Rename } from "../scripts/Rename.js"
 import { Manage } from "../scripts/Manage.js"
@@ -93,8 +82,7 @@ export default {
             this.selected = event
         },
         setEditing: function() {
-            if(this.selected > 0)
-                this.modaleditingshow = true
+            if(this.selected > 0) this.modaleditingshow = true
         },
         handleOk () {
             if(this.selected == 1)
