@@ -47,7 +47,7 @@ export default {
                     this.$emit("filepaths", filePaths)
                 }
             }).catch( error => {
-                console.log(error)
+                document.getElementById('report-result').innerHTML += error + "<br/>"
             })
         }
     }
