@@ -6,25 +6,33 @@
                 <b-form-select size="sm" v-model="selected" v-on:change="onChange($event)" :options="options" id="actions"></b-form-select>
             </b-nav-item>
             <b-nav-item>
-                <b-modal v-model="modaleditingshow" title="Set Editing" @ok="handleOk">
-                    <form ref="form">
-                        <b-form inline>
-                            <div v-if="selected == 1">
-                                <b-form-input class="col-lg-12" v-model="name1" placeholder="delete"></b-form-input>
-                            </div>
-                            <div v-else-if="selected == 2">
-                                <b-form-input class="col-sm-6" v-model="name1" placeholder="from"></b-form-input>
-                                <b-form-input class="col-sm-6" v-model="name2" placeholder="to"></b-form-input>
-                            </div>
-                            <div v-else-if="selected == 3">
-                                <b-form-input class="col-sm-6" v-model="name1" placeholder="before"></b-form-input>
-                                <b-form-input class="col-sm-6" v-model="name2" placeholder="after"></b-form-input>
-                            </div>
-                            <div v-else-if="selected == 4">
-                                Are You Sure?
-                            </div>
-                        </b-form>
-                    </form>
+                <b-modal v-model="modaleditingshow" title="Options" @ok="handleOk">
+                    <div v-if="selected == 1">
+                        <b-form-input class="form-control form-control-sm" v-model="name1" placeholder="delete"></b-form-input>
+                    </div>
+                    <div v-else-if="selected == 2">
+                        <b-row>
+                            <b-col>
+                                <b-form-input class="form-control form-control-sm" v-model="name1" placeholder="from"></b-form-input>
+                            </b-col>
+                            <b-col>
+                                <b-form-input class="form-control form-control-sm" v-model="name2" placeholder="to"></b-form-input>
+                            </b-col>
+                        </b-row>
+                    </div>
+                    <div v-else-if="selected == 3">
+                        <b-row>
+                            <b-col>
+                                <b-form-input class="form-control form-control-sm" v-model="name1" placeholder="before"></b-form-input>
+                            </b-col>
+                            <b-col>
+                                <b-form-input class="form-control form-control-sm" v-model="name2" placeholder="after"></b-form-input>
+                            </b-col>
+                        </b-row>
+                    </div>
+                    <div v-else-if="selected == 4">
+                        Are You Sure?
+                    </div>
                 </b-modal>
                 <b-btn size="sm" v-on:click="setEditing">Go</b-btn>
             </b-nav-item>
@@ -34,7 +42,7 @@
 
 <script>
 import Vue from 'vue'
-import { BNavbar, BNavbarNav, BNavText, BNavItem, BForm, BFormSelect, BButton, VBModal } from 'bootstrap-vue'
+import { BNavbar, BNavbarNav, BNavText, BNavItem, BForm, BFormSelect, BButton, VBModal, BRow, BCol } from 'bootstrap-vue'
 
 import { Rename } from "../scripts/Rename.js"
 import { Manage } from "../scripts/Manage.js"
@@ -46,6 +54,8 @@ Vue.component('b-nav-item', BNavItem)
 Vue.component('b-form', BForm)
 Vue.component('b-form-select', BFormSelect)
 Vue.component('b-btn', BButton)
+Vue.component('b-row', BRow)
+Vue.component('b-col', BCol)
 Vue.directive('b-modal', VBModal)
 
 export default {
