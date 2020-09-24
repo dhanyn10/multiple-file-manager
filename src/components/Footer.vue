@@ -48,6 +48,7 @@ import {
     } from 'bootstrap-vue'
 
 import { Rename } from "../scripts/Rename.js"
+import { Manage } from "../scripts/Manage.js"
 
 Vue.component('b-navbar', BNavbar)
 Vue.component('b-navbar-nav', BNavbarNav)
@@ -83,6 +84,7 @@ export default {
                 { value: '1', text: 'Rename File: delete' },
                 { value: '2', text: 'Rename File: replace' },
                 { value: '3', text: 'Rename File: insert' },
+                { value: '4', text: 'Manage File: delete duplicated' }
             ]
         }
     },
@@ -119,6 +121,13 @@ export default {
                     listfile: this.listDataHandler,
                     before: this.name1,
                     after: this.name2
+                })
+            }
+            else if(this.selected == 4)
+            {
+                Manage.deleteDuplicated({
+                    listfile: this.listDataHandler,
+                    fulldir: this.fulldirHandler
                 })
             }
         }
