@@ -1,6 +1,6 @@
 {
   "name": "mfm",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -12,6 +12,18 @@
     "postuninstall": "electron-builder install-app-deps",
     "start": "npm run electron:serve"
   },
+  "author": {
+    "name": "Dhany Nurdiansyah",
+    "email": "dhanyn.dhan@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhanyn10/mfm-next.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dhanyn10/mfm-next/issues"
+  },
+  "homepage": "https://github.com/dhanyn10/mfm-next#readme",
   "main": "background.js",
   "dependencies": {
     "bootstrap": "^4.4.1",
