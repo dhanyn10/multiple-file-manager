@@ -9,14 +9,6 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 
-const customTitlebar = require('custom-electron-titlebar')
-let titlebar = new customTitlebar.Titlebar({
-    icon: '/icon/multiple-file-manager.ico',
-    backgroundColor: customTitlebar.Color.fromHex("#424242")
-})
-
-titlebar.updateTitle("Multiple File Manager")
-
 Vue.config.productionTip = false
 
 Vue.use(BootstrapVue)
