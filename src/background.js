@@ -35,7 +35,7 @@ function createWindow () {
     win = new BrowserWindow({
         width: 800,
         height: 600,
-        // frame: false,
+        title: "Multiple File Manager",
         webPreferences: {
             nodeIntegration: true
         }
@@ -46,7 +46,7 @@ function createWindow () {
         win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
         if (!process.env.IS_TEST)
         {
-            win.webContents.openDevTools()
+            // win.webContents.openDevTools()
         }
     } else {
         createProtocol('app')
