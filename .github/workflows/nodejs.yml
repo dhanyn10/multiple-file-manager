@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [13.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -20,9 +20,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build
-      run: |
-        npm install
-        npm run test-dist
-      env:
-        CI: true
+    - name: npm install
+      run: npm install
+    - name: build
+      run: npm run electron:builc
+
