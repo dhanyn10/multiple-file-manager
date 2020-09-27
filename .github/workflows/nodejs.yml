@@ -23,5 +23,5 @@ jobs:
     - name: npm install
       run: npm install
     - name: build
-      run: npm run electron:builc
+      run: npm run electron:build
 
