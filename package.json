@@ -1,41 +1,64 @@
 {
-  "name": "multiple-file-manager",
-  "version": "2.0.2",
-  "description": "application made with electron to modify all of your file in a specified folder",
-  "main": "index.js",
+  "name": "mfm",
+  "version": "0.5.0",
+  "private": true,
   "scripts": {
-    "start": "electron .",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "electron:build": "vue-cli-service electron:build",
+    "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "test-dist": "electron-builder --publish=never"
+    "postuninstall": "electron-builder install-app-deps",
+    "start": "npm run electron:serve"
   },
-  "build": {
-    "productName": "Multiple File Manager"
-  },
-  "keywords": [
-    "file",
-    "file management",
-    "editor"
-  ],
-  "author": "Dhany Nurdiansyah",
-  "license": "MIT",
-  "devDependencies": {
-    "electron": "7.1.2",
-    "electron-builder": "22.3.2"
-  },
-  "dependencies": {
-    "bootsalert": "^0.1.0",
-    "bootstrap": "^4.2.1",
-    "jquery": "^3.4.1",
-    "popper.js": "^1.14.7"
+  "author": {
+    "name": "Dhany Nurdiansyah",
+    "email": "dhanyn.dhan@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dhanyn10/multiple-file-manager.git"
+    "url": "git+https://github.com/dhanyn10/mfm-next.git"
   },
   "bugs": {
-    "url": "https://github.com/dhanyn10/multiple-file-manager/issues"
+    "url": "https://github.com/dhanyn10/mfm-next/issues"
   },
-  "homepage": "https://github.com/dhanyn10/multiple-file-manager#readme"
+  "homepage": "https://github.com/dhanyn10/mfm-next#readme",
+  "main": "background.js",
+  "dependencies": {
+    "bootstrap": "^4.4.1",
+    "bootstrap-vue": "^2.17.3",
+    "core-js": "^3.6.4",
+    "vue": "^2.6.12"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.4",
+    "@vue/cli-plugin-eslint": "~4.3.0",
+    "@vue/cli-service": "~4.3.0",
+    "babel-eslint": "^10.1.0",
+    "electron": "^8.5.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "vue-cli-plugin-electron-builder": "^1.4.6",
+    "vue-template-compiler": "^2.6.12"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }
