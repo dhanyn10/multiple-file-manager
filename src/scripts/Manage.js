@@ -54,7 +54,10 @@ export const Manage = {
                     fs.unlink(fulldir + tempdeletedname, function (error){
                         if(error)
                         {
-                            document.getElementById('report-result').innerHTML += error + "<br/>"
+                            Utils.alertFunc({
+                                className: "danger",
+                                message: error
+                            })
                         }
                     })
                 }
