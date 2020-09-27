@@ -91,7 +91,7 @@ export default {
         onChange: function(event) {
             this.selected = event
         },
-        setEditing: function() {
+        setEditing () {
             if(this.selected > 0) this.modaleditingshow = true
         },
         handleOk () {
