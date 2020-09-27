@@ -54,11 +54,10 @@ export const Manage = {
                     fs.unlink(fulldir + tempdeletedname, function (error){
                         if(error)
                         {
-                            var createHtml = "<div class='alert alert-danger alert-dismissible'>"+
-                                "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>" +
-                                error +
-                                "</div>"
-                            document.getElementById('report-result').innerHTML += createHtml
+                            Utils.alertFunc({
+                                className: "danger",
+                                message: error
+                            })
                         }
                     })
                 }
