@@ -6,6 +6,7 @@ import {
         BrowserWindow,
         Menu
 } from 'electron'
+import path from 'path'
 
 import {
     createProtocol,
@@ -38,7 +39,8 @@ function createWindow () {
         title: "Multiple File Manager",
         webPreferences: {
             nodeIntegration: true
-        }
+        },
+        icon: path.join(__static, 'icon.png')
     })
 
     if (process.env.WEBPACK_DEV_SERVER_URL) {
