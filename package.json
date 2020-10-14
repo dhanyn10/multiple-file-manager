@@ -27,7 +27,7 @@
   "homepage": "https://github.com/dhanyn10/multiple-file-manager#readme",
   "main": "background.js",
   "dependencies": {
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.17.3",
     "core-js": "^3.6.4",
     "vue": "^2.6.12"
