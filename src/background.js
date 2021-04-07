@@ -38,6 +38,8 @@ function createWindow () {
         height: 600,
         title: "Multiple File Manager",
         webPreferences: {
+            contextIsolation: false,
+            enableRemoteModule: true,
             nodeIntegration: true
         },
         icon: path.join(__static, 'icon.png')

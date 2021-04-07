@@ -22,10 +22,8 @@ Vue.component('b-form-group', BFormGroup)
 Vue.component('b-form-input', BFormInput)
 Vue.component('b-btn', BButton)
 
-//electron
-const electron = require('electron')
-let remote = electron.remote
-let dialog = remote.dialog
+//electron dialog
+const { dialog } = require('electron').remote
 
 export default {
     name: 'FormSearch',
