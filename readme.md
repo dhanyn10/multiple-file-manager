@@ -8,6 +8,7 @@ application made with electron to modify all of your file in a specified folder
 </div>
 
 ## Download
+**Attention, temporarily the Google Drive link cannot be accessed due to several problems**  
 You can check the latest version to [release page](https://github.com/dhanyn10/multiple-file-manager/releases)
 
 ## How it Work
