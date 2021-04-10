@@ -1,4 +1,5 @@
-const fs = require('fs')
+const trash = require('trash')
+const chokidar = require('chokidar')
 import { Utils } from "../scripts/Utils.js"
 
 export const Manage = {
@@ -51,14 +52,15 @@ export const Manage = {
                 var tempdeletedname = arrfilename[afn] + "." + fileEx
                 if(originaluniquename != tempdeletedname)
                 {
-                    fs.unlink(fulldir + tempdeletedname, function (error){
-                        if(error)
-                        {
-                            Utils.alertFunc({
-                                className: "danger",
-                                message: error
-                            })
-                        }
+                    const watcher = chokidar.watch(fulldir + tempdeletedname, {
+                        persistent: false
+                    })
+                    trash(fulldir + tempdeletedname)
+                    watcher.on('unlink', path => {
+                        Utils.alertFunc({
+                            className: "success",
+                            message: `File ${path} has been removed`
+                        })
                     })
                 }
             }
