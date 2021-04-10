@@ -10,21 +10,24 @@ export const Rename = {
  */
     renameFunc: function (val)
     {
-        var fulldir = val.fulldir,
+        let fulldir = val.fulldir,
             oldname = val.oldname,
             newname = val.newname
 
         fulldir = Utils.fulldirFunc(fulldir)
-
-        //renaming file
-        fs.renameSync(fulldir + oldname, fulldir + newname, function(error){
-            if(error){
-                Utils.alertFunc({
-                    className: "danger",
-                    message: error
-                })
-            }
-        })
+        
+        let _old = fulldir + oldname,
+            _new = fulldir + newname
+        //check if filename is exist or not
+        if(fs.existsSync(_old))
+        {
+            fs.renameSync(_old, _new)
+            console.info(`File ${oldname} has been renamed to ${newname}`)
+        }
+        else
+        {
+            console.error(`File ${_old} is not exist`)
+        }
     },
 
     deleteFunc: function(val)

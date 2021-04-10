@@ -57,10 +57,7 @@ export const Manage = {
                     })
                     trash(fulldir + tempdeletedname)
                     watcher.on('unlink', path => {
-                        Utils.alertFunc({
-                            className: "success",
-                            message: `File ${path} has been removed`
-                        })
+                        console.info(`File ${path} has been removed`)
                     })
                 }
             }
