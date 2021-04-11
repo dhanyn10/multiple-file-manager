@@ -6,6 +6,10 @@ module.exports = {
                     icon: './public/icon/icon.png'
                 },
                 linux: {
+                    package: [
+                        "deb",
+                        "AppImage"
+                    ],
                     icon: './public/icon/icon.png'
                 },
                 dmg: {
