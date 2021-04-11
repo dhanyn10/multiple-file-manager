@@ -16,7 +16,10 @@ module.exports = {
                 dmg: {
                     icon: './public/icon/icon.png'
                 }
-            }
+            },
+            externals: ['chokidar'],
+            // List them all here so that VCP Electron Builder can find them
+            nodeModulesPath: ['../../node_modules', './node_modules']
         }
     }
 }
