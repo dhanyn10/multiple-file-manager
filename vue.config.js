@@ -10,7 +10,7 @@ module.exports = {
                         "deb",
                         "AppImage"
                     ],
-                    category: "Utilities",
+                    category: "Utility",
                     icon: './public/icon/icon.png'
                 },
                 dmg: {
