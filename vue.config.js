@@ -3,7 +3,7 @@ module.exports = {
         electronBuilder: {
             builderOptions: {
                 win: {
-                    icon: './icon/icon.ico'
+                    icon: './icon.ico'
                 }
             }
         }

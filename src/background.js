@@ -42,7 +42,7 @@ function createWindow () {
             enableRemoteModule: true,
             nodeIntegration: true
         },
-        icon: path.join(__static, 'icon.png')
+        icon: path.join(__static, 'icon/icon.png')
     })
 
     if (process.env.WEBPACK_DEV_SERVER_URL) {
