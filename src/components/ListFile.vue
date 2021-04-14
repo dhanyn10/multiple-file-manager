@@ -57,7 +57,6 @@ export default {
     data () {
         return {
             listfile: [],
-            countfile: 0,
             isActive: false,
             isDataExist: false
         }
@@ -71,12 +70,15 @@ export default {
             const fs = require('fs')
             if(this.listData.length > 0)
             {
-                this.isDataExist = true
                 let dirLocation = this.listData.replace(/\\/g, "/")
                 let rdir = fs.readdirSync(dirLocation)
+                var countList = 0
                 rdir.forEach((filename) => {
                     this.listfile.push({name: filename, selected: false})
+                    countList++
                 })
+                if(countList > 0)
+                    this.isDataExist = true
             }
         },
         listfile: {
