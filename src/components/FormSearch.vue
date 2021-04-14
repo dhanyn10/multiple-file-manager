@@ -34,11 +34,14 @@ export default {
     },
     methods: {
         browse () {
+            //reset directory and file list when user click browse button
             this.dirLocation = null
+            this.$emit("filepaths", '')
             dialog.showOpenDialog({
                 properties: ['openDirectory']
             }).then(result => {
-                if(result.canceled == false) //make sure user doesnt cancel opendirectory
+                //when user doesnt cancel opendirectory
+                if(result.canceled == false)
                 {
                     let filePaths = result.filePaths[0]
                     this.dirLocation = filePaths

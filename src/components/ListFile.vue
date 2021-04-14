@@ -69,15 +69,14 @@ export default {
 
             //electron filesystem
             const fs = require('fs')
-            var dirLocation = this.listData.replace(/\\/g, "/")
-            var rdir = fs.readdirSync(dirLocation)
-            rdir.forEach((filename) => {
-                this.listfile.push({name: filename, selected: false})
-            })
-
-            if(this.listfile.length > 0)
+            if(this.listData.length > 0)
             {
                 this.isDataExist = true
+                let dirLocation = this.listData.replace(/\\/g, "/")
+                let rdir = fs.readdirSync(dirLocation)
+                rdir.forEach((filename) => {
+                    this.listfile.push({name: filename, selected: false})
+                })
             }
         },
         listfile: {
