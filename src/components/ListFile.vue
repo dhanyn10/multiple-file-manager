@@ -14,7 +14,7 @@
             >Select All
             </b-btn>
         </div>
-        <b-list-group id="listfile" class="mb-4">
+        <b-list-group id="listfile" class="mb-2">
             <b-list-group-item
                 v-for="(item, index) in listfile" :key="index"
                 v-on:click="itemHandler(item)"
@@ -123,7 +123,9 @@ export default {
 
 <style scoped>
 #listfile{
-    max-height: 300px;
+    min-height: 300px;
+    height: 300px;
     overflow: auto;
+    resize: vertical;
 }
 </style>
