@@ -1,5 +1,5 @@
 <template>
-    <b-navbar toggleable="sm" type="dark" variant="info" class="mb-4">
+    <b-navbar toggleable="sm" type="dark" variant="info">
         <b-navbar-nav class="ml-auto">
             <b-nav-text>Action : </b-nav-text>
             <b-nav-item>
