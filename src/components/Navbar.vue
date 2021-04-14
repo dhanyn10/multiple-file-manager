@@ -2,7 +2,7 @@
     <div>
         <b-navbar toggleable="sm" type="dark" variant="info">
             <b-navbar-nav>
-                <b-nav-item v-on:click="visitWiki">Wiki</b-nav-item>
+                <b-nav-item v-on:click="visitGithub">Github</b-nav-item>
                 <b-nav-item-dropdown text="Help">
                     <b-dropdown-item v-on:click="visitIssues">Report Issue</b-dropdown-item>
                     <b-dropdown-item v-on:click="toggleDevtools">Toggle Developer Tools</b-dropdown-item>
@@ -27,8 +27,8 @@ Vue.component('b-dropdown-item', BDropdownItem)
 export default {
     name: 'Navbar',
     methods: {
-        visitWiki() {
-            shell.openExternal('https://github.com/dhanyn10/multiple-file-manager/wiki')
+        visitGithub() {
+            shell.openExternal('https://github.com/dhanyn10/multiple-file-manager')
         },
         visitIssues() {
             shell.openExternal('https://github.com/dhanyn10/multiple-file-manager/issues')
