@@ -1,6 +1,6 @@
 {
   "name": "mfm",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "File management application. You can bulk rename or deleting your files in at the same time, with certain condition",
   "private": true,
   "scripts": {
