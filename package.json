@@ -1,7 +1,7 @@
 {
   "name": "mfm",
   "version": "3.1.2",
-  "description": "File management application. You can bulk rename or deleting your files in at the same time, with certain condition",
+  "description": "File management application. You can bulk rename or deleting your files in at the same time, with certain condition. Available for windows, linux, and macos",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
