@@ -11,6 +11,7 @@ export const Manage = {
 
         var arrfilename = []
         var arrfileunique = []
+        var arrfileExtension = []
         var fileEx = ""
         //get total of list file with selected: true
         var listlength = listfile.length
@@ -23,44 +24,70 @@ export const Manage = {
                 fileEx = originalname[1]
                 //insert all file name
                 arrfilename.push(tempname)
+                //insert all file extension
+                arrfileExtension.push(fileEx)
             }
         }
+        //check of array of file extension has same value
+        const allEqual = arr => arr.every(v => v === arr[0])
+        //result Equal must return true
+        const resultEqual = allEqual(arrfileExtension)
+
         //make sure the array of file name is already sorted
         arrfilename.sort()
 
-        //find unique file name, then insert them to array: arrfileunique
-        for(var d = 0; d < arrfilename.length; d++)
+        if(resultEqual == true)
         {
-            var duplicatedfile = false
-            for(var u = 0; u < arrfileunique.length; u++)
+            //find unique file name, then insert them to array: arrfileunique
+            for(var d = 0; d < arrfilename.length; d++)
             {
-                if(arrfilename[d].indexOf(arrfileunique[u]) > -1)
+                var duplicatedfile = false
+                for(var u = 0; u < arrfileunique.length; u++)
                 {
-                    duplicatedfile = true;
+                    if(arrfilename[d].indexOf(arrfileunique[u]) > -1)
+                    {
+                        duplicatedfile = true;
+                    }
+                }
+                if(duplicatedfile == false)
+                {
+                    arrfileunique.push(arrfilename[d])
                 }
             }
-            if(duplicatedfile == false)
+            //this will return list of array that will be executed
+            for(var afu = 0; afu < arrfileunique.length; afu++)
             {
-                arrfileunique.push(arrfilename[d])
+                // console.log(arrfileunique[afu])
+                const fileUnique = arrfileunique[afu] + "." + fileEx
+                // console.log(fileUnique)
+                for(var afn = 0; afn < arrfilename.length; afn++)
+                {
+                    const tempdeletedname = arrfilename[afn] + "." + fileEx
+                    if(fileUnique == tempdeletedname)
+                    {
+                        const getIndex = arrfilename.indexOf(arrfilename[afn])
+                        if(getIndex > -1)
+                        {
+                            arrfilename.splice(getIndex, 1)
+                        }
+                    }
+                }
+            }
+            for(var afd = 0; afd < arrfilename.length; afd++)
+            {
+                const exfile = arrfilename[afd] + "." + fileEx
+                const watcher = chokidar.watch(fulldir + exfile, {
+                    persistent: false
+                })
+                trash(fulldir + exfile)
+                watcher.on('unlink', path => {
+                    console.info(`File ${path} has been removed`)
+                })
             }
         }
-        for(var afu = 0; afu < arrfileunique.length; afu++)
+        else
         {
-            var originaluniquename = arrfileunique[afu] + "." + fileEx
-            for(var afn = 0; afn < arrfilename.length; afn++)
-            {
-                var tempdeletedname = arrfilename[afn] + "." + fileEx
-                if(originaluniquename != tempdeletedname)
-                {
-                    const watcher = chokidar.watch(fulldir + tempdeletedname, {
-                        persistent: false
-                    })
-                    trash(fulldir + tempdeletedname)
-                    watcher.on('unlink', path => {
-                        console.info(`File ${path} has been removed`)
-                    })
-                }
-            }
+            console.log("files must be have the same extension")
         }
     }
 }
