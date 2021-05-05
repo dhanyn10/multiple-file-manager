@@ -33,12 +33,12 @@ export const Manage = {
         //result Equal must have return true to make sure that executed files working as expected
         const resultEqual = allEqual(arrfileExtension)
 
-        //make sure the array of file name are already sorted
+        //make sure arrfilename are already sorted
         arrfilename.sort()
 
         if(resultEqual == true)
         {
-            //find unique file name, then insert them to array: arrfileunique
+            //find unique file name, then insert them to arrfileunique
             for(var d = 0; d < arrfilename.length; d++)
             {
                 var duplicatedfile = false
@@ -54,7 +54,7 @@ export const Manage = {
                     arrfileunique.push(arrfilename[d])
                 }
             }
-            //this will return list of array that will be executed
+            //this will return list of arrfilename that will be executed
             for(var afu = 0; afu < arrfileunique.length; afu++)
             {
                 // console.log(arrfileunique[afu])
@@ -74,7 +74,7 @@ export const Manage = {
                     }
                 }
             }
-            //delete(trash) all files listed in arrfilename array
+            //delete(trash) all files listed in arrfilename
             for(var afd = 0; afd < arrfilename.length; afd++)
             {
                 const exfile = arrfilename[afd] + "." + fileEx
