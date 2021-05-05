@@ -19,7 +19,7 @@ export const Manage = {
         {
             if(listfile[l].selected == true)
             {
-                var originalname = listfile[l].name.split(".")
+                const originalname = listfile[l].name.split(".")
                 var tempname = originalname[0]
                 fileEx = originalname[1]
                 //insert all file name

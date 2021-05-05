@@ -79,7 +79,7 @@ this application will specify that `doc 01.txt` and `doc 02.txt` will keep to yo
     doc 02_1.txt
     doc 02_2.txt
 
-__will deleted permanently__  
+will deleted temporary to recycle bin
 ## Contribution
 Do you find an error or have feature request? then let's check this repository [issues](https://github.com/dhanyn10/multiple-file-manager/issues)
 
