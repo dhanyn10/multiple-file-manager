@@ -23,5 +23,9 @@ export const Utils = {
             message +
             "</div>"
         document.getElementById('report-result').innerHTML += createHtml
+    },
+    mfmDevTools: function () {
+        let remote = require('electron').remote
+        remote.getCurrentWindow().openDevTools()
     }
 }

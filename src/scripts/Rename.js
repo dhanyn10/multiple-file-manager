@@ -22,10 +22,12 @@ export const Rename = {
         if(fs.existsSync(_old))
         {
             fs.renameSync(_old, _new)
+            Utils.mfmDevTools()
             console.info(`File ${oldname} has been renamed to ${newname}`)
         }
         else
         {
+            Utils.mfmDevTools()
             console.error(`File ${_old} is not exist`)
         }
     },
