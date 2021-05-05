@@ -28,11 +28,7 @@
 
 <script>
 import Vue from 'vue'
-import {
-    BListGroup,
-    BListGroupItem,
-    BButton
-    } from 'bootstrap-vue'
+import { BListGroup, BListGroupItem, BButton } from 'bootstrap-vue'
 
 Vue.component('b-list-group', BListGroup)
 Vue.component('b-list-group-item', BListGroupItem)

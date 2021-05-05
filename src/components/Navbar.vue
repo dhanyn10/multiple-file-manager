@@ -20,6 +20,7 @@ let shell = require('electron').shell
 let remote = require('electron').remote
 
 Vue.use(NavbarPlugin)
+
 export default {
     name: 'Navbar',
     methods: {

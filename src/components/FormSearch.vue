@@ -18,6 +18,7 @@ import Vue from 'vue'
 import { FormPlugin, BButton } from 'bootstrap-vue'
 
 Vue.use(FormPlugin)
+
 Vue.component('b-btn', BButton)
 
 //electron dialog

@@ -48,11 +48,13 @@ import { Rename } from "../scripts/Rename.js"
 import { Manage } from "../scripts/Manage.js"
 
 Vue.use(NavbarPlugin)
+
 Vue.component('b-form', BForm)
 Vue.component('b-form-select', BFormSelect)
 Vue.component('b-btn', BButton)
 Vue.component('b-row', BRow)
 Vue.component('b-col', BCol)
+
 Vue.directive('b-modal', VBModal)
 
 export default {
