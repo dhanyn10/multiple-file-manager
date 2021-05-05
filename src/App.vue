@@ -13,7 +13,6 @@
                 :fulldirHandler="fulldirHandler"
                 :listDataHandler="listDataHandler"
             />
-            <Result/>
         </b-container>
     </div>
 </template>
@@ -25,7 +24,6 @@ import Navbar from './components/Navbar'
 import FormSearch from './components/FormSearch'
 import ListFile from './components/ListFile'
 import Footer from './components/Footer'
-import Result from './components/Result'
 
 import { BContainer } from 'bootstrap-vue'
 
@@ -37,8 +35,7 @@ export default {
         Navbar,
         FormSearch,
         ListFile,
-        Footer,
-        Result
+        Footer
     },
     data () {
         return {

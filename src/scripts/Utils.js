@@ -15,15 +15,6 @@ export const Utils = {
         }
         return fulldir
     },
-    alertFunc: function (val) {
-        var className = val.className
-        var message = val.message
-        var createHtml = "<div class='alert alert-" + className + " alert-dismissible'>"+
-            "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>" +
-            message +
-            "</div>"
-        document.getElementById('report-result').innerHTML += createHtml
-    },
     mfmDevTools: function () {
         let remote = require('electron').remote
         remote.getCurrentWindow().openDevTools()
