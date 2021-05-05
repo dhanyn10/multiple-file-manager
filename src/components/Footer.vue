@@ -42,15 +42,12 @@
 
 <script>
 import Vue from 'vue'
-import { BNavbar, BNavbarNav, BNavText, BNavItem, BForm, BFormSelect, BButton, VBModal, BRow, BCol } from 'bootstrap-vue'
+import { NavbarPlugin, BForm, BFormSelect, BButton, VBModal, BRow, BCol } from 'bootstrap-vue'
 
 import { Rename } from "../scripts/Rename.js"
 import { Manage } from "../scripts/Manage.js"
 
-Vue.component('b-navbar', BNavbar)
-Vue.component('b-navbar-nav', BNavbarNav)
-Vue.component('b-nav-text', BNavText)
-Vue.component('b-nav-item', BNavItem)
+Vue.use(NavbarPlugin)
 Vue.component('b-form', BForm)
 Vue.component('b-form-select', BFormSelect)
 Vue.component('b-btn', BButton)
