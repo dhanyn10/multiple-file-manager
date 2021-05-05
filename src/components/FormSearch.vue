@@ -15,11 +15,9 @@
 
 <script>
 import Vue from 'vue'
-import { BForm, BFormGroup, BFormInput, BButton } from 'bootstrap-vue'
+import { FormPlugin, BButton } from 'bootstrap-vue'
 
-Vue.component('b-form', BForm)
-Vue.component('b-form-group', BFormGroup)
-Vue.component('b-form-input', BFormInput)
+Vue.use(FormPlugin)
 Vue.component('b-btn', BButton)
 
 //electron dialog

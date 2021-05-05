@@ -14,16 +14,12 @@
 
 <script>
 import Vue from 'vue'
-import { BNavbar, BNavbarNav, BNavItem, BNavItemDropdown, BDropdownItem } from 'bootstrap-vue'
+import { NavbarPlugin } from 'bootstrap-vue'
 
 let shell = require('electron').shell
 let remote = require('electron').remote
 
-Vue.component('b-navbar', BNavbar)
-Vue.component('b-navbar-nav', BNavbarNav)
-Vue.component('b-nav-item', BNavItem)
-Vue.component('b-nav-item-dropdown', BNavItemDropdown)
-Vue.component('b-dropdown-item', BDropdownItem)
+Vue.use(NavbarPlugin)
 export default {
     name: 'Navbar',
     methods: {
