@@ -30,10 +30,10 @@ export const Manage = {
         }
         //check of array of file extension has same value
         const allEqual = arr => arr.every(v => v === arr[0])
-        //result Equal must return true
+        //result Equal must have return true to make sure that executed files working as expected
         const resultEqual = allEqual(arrfileExtension)
 
-        //make sure the array of file name is already sorted
+        //make sure the array of file name are already sorted
         arrfilename.sort()
 
         if(resultEqual == true)
@@ -65,6 +65,7 @@ export const Manage = {
                     const tempdeletedname = arrfilename[afn] + "." + fileEx
                     if(fileUnique == tempdeletedname)
                     {
+                        //removing unique filenames contained inside arrfilename
                         const getIndex = arrfilename.indexOf(arrfilename[afn])
                         if(getIndex > -1)
                         {
@@ -73,6 +74,7 @@ export const Manage = {
                     }
                 }
             }
+            //delete(trash) all files listed in arrfilename array
             for(var afd = 0; afd < arrfilename.length; afd++)
             {
                 const exfile = arrfilename[afd] + "." + fileEx
