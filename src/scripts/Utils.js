@@ -3,6 +3,10 @@ export const Utils = {
 
         var fulldir = dir
 
+        //delete random string as refresh prefix
+        if(fulldir.includes("_refresh_"))
+            fulldir = fulldir.slice(22)
+        
         // converting backward slash to forward slash
         fulldir = fulldir.replace(/\\/g, "/")
         var dirlength = fulldir.length
@@ -18,5 +22,8 @@ export const Utils = {
     mfmDevTools: function () {
         let remote = require('electron').remote
         remote.getCurrentWindow().openDevTools()
+    },
+    randomString: function (length) {
+        return Math.random().toString(16).substr(2, length)
     }
 }

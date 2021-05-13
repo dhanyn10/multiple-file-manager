@@ -30,6 +30,8 @@
 import Vue from 'vue'
 import { BListGroup, BListGroupItem, BButton } from 'bootstrap-vue'
 
+import { Utils } from '../scripts/Utils.js'
+
 Vue.component('b-list-group', BListGroup)
 Vue.component('b-list-group-item', BListGroupItem)
 Vue.component('b-btn', BButton)
@@ -66,7 +68,7 @@ export default {
             const fs = require('fs')
             if(this.listData.length > 0)
             {
-                let dirLocation = this.listData.replace(/\\/g, "/")
+                let dirLocation = Utils.fulldirFunc(this.listData)
                 let rdir = fs.readdirSync(dirLocation)
                 var countList = 0
                 rdir.forEach((filename) => {

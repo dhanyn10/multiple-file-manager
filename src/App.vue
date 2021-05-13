@@ -10,6 +10,7 @@
                 :listData="listData"
             />
             <Footer
+                @refreshList="refreshListHandler"
                 :fulldirHandler="fulldirHandler"
                 :listDataHandler="listDataHandler"
             />
@@ -41,7 +42,8 @@ export default {
         return {
             listData: null,
             listDataHandler: null,
-            fulldirHandler: null
+            fulldirHandler: null,
+            refreshStatus: null
         }
     },
     methods: {
@@ -59,6 +61,9 @@ export default {
         */
         listdataVal(listDataValue) {
             this.listDataHandler = listDataValue
+        },
+        refreshListHandler(rlHandler) {
+            this.listData = rlHandler
         }
     }
 }
