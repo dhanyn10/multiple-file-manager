@@ -42,8 +42,7 @@ export default {
         return {
             listData: null,
             listDataHandler: null,
-            fulldirHandler: null,
-            refreshStatus: null
+            fulldirHandler: null
         }
     },
     methods: {
