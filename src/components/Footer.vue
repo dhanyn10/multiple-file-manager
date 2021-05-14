@@ -46,6 +46,7 @@ import { NavbarPlugin, BForm, BFormSelect, BButton, VBModal, BRow, BCol } from '
 
 import { Rename } from "../scripts/Rename.js"
 import { Manage } from "../scripts/Manage.js"
+import { Utils } from '../scripts/Utils.js'
 
 Vue.use(NavbarPlugin)
 
@@ -94,6 +95,7 @@ export default {
             if(this.selected > 0) this.modaleditingshow = true
         },
         handleOk () {
+            const fillDir = Utils.generateTime() + Utils.randomString(4) + "_refresh_" + this.fulldirHandler
             if(this.selected == 1)
             {
                 Rename.deleteFunc({
@@ -101,6 +103,7 @@ export default {
                     listfile: this.listDataHandler,
                     deleteChar: this.name1
                 })
+                this.$emit('refreshList', fillDir)
             }
             else if(this.selected == 2)
             {
@@ -110,6 +113,7 @@ export default {
                     repfrom: this.name1,
                     repto: this.name2
                 })
+                this.$emit('refreshList', fillDir)
             }
             else if(this.selected == 3)
             {
@@ -119,6 +123,7 @@ export default {
                     before: this.name1,
                     after: this.name2
                 })
+                this.$emit('refreshList', fillDir)
             }
             else if(this.selected == 4)
             {
@@ -126,6 +131,7 @@ export default {
                     listfile: this.listDataHandler,
                     fulldir: this.fulldirHandler
                 })
+                this.$emit('refreshList', fillDir)
             }
         }
     }
