@@ -4,8 +4,9 @@ export const Utils = {
         var fulldir = dir
 
         //delete random string as refresh prefix
-        if(fulldir.includes("_refresh_"))
-            fulldir = fulldir.slice(22)
+        //random string generates is like xxxx...(16 char)_refresh_
+        if(fulldir.slice(16,25) == "_refresh_")
+            fulldir = fulldir.slice(25)
         
         // converting backward slash to forward slash
         fulldir = fulldir.replace(/\\/g, "/")
@@ -24,6 +25,13 @@ export const Utils = {
         remote.getCurrentWindow().openDevTools()
     },
     randomString: function (length) {
-        return Math.random().toString(16).substr(2, length)
+        var rs = '';
+        do {
+            rs += Math.random().toString(36).substr(2)
+        } while (rs.length < length)
+        
+        rs = rs.substr(0, length)
+        
+        return rs;
     }
 }
