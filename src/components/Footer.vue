@@ -95,7 +95,7 @@ export default {
             if(this.selected > 0) this.modaleditingshow = true
         },
         handleOk () {
-            const fillDir = Utils.randomString(4) + "_refresh_" + this.fulldirHandler
+            const fillDir = Utils.generateTime() + Utils.randomString(4) + "_refresh_" + this.fulldirHandler
             if(this.selected == 1)
             {
                 Rename.deleteFunc({

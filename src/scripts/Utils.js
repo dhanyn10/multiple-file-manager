@@ -1,4 +1,5 @@
 export const Utils = {
+    //generate zero prefix if generated value cannot meet required length
     addZero: function (x, n) {
         while (x.toString().length < n) {
             x = "0" + x
@@ -30,8 +31,7 @@ export const Utils = {
         let remote = require('electron').remote
         remote.getCurrentWindow().openDevTools()
     },
-    randomString: function (length) {
-        
+    generateTime: function () {
         //generate time from hour to miliseconds
         const d = new Date(),
         h = this.addZero(d.getHours(), 2),
@@ -39,6 +39,10 @@ export const Utils = {
         s = this.addZero(d.getSeconds(), 2),
         ms = this.addZero(d.getMilliseconds(), 3),
         dateHMSMl = h + "-" + m + "-" + s + "-" + ms
+
+        return dateHMSMl
+    },
+    randomString: function (length) {
 
         //generate random string with given specific length
         var rs = '';
@@ -48,6 +52,6 @@ export const Utils = {
         
         rs = rs.substr(0, length)
         
-        return dateHMSMl + rs
+        return rs
     }
 }
