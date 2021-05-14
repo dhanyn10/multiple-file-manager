@@ -1,4 +1,10 @@
 export const Utils = {
+    addZero: function (x, n) {
+        while (x.toString().length < n) {
+            x = "0" + x
+        }
+        return x
+    },
     fulldirFunc: function (dir) {
 
         var fulldir = dir
@@ -25,6 +31,16 @@ export const Utils = {
         remote.getCurrentWindow().openDevTools()
     },
     randomString: function (length) {
+        
+        //generate time from hour to miliseconds
+        const d = new Date(),
+        h = this.addZero(d.getHours(), 2),
+        m = this.addZero(d.getMinutes(), 2),
+        s = this.addZero(d.getSeconds(), 2),
+        ms = this.addZero(d.getMilliseconds(), 3),
+        dateHMSMl = h + "-" + m + "-" + s + "-" + ms
+
+        //generate random string with given specific length
         var rs = '';
         do {
             rs += Math.random().toString(36).substr(2)
@@ -32,6 +48,6 @@ export const Utils = {
         
         rs = rs.substr(0, length)
         
-        return rs;
+        return dateHMSMl + rs
     }
 }
