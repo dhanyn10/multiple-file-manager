@@ -29,7 +29,7 @@ export const Utils = {
     },
     mfmDevTools: function () {
         let remote = require('electron').remote
-        remote.getCurrentWindow().openDevTools()
+        remote.getCurrentWindow().openDevTools({mode: 'bottom'})
     },
     generateTime: function () {
         //generate time from hour to miliseconds
