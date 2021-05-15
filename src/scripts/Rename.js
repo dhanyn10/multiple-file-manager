@@ -39,8 +39,10 @@ export const Rename = {
         var deleteChar  = val.deleteChar
 
         const length = listfile.length
+
         //reset report array
         report = []
+
         for(var l = 0; l < length; l++)
         {
             if(listfile[l].selected == true)
@@ -66,6 +68,8 @@ export const Rename = {
         const length = listfile.length
 
         //reset report array
+        report = []
+
         for(var l = 0; l < length; l++)
         {
             if(listfile[l].selected == true)
@@ -92,6 +96,7 @@ export const Rename = {
         
         //reset report array
         report = []
+
         for(var l = 0; l < length; l++)
         {
             if(listfile[l].selected == true)
