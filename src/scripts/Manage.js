@@ -84,17 +84,13 @@ export const Manage = {
                 })
                 trash(fulldir + exfile)
                 watcher.on('unlink', path => {
-                    Utils.mfmDevTools()
                     report.push(`File ${path} has been removed`)
-                    console.info(`File ${path} has been removed`)
                 })
             }
         }
         else
         {
-            Utils.mfmDevTools()
             report.push("files must have the same extension")
-            console.error("files must have the same extension")
         }
         return report
     }
