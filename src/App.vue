@@ -10,9 +10,13 @@
                 :listData="listData"
             />
             <Footer
+                @reportResult="reportResultHandler"
                 @refreshList="refreshListHandler"
                 :fulldirHandler="fulldirHandler"
                 :listDataHandler="listDataHandler"
+            />
+            <ReportResult
+                :resultHandler="resultHandler"
             />
         </b-container>
     </div>
@@ -25,6 +29,7 @@ import Navbar from './components/Navbar'
 import FormSearch from './components/FormSearch'
 import ListFile from './components/ListFile'
 import Footer from './components/Footer'
+import ReportResult from './components/ReportResult'
 
 import { BContainer } from 'bootstrap-vue'
 
@@ -36,13 +41,15 @@ export default {
         Navbar,
         FormSearch,
         ListFile,
-        Footer
+        Footer,
+        ReportResult
     },
     data () {
         return {
             listData: null,
             listDataHandler: null,
-            fulldirHandler: null
+            fulldirHandler: null,
+            resultHandler: []
         }
     },
     methods: {
@@ -63,6 +70,9 @@ export default {
         },
         refreshListHandler(rlHandler) {
             this.listData = rlHandler
+        },
+        reportResultHandler(rrHandler) {
+            this.resultHandler = rrHandler
         }
     }
 }

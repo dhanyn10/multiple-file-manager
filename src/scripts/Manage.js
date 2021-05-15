@@ -9,6 +9,7 @@ export const Manage = {
 
         fulldir = Utils.fulldirFunc(fulldir)
 
+        var report = []
         var arrfilename = []
         var arrfileunique = []
         var arrfileExtension = []
@@ -83,15 +84,14 @@ export const Manage = {
                 })
                 trash(fulldir + exfile)
                 watcher.on('unlink', path => {
-                    Utils.mfmDevTools()
-                    console.info(`File ${path} has been removed`)
+                    report.push(`File ${path} has been removed`)
                 })
             }
         }
         else
         {
-            Utils.mfmDevTools()
-            console.error("files must have the same extension")
+            report.push("files must have the same extension")
         }
+        return report
     }
 }

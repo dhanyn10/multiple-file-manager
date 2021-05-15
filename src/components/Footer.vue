@@ -98,40 +98,46 @@ export default {
             const fillDir = Utils.generateTime() + Utils.randomString(4) + "_refresh_" + this.fulldirHandler
             if(this.selected == 1)
             {
-                Rename.deleteFunc({
+                const rresult = Rename.deleteFunc({
                     fulldir: this.fulldirHandler,
                     listfile: this.listDataHandler,
                     deleteChar: this.name1
                 })
+                this.$emit('reportResult', rresult)
                 this.$emit('refreshList', fillDir)
             }
             else if(this.selected == 2)
             {
-                Rename.replaceFunc({
+                const rresult = Rename.replaceFunc({
                     fulldir: this.fulldirHandler,
                     listfile: this.listDataHandler,
                     repfrom: this.name1,
                     repto: this.name2
                 })
+                this.$emit('reportResult', rresult)
                 this.$emit('refreshList', fillDir)
             }
             else if(this.selected == 3)
             {
-                Rename.insertFunc({
+                const rresult = Rename.insertFunc({
                     fulldir: this.fulldirHandler,
                     listfile: this.listDataHandler,
                     before: this.name1,
                     after: this.name2
                 })
+                this.$emit('reportResult', rresult)
                 this.$emit('refreshList', fillDir)
             }
             else if(this.selected == 4)
             {
-                Manage.deleteDuplicated({
+                const rresult = Manage.deleteDuplicated({
                     listfile: this.listDataHandler,
                     fulldir: this.fulldirHandler
                 })
-                this.$emit('refreshList', fillDir)
+                this.$emit('reportResult', rresult)
+                setTimeout(() => {
+                    this.$emit('refreshList', fillDir)
+                }, 3000);
             }
         }
     }

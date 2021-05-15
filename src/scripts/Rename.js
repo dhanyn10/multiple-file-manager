@@ -1,4 +1,5 @@
 const fs = require('fs')
+var report = []
 import { Utils } from "../scripts/Utils.js"
 
 export const Rename = {
@@ -18,17 +19,16 @@ export const Rename = {
         
         let _old = fulldir + oldname,
             _new = fulldir + newname
+
         //check if filename is exist or not
         if(fs.existsSync(_old))
         {
             fs.renameSync(_old, _new)
-            Utils.mfmDevTools()
-            console.info(`File ${oldname} has been renamed to ${newname}`)
+            report.push(`File ${oldname} has been renamed to ${newname}`)
         }
         else
         {
-            Utils.mfmDevTools()
-            console.error(`File ${_old} is not exist`)
+            report.push(`File ${_old} is not exist`)
         }
     },
 
@@ -39,7 +39,8 @@ export const Rename = {
         var deleteChar  = val.deleteChar
 
         const length = listfile.length
-
+        //reset report array
+        report = []
         for(var l = 0; l < length; l++)
         {
             if(listfile[l].selected == true)
@@ -53,6 +54,7 @@ export const Rename = {
                 })
             }
         }
+        return report
     },
     replaceFunc: function (val)
     {
@@ -63,6 +65,7 @@ export const Rename = {
 
         const length = listfile.length
 
+        //reset report array
         for(var l = 0; l < length; l++)
         {
             if(listfile[l].selected == true)
@@ -76,6 +79,7 @@ export const Rename = {
                 })
             }
         }
+        return report
     },
     insertFunc: function (val)
     {
@@ -86,6 +90,8 @@ export const Rename = {
         
         const length = listfile.length
         
+        //reset report array
+        report = []
         for(var l = 0; l < length; l++)
         {
             if(listfile[l].selected == true)
@@ -103,5 +109,6 @@ export const Rename = {
                 })
             }
         }
+        return report
     }
 }
