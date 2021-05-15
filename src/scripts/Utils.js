@@ -27,10 +27,6 @@ export const Utils = {
         }
         return fulldir
     },
-    mfmDevTools: function () {
-        let remote = require('electron').remote
-        remote.getCurrentWindow().openDevTools({mode: 'bottom'})
-    },
     generateTime: function () {
         //generate time from hour to miliseconds
         const d = new Date(),
