@@ -135,7 +135,9 @@ export default {
                     fulldir: this.fulldirHandler
                 })
                 this.$emit('reportResult', rresult)
-                this.$emit('refreshList', fillDir)
+                setTimeout(() => {
+                    this.$emit('refreshList', fillDir)
+                }, 3000);
             }
         }
     }
