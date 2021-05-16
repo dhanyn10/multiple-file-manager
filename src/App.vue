@@ -53,24 +53,33 @@ export default {
         }
     },
     methods: {
-        /*
-        * filepaths return the data path,
-        * then listData will save the value and send it to ListFile.vue
-        */
+        /**
+         * filepaths return the data path,
+         * then lfdirhandler will save the value and send it to ListFile.vue
+         */
         filepathsVal (filepaths) {
             this.lfdirHandler = filepaths,
             this.fulldirHandler = filepaths
         },
-        /*
-        * listDataValue return the list of data from ListFile
-        * the list data will send to Footer.vue through listDataHandler
-        */
+        /**
+         * listDataValue return the list of data from ListFile
+         * the list data will send to Footer.vue through listDataHandler
+         */
         listdataVal(listDataValue) {
             this.listDataHandler = listDataValue
         },
+        /**
+         * rlHandler return the directory data followed by random string in
+         * prefix so vuejs wacther will not detect the data as the same directory
+         */
         refreshListHandler(rlHandler) {
             this.lfdirHandler = rlHandler
         },
+        /**
+         * rrHandler return the report data that collected from Rename.js or
+         * Manage.js and send the report to ReportResult.vue that previously
+         * displayed using console log/error
+         */
         reportResultHandler(rrHandler) {
             this.resultHandler = rrHandler
         }
