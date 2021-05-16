@@ -137,7 +137,7 @@ export default {
                 this.$emit('reportResult', rresult)
                 setTimeout(() => {
                     this.$emit('refreshList', fillDir)
-                }, 3000);
+                }, 3000)
             }
         }
     }
