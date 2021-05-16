@@ -48,7 +48,7 @@ function getInitialData()
 export default {
     name: 'ListFile',
     props: {
-        listData: {
+        lfdirHandler: {
             type: String
         }
     },
@@ -60,15 +60,15 @@ export default {
         }
     },
     watch: {
-        listData: function () {
+        lfdirHandler: function () {
             //reset data from previous action
             Object.assign(this.$data, getInitialData())
 
             //electron filesystem
             const fs = require('fs')
-            if(this.listData.length > 0)
+            if(this.lfdirHandler.length > 0)
             {
-                let dirLocation = Utils.fulldirFunc(this.listData)
+                let dirLocation = Utils.fulldirFunc(this.lfdirHandler)
                 let rdir = fs.readdirSync(dirLocation)
                 var countList = 0
                 rdir.forEach((filename) => {
