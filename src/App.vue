@@ -7,7 +7,7 @@
             />
             <ListFile
                 @listDataValue="listdataVal"
-                :listData="listData"
+                :lfdirHandler="lfdirHandler"
             />
             <Footer
                 @reportResult="reportResultHandler"
@@ -46,10 +46,10 @@ export default {
     },
     data () {
         return {
-            listData: null,
-            listDataHandler: null,
-            fulldirHandler: null,
-            resultHandler: []
+            lfdirHandler: null,     //directory data for ListFile component
+            listDataHandler: null,  //list files data for Footer component
+            fulldirHandler: null,   //directory data for Footer component
+            resultHandler: []       //result data for ReportResult component
         }
     },
     methods: {
@@ -58,7 +58,7 @@ export default {
         * then listData will save the value and send it to ListFile.vue
         */
         filepathsVal (filepaths) {
-            this.listData = filepaths,
+            this.lfdirHandler = filepaths,
             this.fulldirHandler = filepaths
         },
         /*
@@ -69,7 +69,7 @@ export default {
             this.listDataHandler = listDataValue
         },
         refreshListHandler(rlHandler) {
-            this.listData = rlHandler
+            this.lfdirHandler = rlHandler
         },
         reportResultHandler(rrHandler) {
             this.resultHandler = rrHandler
