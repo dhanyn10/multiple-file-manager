@@ -15,9 +15,10 @@
             </b-btn>
         </div>
         <b-list-group id="listfile" class="mb-2">
-            <b-list-group-item
+            <b-list-group-item class="no-highlight"
                 v-for="(item, index) in listfile" :key="index"
                 v-on:click="itemHandler(item)"
+                @click.shift="selectMultiple"
                 v-bind:class="{ active: item.selected }"
             >
                 {{item.name}}
@@ -41,7 +42,8 @@ function getInitialData()
     return {
         listfile: [],
         isActive: false,
-        isDataExist: false
+        isDataExist: false,
+        arrayIdx: []
     }
 }
 
@@ -56,7 +58,8 @@ export default {
         return {
             listfile: [],
             isActive: false,
-            isDataExist: false
+            isDataExist: false,
+            arrayIdx: []
         }
     },
     watch: {
@@ -72,7 +75,11 @@ export default {
                 let rdir = fs.readdirSync(dirLocation)
                 var countList = 0
                 rdir.forEach((filename) => {
-                    this.listfile.push({name: filename, selected: false})
+                    this.listfile.push({
+                            id: countList,
+                            name: filename,
+                            selected: false
+                        })
                     countList++
                 })
                 if(countList > 0)
@@ -92,7 +99,31 @@ export default {
             if(item.selected == true)
                 item.selected = false
             else
+            {
                 item.selected = true
+                this.arrayIdx.push(item.id)
+                if(this.arrayIdx.length > 2)
+                {
+                    this.arrayIdx = this.arrayIdx.slice(1,3)
+                }
+            }
+        },
+        selectMultiple() {
+            if(this.arrayIdx.length == 2)
+            {
+                var low = this.arrayIdx[0]
+                var high = this.arrayIdx[1]
+                if(low > high)
+                {
+                    const h = low
+                    low = high
+                    high = h
+                }
+                for(var i = low; i <= high; i++)
+                {
+                    this.listfile[i].selected = true
+                }
+            }
         },
         toggleSelectAll () {
             this.isActive = !this.isActive
@@ -120,6 +151,9 @@ export default {
 </script>
 
 <style scoped>
+.no-highlight{
+    user-select: none;
+}
 #listfile{
     min-height: 300px;
     height: 300px;
