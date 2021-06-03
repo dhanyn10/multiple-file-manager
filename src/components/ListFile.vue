@@ -103,9 +103,7 @@ export default {
                 item.selected = true
                 this.arrayIdx.push(item.id)
                 if(this.arrayIdx.length > 2)
-                {
                     this.arrayIdx = this.arrayIdx.slice(1,3)
-                }
             }
         },
         selectMultiple() {
