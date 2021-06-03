@@ -22,6 +22,9 @@ export default {
         resultHandler: function () {
             if(this.resultHandler.length > 0)
             {
+                //reset the reportlist data to prevent duplicate alert
+                if(this.reportList.length > 0)
+                    this.reportList = []
                 for(var i = 0; i < this.resultHandler.length; i++)
                 {
                     this.reportList.push({message: this.resultHandler[i]})
