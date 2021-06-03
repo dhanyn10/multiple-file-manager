@@ -124,18 +124,14 @@ export default {
                 //get listfile length
                 const dataLength = this.listfile.length
                 for(var j = 0; j < dataLength; j++)
-                {
                     this.listfile[j].selected = true
-                }
             }
             else
             {
                 //get listfile length
                 const dataLength = this.listfile.length
                 for(var k = 0; k < dataLength; k++)
-                {
                     this.listfile[k].selected = false
-                }
             }
         }
     }
