@@ -111,8 +111,8 @@ export default {
         selectMultiple() {
             if(this.arrayIdx.length == 2)
             {
-                var low = Math.min.apply(Math, this.arrayIdx)
-                var high = Math.max.apply(Math, this.arrayIdx)
+                const low = Math.min.apply(Math, this.arrayIdx)
+                const high = Math.max.apply(Math, this.arrayIdx)
                 for(var i = low; i <= high; i++)
                     this.listfile[i].selected = true
             }
