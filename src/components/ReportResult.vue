@@ -1,11 +1,19 @@
 <template>
     <div>
-        <div v-for="(item, i) in reportList" :key="i">
-            {{ item.message }}
+        <div v-for="(item, i) in reportList" :key="i" class="mt-2">
+            <b-alert variant="info" show dismissible>
+                {{ item.message }}
+            </b-alert>
         </div>
     </div>
 </template>
 <script>
+import Vue from 'vue'
+import { BAlert, BFormGroup } from 'bootstrap-vue'
+
+Vue.component('b-alert', BAlert)
+Vue.component('b-form-group', BFormGroup)
+
 export default {
     name: 'ReportResult',
     props: {
