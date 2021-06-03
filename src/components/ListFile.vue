@@ -111,18 +111,10 @@ export default {
         selectMultiple() {
             if(this.arrayIdx.length == 2)
             {
-                var low = this.arrayIdx[0]
-                var high = this.arrayIdx[1]
-                if(low > high)
-                {
-                    const h = low
-                    low = high
-                    high = h
-                }
+                var low = Math.min.apply(Math, this.arrayIdx)
+                var high = Math.max.apply(Math, this.arrayIdx)
                 for(var i = low; i <= high; i++)
-                {
                     this.listfile[i].selected = true
-                }
             }
         },
         toggleSelectAll () {
