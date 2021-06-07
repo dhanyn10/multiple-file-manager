@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-form class="mb-4">
-            <b-form-row description="browse directory here">
+            <b-form-row>
                 <b-col cols="9">
                     <b-form-input v-model="dirLocation" disabled></b-form-input>
                 </b-col>
