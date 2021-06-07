@@ -101,12 +101,14 @@ export const Rename = {
         {
             if(listfile[l].selected == true)
             {
-                var originalname = listfile[l].name
-                var tempname = originalname.split(".")
+                var originalname    = listfile[l].name
+                var tempname        = originalname.split(".")
+
                 //assuming you file name contains only filename with single extension
-                var filename = tempname[0]
-                var completename = before + filename + after
-                var newname = originalname.replace(filename, completename)
+                var filename        = tempname[0]
+                var completename    = before + filename + after
+                var newname         = originalname.replace(filename, completename)
+                
                 this.renameFunc({
                     fulldir: fulldir,
                     oldname: originalname,
