@@ -105,6 +105,7 @@ export default {
                 })
                 this.$emit('reportResult', rresult)
                 this.$emit('refreshList', fillDir)
+                this.resetvModelData()
             }
             if(this.selected == 2)
             {
@@ -116,6 +117,7 @@ export default {
                 })
                 this.$emit('reportResult', rresult)
                 this.$emit('refreshList', fillDir)
+                this.resetvModelData()
             }
             if(this.selected == 3)
             {
@@ -127,6 +129,7 @@ export default {
                 })
                 this.$emit('reportResult', rresult)
                 this.$emit('refreshList', fillDir)
+                this.resetvModelData()
             }
             if(this.selected == 4)
             {
@@ -136,7 +139,12 @@ export default {
                 })
                 this.$emit('reportResult', rresult)
                 this.$emit('refreshList', fillDir)
+                this.resetvModelData()
             }
+        },
+        resetvModelData () {
+            this.name1 = null
+            this.name2 = null
         }
     }
 }
