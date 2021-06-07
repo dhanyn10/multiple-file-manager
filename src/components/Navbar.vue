@@ -24,13 +24,13 @@ Vue.use(NavbarPlugin)
 export default {
     name: 'Navbar',
     methods: {
-        visitGithub() {
+        visitGithub () {
             shell.openExternal('https://github.com/dhanyn10/multiple-file-manager')
         },
-        visitIssues() {
+        visitIssues () {
             shell.openExternal('https://github.com/dhanyn10/multiple-file-manager/issues')
         },
-        toggleDevtools() {
+        toggleDevtools () {
             remote.getCurrentWindow().toggleDevTools({mode: 'bottom'})
         }
     }

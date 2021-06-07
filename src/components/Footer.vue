@@ -88,7 +88,7 @@ export default {
         }
     },
     methods: {
-        onChange: function(event) {
+        onChange: function (event) {
             this.selected = event
         },
         setEditing () {
@@ -106,7 +106,7 @@ export default {
                 this.$emit('reportResult', rresult)
                 this.$emit('refreshList', fillDir)
             }
-            else if(this.selected == 2)
+            if(this.selected == 2)
             {
                 const rresult = Rename.replaceFunc({
                     fulldir: this.fulldirHandler,
@@ -117,7 +117,7 @@ export default {
                 this.$emit('reportResult', rresult)
                 this.$emit('refreshList', fillDir)
             }
-            else if(this.selected == 3)
+            if(this.selected == 3)
             {
                 const rresult = Rename.insertFunc({
                     fulldir: this.fulldirHandler,
@@ -128,7 +128,7 @@ export default {
                 this.$emit('reportResult', rresult)
                 this.$emit('refreshList', fillDir)
             }
-            else if(this.selected == 4)
+            if(this.selected == 4)
             {
                 const rresult = Manage.deleteDuplicated({
                     listfile: this.listDataHandler,

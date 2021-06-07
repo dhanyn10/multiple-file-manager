@@ -106,7 +106,7 @@ export default {
                     this.arrayIdx = this.arrayIdx.slice(1,3)
             }
         },
-        selectMultiple() {
+        selectMultiple () {
             if(this.arrayIdx.length == 2)
             {
                 const low = Math.min.apply(null, this.arrayIdx)
