@@ -94,42 +94,29 @@ export default {
         setEditing () {
             if(this.selected > 0) this.modaleditingshow = true
         },
-        handleOk () {
+        afterFunction (reportResult) {
+            const rresult = reportResult
             const fillDir = Utils.generateTime() + Utils.randomString(4) + "_refresh_" + this.fulldirHandler
+            this.$emit('reportResult', rresult)
+            this.$emit('refreshList', fillDir)
+            this.name1 = ''
+            this.name2 = ''
+        },
+        handleOk () {
             if(this.selected == 1)
             {
-                const rresult = Rename.deleteFunc({
-                    fulldir: this.fulldirHandler,
-                    listfile: this.listDataHandler,
-                    deleteChar: this.name1
-                })
-                this.$emit('reportResult', rresult)
-                this.$emit('refreshList', fillDir)
-                this.resetvModelData()
+                const rresult = Rename.deleteFunc(this.fulldirHandler, this.listDataHandler, this.name1)
+                this.afterFunction(rresult)
             }
             if(this.selected == 2)
             {
-                const rresult = Rename.replaceFunc({
-                    fulldir: this.fulldirHandler,
-                    listfile: this.listDataHandler,
-                    repfrom: this.name1,
-                    repto: this.name2
-                })
-                this.$emit('reportResult', rresult)
-                this.$emit('refreshList', fillDir)
-                this.resetvModelData()
+                const rresult = Rename.replaceFunc(this.fulldirHandler, this.listDataHandler, this.name1, this.name2)
+                this.afterFunction(rresult)
             }
             if(this.selected == 3)
             {
-                const rresult = Rename.insertFunc({
-                    fulldir: this.fulldirHandler,
-                    listfile: this.listDataHandler,
-                    before: this.name1,
-                    after: this.name2
-                })
-                this.$emit('reportResult', rresult)
-                this.$emit('refreshList', fillDir)
-                this.resetvModelData()
+                const rresult = Rename.insertFunc(this.fulldirHandler, this.listDataHandler, this.name1, this.name2)
+                this.afterFunction(rresult)
             }
             if(this.selected == 4)
             {
@@ -137,9 +124,7 @@ export default {
                     listfile: this.listDataHandler,
                     fulldir: this.fulldirHandler
                 })
-                this.$emit('reportResult', rresult)
-                this.$emit('refreshList', fillDir)
-                this.resetvModelData()
+                this.afterFunction(rresult)
             }
         },
         resetvModelData () {

@@ -32,12 +32,8 @@ export const Rename = {
         }
     },
 
-    deleteFunc: function(val)
+    deleteFunc: function(fulldir, listfile, deleteChar)
     {
-        var fulldir     = val.fulldir
-        var listfile    = val.listfile
-        var deleteChar  = val.deleteChar
-
         const length = listfile.length
 
         //reset report array
@@ -58,13 +54,8 @@ export const Rename = {
         }
         return report
     },
-    replaceFunc: function (val)
+    replaceFunc: function (fulldir, listfile, repfrom, repto)
     {
-        var fulldir     = val.fulldir
-        var listfile    = val.listfile
-        var repfrom     = val.repfrom
-        var repto       = val.repto
-
         const length = listfile.length
 
         //reset report array
@@ -85,13 +76,8 @@ export const Rename = {
         }
         return report
     },
-    insertFunc: function (val)
-    {
-        var fulldir     = val.fulldir
-        var listfile    = val.listfile
-        var before      = val.before
-        var after       = val.after
-        
+    insertFunc: function (fulldir, listfile, before, after)
+    {   
         const length = listfile.length
         
         //reset report array
