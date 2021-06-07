@@ -120,16 +120,9 @@ export default {
             }
             if(this.selected == 4)
             {
-                const rresult = Manage.deleteDuplicated({
-                    listfile: this.listDataHandler,
-                    fulldir: this.fulldirHandler
-                })
+                const rresult = Manage.deleteDuplicated(this.fulldirHandler, this.listDataHandler)
                 this.afterFunction(rresult)
             }
-        },
-        resetvModelData () {
-            this.name1 = null
-            this.name2 = null
         }
     }
 }

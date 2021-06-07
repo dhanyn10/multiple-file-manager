@@ -3,9 +3,7 @@ const chokidar = require('chokidar')
 import { Utils } from "../scripts/Utils.js"
 
 export const Manage = {
-    deleteDuplicated: function (val) {
-        var fulldir = val.fulldir
-        var listfile = val.listfile
+    deleteDuplicated: function (fulldir, listfile) {
 
         fulldir = Utils.fulldirFunc(fulldir)
 
