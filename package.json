@@ -31,7 +31,7 @@
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",
     "chokidar": "^3.5.1",
-    "trash": "^7.1.1",
+    "trash": "^7.2.0",
     "vue": "^2.6.13"
   },
   "devDependencies": {
