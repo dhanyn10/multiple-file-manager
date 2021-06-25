@@ -7,8 +7,7 @@ module.exports = {
                 },
                 linux: {
                     target: [
-                        "deb",
-                        "AppImage"
+                        "deb"
                     ],
                     category: "Utility",
                     icon: './public/icon/icon.png'
