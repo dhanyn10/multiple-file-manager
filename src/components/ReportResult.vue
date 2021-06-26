@@ -1,8 +1,8 @@
 <template>
     <div>
         <div v-for="(item, i) in reportList" :key="i" class="mt-2">
-            <b-alert variant="info" v-html="item.message" show dismissible>
-                {{ item.message }}
+            <b-alert variant="info">
+                <div v-html="item.message">{{ item.message }}</div>
             </b-alert>
         </div>
     </div>

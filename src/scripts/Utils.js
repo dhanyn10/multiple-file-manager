@@ -8,7 +8,7 @@ export const Utils = {
     },
     reportBadge: function (text) {
         var output = text
-        output = '<span class="badge badge-pill badge-light">'+ output +'</span>'
+        output = '<span class="badge badge-light font-weight-normal">'+ output +'</span>'
         return output
     },
     fulldirFunc: function (dir) {
