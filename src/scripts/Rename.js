@@ -9,12 +9,8 @@ export const Rename = {
  * @param filename  : file name
  * @param newfile   : new file name
  */
-    renameFunc: function (val)
+    renameFunc: function (fulldir, oldname, newname)
     {
-        let fulldir = val.fulldir,
-            oldname = val.oldname,
-            newname = val.newname
-
         fulldir = Utils.fulldirFunc(fulldir)
         
         let _old = fulldir + oldname,
@@ -45,11 +41,7 @@ export const Rename = {
             {
                 var filename = listfile[l].name
                 var newname = filename.replace(deleteChar, "")
-                this.renameFunc({
-                    fulldir: fulldir,
-                    oldname: filename,
-                    newname: newname
-                })
+                this.renameFunc(fulldir, filename, newname)
             }
         }
         return report
@@ -67,11 +59,7 @@ export const Rename = {
             {
                 var filename = listfile[l].name
                 var newname = filename.replace(repfrom, repto)
-                this.renameFunc({
-                    fulldir: fulldir,
-                    oldname: filename,
-                    newname: newname
-                })
+                this.renameFunc(fulldir, filename, newname)
             }
         }
         return report
@@ -95,11 +83,7 @@ export const Rename = {
                 var completename    = before + filename + after
                 var newname         = originalname.replace(filename, completename)
                 
-                this.renameFunc({
-                    fulldir: fulldir,
-                    oldname: originalname,
-                    newname: newname
-                })
+                this.renameFunc(fulldir, originalname, newname)
             }
         }
         return report
