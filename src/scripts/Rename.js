@@ -20,10 +20,13 @@ export const Rename = {
         if(fs.existsSync(_old))
         {
             fs.renameSync(_old, _new)
+            oldname = Utils.reportBadge(oldname)
+            newname = Utils.reportBadge(newname)
             report.push(`File ${oldname} has been renamed to ${newname}`)
         }
         else
         {
+            _old = Utils.reportBadge(_old)
             report.push(`File ${_old} is not exist`)
         }
     },

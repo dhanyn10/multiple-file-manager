@@ -6,6 +6,11 @@ export const Utils = {
         }
         return x
     },
+    reportBadge: function (text) {
+        var output = text
+        output = '<span class="badge badge-pill badge-light">'+ output +'</span>'
+        return output
+    },
     fulldirFunc: function (dir) {
 
         var fulldir = dir

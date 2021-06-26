@@ -82,6 +82,7 @@ export const Manage = {
                 })
                 trash(fulldir + exfile)
                 watcher.on('unlink', path => {
+                    path = Utils.reportBadge(path)
                     report.push(`File ${path} has been removed`)
                 })
             }
