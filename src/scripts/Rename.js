@@ -6,7 +6,7 @@ export const Rename = {
     
 /**
  * @param fulldir   : full directory with absolute path
- * @param filename  : file name
+ * @param oldname   : file name before changed
  * @param newfile   : new file name
  */
     renameFunc: function (fulldir, oldname, newname)
