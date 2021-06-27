@@ -15,7 +15,7 @@
             </b-btn>
         </div>
         <b-list-group id="listfile" class="mb-2">
-            <b-list-group-item class="no-highlight"
+            <b-list-group-item class="itemsname"
                 v-for="(item, index) in listfile" :key="index"
                 v-on:click="itemHandler(item)"
                 @click.shift="selectMultiple"
@@ -137,8 +137,9 @@ export default {
 </script>
 
 <style scoped>
-.no-highlight{
+.itemsname{
     user-select: none;
+    font-family: 'Courier New', Courier, monospace;
 }
 #listfile{
     min-height: 300px;
