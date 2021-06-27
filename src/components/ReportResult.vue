@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div v-for="(item, i) in reportList" :key="i" class="mt-2">
-            <b-alert variant="info">
-                <div v-html="item.message">{{ item.message }}</div>
+        <div v-for="item in reportList" :key="item" class="mt-2">
+            <b-alert variant="info" show dismissible>
+                <div v-html="item">{{ item }}</div>
             </b-alert>
         </div>
     </div>
@@ -14,6 +14,8 @@ import { BAlert, BFormGroup } from 'bootstrap-vue'
 Vue.component('b-alert', BAlert)
 Vue.component('b-form-group', BFormGroup)
 
+//this will save result log as array
+var tempResData = []
 export default {
     name: 'ReportResult',
     props: {
@@ -30,13 +32,12 @@ export default {
         resultHandler: function () {
             if(this.resultHandler.length > 0)
             {
-                //reset the reportlist data to prevent duplicate alert
-                if(this.reportList.length > 0)
-                    this.reportList = []
                 for(var i = 0; i < this.resultHandler.length; i++)
                 {
-                    this.reportList.push({message: this.resultHandler[i]})
+                    tempResData.push(this.resultHandler[i])
                 }
+                //array distinct to prevent redundant data
+                this.reportList = [...new Set(tempResData)]
             }
         }
     }
