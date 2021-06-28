@@ -44,24 +44,6 @@ export const Rename = {
         }
         return tableData
     },
-    deleteFunc: function(fulldir, listfile, deleteChar)
-    {
-        const length = listfile.length
-
-        //reset report array
-        report = []
-
-        for(var l = 0; l < length; l++)
-        {
-            if(listfile[l].selected == true)
-            {
-                var filename = listfile[l].name
-                var newname = filename.replace(deleteChar, "")
-                this.renameFunc(fulldir, filename, newname)
-            }
-        }
-        return report
-    },
     replaceFunc: function (fulldir, listfile, repfrom, repto)
     {
         const length = listfile.length

@@ -10,18 +10,6 @@
                     <div v-if="selected == 1">
                         <b-row>
                             <b-col>
-                                <b-form-input class="form-control form-control-sm" v-model="name1" placeholder="delete"></b-form-input>
-                            </b-col>
-                        </b-row>
-                        <b-row>
-                            <b-col>
-                                <b-table :items="dataPreview" sticky-header="true"></b-table>
-                            </b-col>
-                        </b-row>
-                    </div>
-                    <div v-else-if="selected == 2">
-                        <b-row>
-                            <b-col>
                                 <b-form-input class="form-control form-control-sm" v-model="name1" placeholder="from"></b-form-input>
                             </b-col>
                             <b-col>
@@ -34,7 +22,7 @@
                             </b-col>
                         </b-row>
                     </div>
-                    <div v-else-if="selected == 3">
+                    <div v-else-if="selected == 2">
                         <b-row>
                             <b-col>
                                 <b-form-input class="form-control form-control-sm" v-model="name1" placeholder="before"></b-form-input>
@@ -49,7 +37,7 @@
                             </b-col>
                         </b-row>
                     </div>
-                    <div v-else-if="selected == 4">
+                    <div v-else-if="selected == 3">
                         Are You Sure?
                     </div>
                 </b-modal>
@@ -99,10 +87,9 @@ export default {
             modaleditingshow: false,
             options: [
                 { value: null, text: 'select an option' },
-                { value: '1', text: 'Rename File: delete' },
-                { value: '2', text: 'Rename File: replace' },
-                { value: '3', text: 'Rename File: insert' },
-                { value: '4', text: 'Manage File: delete duplicated' }
+                { value: '1', text: 'Rename File: replace' },
+                { value: '2', text: 'Rename File: insert' },
+                { value: '3', text: 'Manage File: delete duplicated' }
             ],
             dataPreview: []
         }
@@ -125,20 +112,15 @@ export default {
         handleOk () {
             if(this.selected == 1)
             {
-                const rresult = Rename.deleteFunc(this.fulldirHandler, this.listDataHandler, this.name1)
+                const rresult = Rename.replaceFunc(this.fulldirHandler, this.listDataHandler, this.name1, this.name2)
                 this.afterFunction(rresult)
             }
             if(this.selected == 2)
             {
-                const rresult = Rename.replaceFunc(this.fulldirHandler, this.listDataHandler, this.name1, this.name2)
-                this.afterFunction(rresult)
-            }
-            if(this.selected == 3)
-            {
                 const rresult = Rename.insertFunc(this.fulldirHandler, this.listDataHandler, this.name1, this.name2)
                 this.afterFunction(rresult)
             }
-            if(this.selected == 4)
+            if(this.selected == 3)
             {
                 const rresult = Manage.deleteDuplicated(this.fulldirHandler, this.listDataHandler)
                 this.afterFunction(rresult)
