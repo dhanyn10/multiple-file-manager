@@ -38,7 +38,7 @@
                         </b-row>
                     </div>
                     <div v-else-if="selected == 3">
-                        Are You Sure? Here the data list that will be moved to recycle bin
+                        <p class="text-center">Are you sure?<br/>Here the data list that will be moved to recycle bin</p>
                         <b-table :items="dataPreview" sticky-header="true"></b-table>
                     </div>
                 </b-modal>
