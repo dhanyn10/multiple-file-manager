@@ -77,7 +77,7 @@ export const Manage = {
             for(var t = 0; t < arrfilename.length; t++)
             {
                 tableData.push({
-                    Number: t,
+                    Number: t + 1,
                     Filenames: arrfilename[t] + "." + fileEx
                 })
             }
