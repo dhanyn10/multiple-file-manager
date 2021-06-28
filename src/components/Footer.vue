@@ -38,7 +38,8 @@
                         </b-row>
                     </div>
                     <div v-else-if="selected == 3">
-                        Are You Sure?
+                        Are You Sure? Here the data list that will be moved to recycle bin
+                        <b-table :items="dataPreview" sticky-header="true"></b-table>
                     </div>
                 </b-modal>
                 <b-btn size="sm" v-on:click="setEditing">Go</b-btn>
@@ -100,6 +101,14 @@ export default {
         },
         setEditing () {
             if(this.selected > 0) this.modaleditingshow = true
+            if(this.selected == 3)
+            {
+                const tempPrev = Manage.prevDuplicated(this.fulldirHandler, this.listDataHandler)
+                if(tempPrev.type == 'array')
+                    this.dataPreview = tempPrev.data
+                else
+                    this.$emit('reportResult', tempPrev.data)
+            }
         },
         afterFunction (reportResult) {
             const rresult = reportResult

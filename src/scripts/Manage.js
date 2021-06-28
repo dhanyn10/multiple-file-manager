@@ -3,7 +3,7 @@ const chokidar = require('chokidar')
 import { Utils } from "../scripts/Utils.js"
 
 export const Manage = {
-    deleteDuplicated: function (fulldir, listfile) {
+    prevDuplicated: function (fulldir, listfile) {
 
         fulldir = Utils.fulldirFunc(fulldir)
 
@@ -11,6 +11,7 @@ export const Manage = {
         var arrfilename = []
         var arrfileunique = []
         var arrfileExtension = []
+        var tableData = []
         var fileEx = ""
         //get total of list file with selected: true
         var listlength = listfile.length
@@ -73,24 +74,51 @@ export const Manage = {
                     }
                 }
             }
-            //delete(trash) all files listed in arrfilename
-            for(var afd = 0; afd < arrfilename.length; afd++)
+            for(var t = 0; t < arrfilename.length; t++)
             {
-                const exfile = arrfilename[afd] + "." + fileEx
-                const watcher = chokidar.watch(fulldir + exfile, {
-                    persistent: false
+                tableData.push({
+                    Number: t,
+                    Filenames: arrfilename[t] + "." + fileEx
                 })
-                trash(fulldir + exfile)
-                watcher.on('unlink', path => {
-                    path = Utils.reportBadge(path)
-                    report.push(`File ${path} has been removed`)
-                })
+            }
+            return {
+                type: 'array',
+                data: tableData
             }
         }
         else
         {
             report.push("files must have the same extension")
+            return {
+                type: 'report',
+                data: report
+            }
         }
-        return report
+    },
+    deleteDuplicated: function (fulldir, listfile) {
+
+        fulldir = Utils.fulldirFunc(fulldir)
+        // this will return data from prevDuplicated
+        const datadup = this.prevDuplicated(fulldir, listfile)
+        if(datadup.type == 'array')
+        {
+            const files = datadup.data
+            var report = []
+
+            // delete(trash) all files listed in arrfilename
+            for(var j = 0; j < files.length; j++)
+            {
+                const completename = files[j].Filenames
+                const watcher = chokidar.watch(fulldir + completename, {
+                    persistent: false
+                })
+                trash(fulldir + completename)
+                watcher.on('unlink', path => {
+                    path = Utils.reportBadge(path)
+                    report.push(`File ${path} has been removed`)
+                })
+            }
+            return report
+        }
     }
 }
