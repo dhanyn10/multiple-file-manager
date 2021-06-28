@@ -155,9 +155,3 @@ export default {
     }
 }
 </script>
-<style>
-.data-preview tbody{
-    max-height: 600px;
-    overflow: auto;
-}
-</style>
