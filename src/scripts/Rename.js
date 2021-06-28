@@ -30,16 +30,29 @@ export const Rename = {
             report.push(`File ${_old} is not exist`)
         }
     },
-    prevRename: function (previous, next, dataList) {
+    prevRename: function (selectedFunc, previous, next, dataList) {
         var tableData = []
         for(var d = 0; d < dataList.length; d++)
         {
             if(dataList[d].selected == true)
             {
-                tableData.push({
-                    before: dataList[d].name,
-                    after: dataList[d].name.replace(previous, next)
-                })
+                if(selectedFunc == 1)
+                {
+                    tableData.push({
+                        before: dataList[d].name,
+                        after: dataList[d].name.replace(previous, next)
+                    })
+                } else if (selectedFunc == 2) {
+                    var originalname    = dataList[d].name
+                    var tempname        = originalname.split(".")
+                    var filename        = tempname[0]
+                    var completename    = previous + filename + next
+                    var newname         = originalname.replace(filename, completename)
+                    tableData.push({
+                        before: originalname,
+                        after: newname
+                    })
+                }
             }
         }
         return tableData

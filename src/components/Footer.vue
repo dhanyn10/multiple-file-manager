@@ -129,10 +129,10 @@ export default {
     },
     watch: {
         name1: function () {
-            this.dataPreview = Rename.prevRename(this.name1, this.name2, this.listDataHandler)
+            this.dataPreview = Rename.prevRename(this.selected, this.name1, this.name2, this.listDataHandler)
         },
         name2: function () {
-            this.dataPreview = Rename.prevRename(this.name1, this.name2, this.listDataHandler)
+            this.dataPreview = Rename.prevRename(this.selected, this.name1, this.name2, this.listDataHandler)
         }
     }
 }
