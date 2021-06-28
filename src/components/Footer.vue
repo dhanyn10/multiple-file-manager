@@ -8,7 +8,16 @@
             <b-nav-item>
                 <b-modal v-model="modaleditingshow" title="Options" @ok="handleOk">
                     <div v-if="selected == 1">
-                        <b-form-input class="form-control form-control-sm" v-model="name1" placeholder="delete"></b-form-input>
+                        <b-row>
+                            <b-col>
+                                <b-form-input class="form-control form-control-sm" v-model="name1" placeholder="delete"></b-form-input>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col>
+                                <b-table :items="dataPreview" sticky-header="true"></b-table>
+                            </b-col>
+                        </b-row>
                     </div>
                     <div v-else-if="selected == 2">
                         <b-row>
@@ -19,6 +28,11 @@
                                 <b-form-input class="form-control form-control-sm" v-model="name2" placeholder="to"></b-form-input>
                             </b-col>
                         </b-row>
+                        <b-row>
+                            <b-col>
+                                <b-table :items="dataPreview" sticky-header="true"></b-table>
+                            </b-col>
+                        </b-row>
                     </div>
                     <div v-else-if="selected == 3">
                         <b-row>
@@ -27,6 +41,11 @@
                             </b-col>
                             <b-col>
                                 <b-form-input class="form-control form-control-sm" v-model="name2" placeholder="after"></b-form-input>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col>
+                                <b-table :items="dataPreview" sticky-header="true"></b-table>
                             </b-col>
                         </b-row>
                     </div>
@@ -84,7 +103,8 @@ export default {
                 { value: '2', text: 'Rename File: replace' },
                 { value: '3', text: 'Rename File: insert' },
                 { value: '4', text: 'Manage File: delete duplicated' }
-            ]
+            ],
+            dataPreview: []
         }
     },
     methods: {
@@ -124,6 +144,20 @@ export default {
                 this.afterFunction(rresult)
             }
         }
+    },
+    watch: {
+        name1: function () {
+            this.dataPreview = Rename.prevRename(this.name1, this.name2, this.listDataHandler)
+        },
+        name2: function () {
+            this.dataPreview = Rename.prevRename(this.name1, this.name2, this.listDataHandler)
+        }
     }
 }
 </script>
+<style>
+.data-preview tbody{
+    max-height: 600px;
+    overflow: auto;
+}
+</style>

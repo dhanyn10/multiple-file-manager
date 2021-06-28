@@ -30,7 +30,20 @@ export const Rename = {
             report.push(`File ${_old} is not exist`)
         }
     },
-
+    prevRename: function (previous, next, dataList) {
+        var tableData = []
+        for(var d = 0; d < dataList.length; d++)
+        {
+            if(dataList[d].selected == true)
+            {
+                tableData.push({
+                    before: dataList[d].name,
+                    after: dataList[d].name.replace(previous, next)
+                })
+            }
+        }
+        return tableData
+    },
     deleteFunc: function(fulldir, listfile, deleteChar)
     {
         const length = listfile.length
