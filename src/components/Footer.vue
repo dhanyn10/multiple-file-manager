@@ -96,7 +96,7 @@ export default {
         }
     },
     methods: {
-        onChange: function (event) {
+        onChange (event) {
             this.selected = event
         },
         setEditing () {
