@@ -57,9 +57,7 @@ export const Manage = {
             //this will return list of arrfilename that will be executed
             for(var afu = 0; afu < arrfileunique.length; afu++)
             {
-                // console.log(arrfileunique[afu])
                 const fileUnique = arrfileunique[afu] + "." + fileEx
-                // console.log(fileUnique)
                 for(var afn = 0; afn < arrfilename.length; afn++)
                 {
                     const tempdeletedname = arrfilename[afn] + "." + fileEx
