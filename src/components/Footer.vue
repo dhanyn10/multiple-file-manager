@@ -100,15 +100,19 @@ export default {
             this.selected = event
         },
         setEditing () {
-            if(this.selected > 0) this.modaleditingshow = true
             if(this.selected == 3)
             {
                 const tempPrev = Manage.prevDuplicated(this.fulldirHandler, this.listDataHandler)
                 if(tempPrev.type == 'array')
+                {
+                    this.modaleditingshow = true
                     this.dataPreview = tempPrev.data
-                else
+                }
+                else if(tempPrev.type == 'report')
                     this.$emit('reportResult', tempPrev.data)
             }
+            else if(this.selected > 0 && this.selected != 3)
+                this.modaleditingshow = true
         },
         afterFunction (reportResult) {
             const rresult = reportResult
