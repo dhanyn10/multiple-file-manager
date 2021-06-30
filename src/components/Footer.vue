@@ -6,7 +6,7 @@
                 <b-form-select size="sm" v-model="selected" v-on:change="onChange($event)" :options="options" id="actions"></b-form-select>
             </b-nav-item>
             <b-nav-item>
-                <b-modal v-model="modaleditingshow" title="Options" @ok="handleOk">
+                <b-modal v-model="modalForm" title="Options" @ok="handleOk">
                     <div v-if="selected == 1">
                         <b-row>
                             <b-col>
@@ -85,7 +85,7 @@ export default {
             name1: '',
             name2: '',
             selected: null,
-            modaleditingshow: false,
+            modalForm: false,
             options: [
                 { value: null, text: 'select an option' },
                 { value: '1', text: 'Rename : replace' },
@@ -109,7 +109,7 @@ export default {
                     this.name1 = ''
                     this.name2 = ''
                     // show modal
-                    this.modaleditingshow = true
+                    this.modalForm = true
                     // show preview table
                     this.dataPreview = tempPrev.data
                 }
@@ -122,7 +122,7 @@ export default {
                 this.name1 = ''
                 this.name2 = ''
                 // show modal
-                this.modaleditingshow = true
+                this.modalForm = true
                 // show preview table
                 this.dataPreview = Rename.prevRename(this.selected, this.name1, this.name2, this.listDataHandler)
             }
