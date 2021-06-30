@@ -88,9 +88,9 @@ export default {
             modaleditingshow: false,
             options: [
                 { value: null, text: 'select an option' },
-                { value: '1', text: 'Rename File: replace' },
-                { value: '2', text: 'Rename File: insert' },
-                { value: '3', text: 'Manage File: delete duplicated' }
+                { value: '1', text: 'Rename : replace' },
+                { value: '2', text: 'Rename : insert' },
+                { value: '3', text: 'Manage : delete duplicated' }
             ],
             dataPreview: []
         }
