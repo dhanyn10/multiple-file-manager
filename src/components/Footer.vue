@@ -105,14 +105,27 @@ export default {
                 const tempPrev = Manage.prevDuplicated(this.fulldirHandler, this.listDataHandler)
                 if(tempPrev.type == 'array')
                 {
+                    // reset modal input form
+                    this.name1 = ''
+                    this.name2 = ''
+                    // show modal
                     this.modaleditingshow = true
+                    // show preview table
                     this.dataPreview = tempPrev.data
                 }
                 else if(tempPrev.type == 'report')
                     this.$emit('reportResult', tempPrev.data)
             }
             else if(this.selected > 0 && this.selected != 3)
+            {
+                // reset modal input form
+                this.name1 = ''
+                this.name2 = ''
+                // show modal
                 this.modaleditingshow = true
+                // show preview table
+                this.dataPreview = Rename.prevRename(this.selected, this.name1, this.name2, this.listDataHandler)
+            }
         },
         afterFunction (reportResult) {
             const rresult = reportResult
