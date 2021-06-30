@@ -15,6 +15,7 @@ export const Manage = {
         var tableData = []
         //get total of list file with selected: true
         var listlength = listfile.length
+        var listSelected = 0
         for(var l = 0; l < listlength; l++)
         {
             if(listfile[l].selected == true)
@@ -26,7 +27,12 @@ export const Manage = {
                 arrfilename.push(tempname)
                 //insert all file extension
                 arrfileExtension.push(fileEx)
+                listSelected++
             }
+        }
+        if(listSelected == 0)
+        {
+            report.push('You dont choose any file yet')
         }
         //check of array of file extension has same value
         const allEqual = arr => arr.every(v => v === arr[0])
@@ -79,18 +85,19 @@ export const Manage = {
                     Filenames: arrfilename[t] + "." + fileEx
                 })
             }
-            return {
-                type: 'array',
-                data: tableData
-            }
+            if(tableData.length > 0)
+                return {
+                    type: 'array',
+                    data: tableData
+                }
         }
         else
         {
             report.push("files must have the same extension")
-            return {
-                type: 'report',
-                data: report
-            }
+        }
+        return {
+            type: 'report',
+            data: report
         }
     },
     deleteDuplicated: function (fulldir, listfile) {
