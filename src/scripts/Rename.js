@@ -38,8 +38,8 @@ export const Rename = {
             {
                 if(selectedFunc == 1)
                 {
-                    const filename = dataList[d].name
-                    const newname = filename.replace(previous, next)
+                    let filename = dataList[d].name
+                    let newname = filename.replace(previous, next)
                     tableData.push({
                         before: filename,
                         after: newname
@@ -47,11 +47,11 @@ export const Rename = {
                 }
                 else if (selectedFunc == 2)
                 {
-                    var originalname    = dataList[d].name
-                    var tempname        = originalname.split(".")
-                    var filename        = tempname[0]
-                    var completename    = previous + filename + next
-                    var newname         = originalname.replace(filename, completename)
+                    let originalname    = dataList[d].name
+                    let tempname        = originalname.split(".")
+                    let filename        = tempname[0]
+                    let completename    = previous + filename + next
+                    let newname         = originalname.replace(filename, completename)
                     tableData.push({
                         before: originalname,
                         after: newname
