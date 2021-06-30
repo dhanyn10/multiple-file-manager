@@ -7,12 +7,12 @@ export const Manage = {
 
         fulldir = Utils.fulldirFunc(fulldir)
 
-        var report = []
         var arrfilename = []
         var arrfileunique = []
         var arrfileExtension = []
-        var tableData = []
         var fileEx = ""
+        var report = []
+        var tableData = []
         //get total of list file with selected: true
         var listlength = listfile.length
         for(var l = 0; l < listlength; l++)
