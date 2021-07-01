@@ -14,6 +14,9 @@ module.exports = {
                 },
                 dmg: {
                     icon: './public/icon/icon.png'
+                },
+                mac: {
+                    asarUnpack: "**/*.node"
                 }
             },
             externals: ['chokidar'],
