@@ -7,21 +7,21 @@ export const Manage = {
 
         fulldir = Utils.fulldirFunc(fulldir)
 
-        var arrfilename = []
-        var arrfileunique = []
-        var arrfileExtension = []
-        var fileEx = ""
-        var report = []
-        var tableData = []
+        let arrfilename = []
+        let arrfileunique = []
+        let arrfileExtension = []
+        let fileEx = ""
+        let report = []
+        let tableData = []
         //get total of list file with selected: true
-        var listlength = listfile.length
-        var listSelected = 0
-        for(var l = 0; l < listlength; l++)
+        const listlength = listfile.length
+        let listSelected = 0
+        for(let l = 0; l < listlength; l++)
         {
             if(listfile[l].selected == true)
             {
                 const originalname = listfile[l].name.split(".")
-                var tempname = originalname[0]
+                let tempname = originalname[0]
                 fileEx = originalname[1]
                 //insert all file name
                 arrfilename.push(tempname)
@@ -45,10 +45,10 @@ export const Manage = {
         if(resultEqual == true)
         {
             //find unique file name, then insert them to arrfileunique
-            for(var d = 0; d < arrfilename.length; d++)
+            for(let d = 0; d < arrfilename.length; d++)
             {
                 var duplicatedfile = false
-                for(var u = 0; u < arrfileunique.length; u++)
+                for(let u = 0; u < arrfileunique.length; u++)
                 {
                     if(arrfilename[d].indexOf(arrfileunique[u]) > -1)
                     {
@@ -61,10 +61,10 @@ export const Manage = {
                 }
             }
             //this will return list of arrfilename that will be executed
-            for(var afu = 0; afu < arrfileunique.length; afu++)
+            for(let afu = 0; afu < arrfileunique.length; afu++)
             {
                 const fileUnique = arrfileunique[afu] + "." + fileEx
-                for(var afn = 0; afn < arrfilename.length; afn++)
+                for(let afn = 0; afn < arrfilename.length; afn++)
                 {
                     const tempdeletedname = arrfilename[afn] + "." + fileEx
                     if(fileUnique == tempdeletedname)
@@ -78,7 +78,7 @@ export const Manage = {
                     }
                 }
             }
-            for(var t = 0; t < arrfilename.length; t++)
+            for(let t = 0; t < arrfilename.length; t++)
             {
                 tableData.push({
                     Number: t + 1,
@@ -108,10 +108,10 @@ export const Manage = {
         if(datadup.type == 'array')
         {
             const files = datadup.data
-            var report = []
+            let report = []
 
             // delete(trash) all files listed in arrfilename
-            for(var j = 0; j < files.length; j++)
+            for(let j = 0; j < files.length; j++)
             {
                 const completename = files[j].Filenames
                 const watcher = chokidar.watch(fulldir + completename, {
