@@ -1,5 +1,5 @@
 const fs = require('fs')
-var report = []
+let report = []
 import { Utils } from "../scripts/Utils.js"
 
 export const Rename = {
@@ -31,8 +31,8 @@ export const Rename = {
         }
     },
     prevRename: function (selectedFunc, previous, next, dataList) {
-        var tableData = []
-        for(var d = 0; d < dataList.length; d++)
+        let tableData = []
+        for(let d = 0; d < dataList.length; d++)
         {
             if(dataList[d].selected == true)
             {
@@ -68,12 +68,12 @@ export const Rename = {
         //reset report array
         report = []
 
-        for(var l = 0; l < length; l++)
+        for(let l = 0; l < length; l++)
         {
             if(listfile[l].selected == true)
             {
-                var filename = listfile[l].name
-                var newname = filename.replace(repfrom, repto)
+                let filename = listfile[l].name
+                let newname = filename.replace(repfrom, repto)
                 this.renameFunc(fulldir, filename, newname)
             }
         }
@@ -86,17 +86,17 @@ export const Rename = {
         //reset report array
         report = []
 
-        for(var l = 0; l < length; l++)
+        for(let l = 0; l < length; l++)
         {
             if(listfile[l].selected == true)
             {
-                var originalname    = listfile[l].name
-                var tempname        = originalname.split(".")
+                let originalname    = listfile[l].name
+                let tempname        = originalname.split(".")
 
                 //assuming you file name contains only filename with single extension
-                var filename        = tempname[0]
-                var completename    = before + filename + after
-                var newname         = originalname.replace(filename, completename)
+                let filename        = tempname[0]
+                let completename    = before + filename + after
+                let newname         = originalname.replace(filename, completename)
                 
                 this.renameFunc(fulldir, originalname, newname)
             }
