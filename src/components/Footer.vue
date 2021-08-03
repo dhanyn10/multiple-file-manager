@@ -69,15 +69,9 @@ Vue.directive('b-modal', VBModal)
 export default {
     name: 'Footer',
     props: {
-        footerData: {
-            type: String
-        },
-        listDataHandler: {
-            type: Array
-        },
-        fulldirHandler: {
-            type: String
-        }
+        footerData: String,
+        listDataHandler: Array,
+        fulldirHandler: String
     },
     data()
     {

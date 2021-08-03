@@ -50,9 +50,7 @@ function getInitialData()
 export default {
     name: 'ListFile',
     props: {
-        lfdirHandler: {
-            type: String
-        }
+        lfdirHandler: String
     },
     data () {
         return {

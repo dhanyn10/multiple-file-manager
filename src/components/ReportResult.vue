@@ -19,9 +19,7 @@ var tempResData = []
 export default {
     name: 'ReportResult',
     props: {
-        resultHandler: {
-            type: Array
-        }
+        resultHandler: Array
     },
     data () {
         return {
