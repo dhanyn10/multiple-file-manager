@@ -12,7 +12,8 @@
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     "start": "npm run electron:serve",
-    "electron:generate-icons": "electron-icon-builder --input=./public/icon/icon.png --output=build --flatten"
+    "electron:generate-icons": "electron-icon-builder --input=./public/icon/icon.png --output=build --flatten",
+    "test": "jest"
   },
   "author": {
     "name": "Dhany Nurdiansyah",
@@ -43,6 +44,8 @@
     "electron-icon-builder": "^2.0.1",
     "eslint": "^7.28.0",
     "eslint-plugin-vue": "^7.10.0",
+    "jest": "^27.0.6",
+    "spectron": "14",
     "vue-cli-plugin-electron-builder": "^1.4.6",
     "vue-template-compiler": "^2.6.13"
   },
