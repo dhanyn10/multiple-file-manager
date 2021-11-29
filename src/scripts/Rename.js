@@ -93,7 +93,7 @@ export const Rename = {
                 let originalname    = listfile[l].name
                 let tempname        = originalname.split(".")
 
-                //assuming you file name contains only filename with single extension
+                //assuming your file name contains only filename with single extension
                 let filename        = tempname[0]
                 let completename    = before + filename + after
                 let newname         = originalname.replace(filename, completename)
