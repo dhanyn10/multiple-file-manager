@@ -31,7 +31,10 @@ export default {
             shell.openExternal('https://github.com/dhanyn10/multiple-file-manager/issues')
         },
         toggleDevtools () {
-            remote.getCurrentWindow().toggleDevTools({mode: 'bottom'})
+            if(remote.getCurrentWindow().isDevToolsOpened() == false)
+                remote.getCurrentWindow().openDevTools({mode: 'bottom'})
+            else
+                remote.getCurrentWindow().closeDevTools()
         }
     }
 }
