@@ -26,4 +26,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: yarn install
+    - name: install dep
+      run: yarn install
+    - name: build
+      run: npm run electron:build
