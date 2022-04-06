@@ -26,3 +26,6 @@ jobs:
     - name: install dep
       working-directory: ./app
       run: yarn install
+    - name: Build App
+      working-directory: ./app
+      run: npm run electron:build -- --linux deb
