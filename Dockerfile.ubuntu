@@ -1,0 +1,17 @@
+FROM ubuntu:18.04
+
+WORKDIR /app
+
+COPY /app /app
+# update 
+RUN apt-get update
+# install curl 
+RUN apt-get install binutils curl -y
+# get install script and pass it to execute: 
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
+# and install node 
+RUN apt-get install nodejs -y
+# confirm that it was successful 
+CMD node -v
+
+CMD npm run electron:build -- --linux deb
