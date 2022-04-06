@@ -1,0 +1,5 @@
+*
+!/macos
+!/ubuntu
+!.gitignore
+!.gitkeep
