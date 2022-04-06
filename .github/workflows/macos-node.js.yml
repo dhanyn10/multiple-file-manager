@@ -28,4 +28,4 @@ jobs:
       run: yarn install
     - name: Build App
       working-directory: ./app
-      run: npm run electron:build -- --macos dmg
+      run: npm run electron:build -- --macos dmg --publish=never
