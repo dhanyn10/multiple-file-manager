@@ -43,7 +43,7 @@
     "electron-icon-builder": "^2.0.1",
     "eslint": "^7.28.0",
     "eslint-plugin-vue": "^7.10.0",
-    "vue-cli-plugin-electron-builder": "^1.4.6",
+    "vue-cli-plugin-electron-builder": "^2.1.1",
     "vue-template-compiler": "^2.6.13"
   },
   "eslintConfig": {
