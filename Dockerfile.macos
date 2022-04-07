@@ -6,9 +6,17 @@ COPY /app /app
 
 #fix permission
 USER root
+
 #download homebrew installer
 RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o - > install.sh
+
 #install homebrew
 RUN /bin/bash install.sh
 
-CMD npm run electron:build -- --macos dmg
+#install nodejs
+RUN brew install node
+
+#install yarn
+RUN npm install --global yarn
+
+CMD yarn electron:build --macos dmg
