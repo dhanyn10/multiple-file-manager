@@ -4,21 +4,9 @@ WORKDIR /app
 
 COPY /app /app
 
-#fix permission
-USER root
 
-#install xcode
-RUN xcode-select --install
-#download homebrew installer
-RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o - > install.sh
-
-#install homebrew
-RUN /bin/bash install.sh
-#add Homebrew to your PATH
-CMD echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /root/.profile
-CMD eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 #install nodejs
-RUN brew install node
+RUN port install nodejs16
 
 #install yarn
 RUN npm install --global yarn
