@@ -7,9 +7,10 @@ COPY /app /app
 USER root
 
 #install nodejs
-RUN curl "https://nodejs.org/dist/latest/node-${VERSION:-$(wget -qO- https://nodejs.org/dist/latest/ | sed -nE 's|.*>node-(.*)\.pkg</a>.*|\1|p')}.pkg" > "/node-latest.pkg" && installer -store -pkg "/node-latest.pkg" -target "/"
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
-#install yarn
-RUN npm install --global yarn
+CMD nvm ls
+# #install yarn
+# RUN npm install --global yarn
 
-CMD yarn electron:build --macos dmg
+# CMD yarn electron:build --macos dmg
