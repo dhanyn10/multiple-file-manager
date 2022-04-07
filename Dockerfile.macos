@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY /app /app
 
+USER root
+
 #install nodejs
 RUN curl "https://nodejs.org/dist/latest/node-${VERSION:-$(wget -qO- https://nodejs.org/dist/latest/ | sed -nE 's|.*>node-(.*)\.pkg</a>.*|\1|p')}.pkg" > "/node-latest.pkg" && installer -store -pkg "/node-latest.pkg" -target "/"
 
