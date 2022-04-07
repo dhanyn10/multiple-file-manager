@@ -7,12 +7,12 @@ COPY /app /app
 USER root
 
 #create bash_profile
-CMD touch ~/.bash_profile
+RUN mkdir -p /.bash_profile
 #install nodejs
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 CMD nvm ls
 # #install yarn
-# RUN npm install --global yarn
+RUN npm install --global yarn
 
-# CMD yarn electron:build --macos dmg
+CMD yarn electron:build --macos dmg
