@@ -4,7 +4,9 @@ WORKDIR /app
 
 COPY /app /app
 
-#install nodejs
-RUN curl "https://nodejs.org/dist/latest/node-${VERSION:-$(wget -qO- https://nodejs.org/dist/latest/ | sed -nE 's|.*>node-(.*)\.pkg</a>.*|\1|p')}.pkg" > "$HOME/arch/Downloads/node-latest.pkg" && sudo installer -store -pkg "$HOME/arch/Downloads/node-latest.pkg" -target "/"
+#download homebrew installer
+RUN curl -fsSL -o install.sh https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+#install homebrew
+RUN /bin/bash install.sh
 
 CMD npm run electron:build -- --macos dmg
