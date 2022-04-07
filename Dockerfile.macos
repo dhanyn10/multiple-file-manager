@@ -5,8 +5,8 @@ WORKDIR /app
 COPY /app /app
 
 #download homebrew installer
-RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o - > install.sh
 #install homebrew
-RUN install.sh
+RUN /bin/bash install.sh
 
 CMD npm run electron:build -- --macos dmg
