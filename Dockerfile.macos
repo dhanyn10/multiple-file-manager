@@ -4,8 +4,13 @@ WORKDIR /app
 
 COPY /app /app
 
+#fix permission
+RUN useradd -ms /bin/bash admin
+RUN chown -R admin:admin /app
+RUN chmod 755 /app
+USER admin
 #download homebrew installer
-RUN chmod u+x curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o - > install.sh
+RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o - > install.sh
 #install homebrew
 RUN /bin/bash install.sh
 
