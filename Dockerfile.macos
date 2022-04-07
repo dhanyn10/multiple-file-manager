@@ -12,10 +12,9 @@ RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.s
 
 #install homebrew
 RUN /bin/bash install.sh
-RUN mkdir -p /opt/homebrew/bin/brew
 #add Homebrew to your PATH
-RUN echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-RUN eval "$(/opt/homebrew/bin/brew shellenv)"
+RUN echo 'eval "$(/usr/local/Homebrew/bin/brew shellenv)"' >> ~/.zprofile
+RUN eval "$(/usr/local/Homebrew/bin/brew shellenv)"
 #install nodejs
 RUN brew install node
 
