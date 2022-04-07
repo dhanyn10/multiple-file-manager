@@ -5,7 +5,7 @@ WORKDIR /app
 COPY /app /app
 
 #download homebrew installer
-RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o - > install.sh
+RUN chmod u+x curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o - > install.sh
 #install homebrew
 RUN /bin/bash install.sh
 
