@@ -4,9 +4,8 @@ WORKDIR /app
 
 COPY /app /app
 
-
 #install nodejs
-RUN curl "https://nodejs.org/dist/latest/node-${VERSION:-$(wget -qO- https://nodejs.org/dist/latest/ | sed -nE 's|.*>node-(.*)\.pkg</a>.*|\1|p')}.pkg" > "$HOME/Downloads/node-latest.pkg" && sudo installer -store -pkg "$HOME/Downloads/node-latest.pkg" -target "/"
+RUN curl "https://nodejs.org/dist/latest/node-${VERSION:-$(wget -qO- https://nodejs.org/dist/latest/ | sed -nE 's|.*>node-(.*)\.pkg</a>.*|\1|p')}.pkg" > "/node-latest.pkg" && installer -store -pkg "/node-latest.pkg" -target "/"
 
 #install yarn
 RUN npm install --global yarn
