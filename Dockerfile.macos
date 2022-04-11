@@ -1,24 +1,8 @@
-FROM sickcodes/docker-osx:catalina
+from electronuserland/builder
 
 WORKDIR /app
-
 COPY /app /app
-
-#fix permission
-USER root
-
-#download homebrew installer
-RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o - > install.sh
-
-#install homebrew
-RUN /bin/bash install.sh
-#add Homebrew to your PATH
-RUN echo 'eval "$(/usr/local/Homebrew/bin/brew shellenv)"' >> ~/.zprofile
-RUN eval "$(/usr/local/Homebrew/bin/brew shellenv)"
-#install nodejs
-RUN brew install node
-
-#install yarn
-RUN npm install --global yarn
+run yarn install
+run yarn global add electron-builder
 
 CMD yarn electron:build --macos dmg

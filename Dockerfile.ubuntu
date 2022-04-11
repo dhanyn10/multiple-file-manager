@@ -1,18 +1,8 @@
-FROM ubuntu:18.04
+from electronuserland/builder
 
 WORKDIR /app
-
 COPY /app /app
-# update 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends apt-utils
-# install curl
-RUN apt-get install binutils curl -y
-# get install script and pass it to execute: 
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
-# and install node 
-RUN apt-get install nodejs -y
-# confirm that it was successful 
-CMD node -v
+run yarn install
+run yarn global add electron-builder
 
-CMD npm run electron:build -- --linux deb
+CMD yarn electron:build --linux deb

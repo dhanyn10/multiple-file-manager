@@ -2,7 +2,7 @@ version: '3.8'
 services:
 
   ubuntu:
-    container_name: mfm
+    container_name: mfm-linux
     build:
       context: .
       dockerfile: Dockerfile.ubuntu
@@ -11,7 +11,7 @@ services:
   
   macos:
     working_dir: /app
-    container_name: mfm
+    container_name: mfm-macos
     build:
       context: .
       dockerfile: Dockerfile.macos
