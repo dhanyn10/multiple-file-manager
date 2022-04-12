@@ -1,0 +1,8 @@
+from electronuserland/builder
+
+WORKDIR /app
+COPY /app /app
+run yarn install
+run yarn global add electron-builder
+
+CMD yarn electron:build --linux deb

@@ -11,6 +11,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    defaults:
+       run:
+         working-directory: ./app/
     strategy:
       matrix:
         node-version: [16.x]
@@ -22,10 +25,9 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        cache: 'yarn'
+        cache-dependency-path: './app/yarn.lock'
     - name: install dep
-      working-directory: ./app
       run: yarn install
     - name: Build App
-      working-directory: ./app
-      run: npm run electron:build -- --linux deb
+      run: yarn electron:build --linux deb
