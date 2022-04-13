@@ -30,4 +30,4 @@ jobs:
     - name: install dep
       run: yarn install
     - name: Build App
-      run: yarn electron:build --win nsis
+      run: yarn electron:build --win nsis --publish=never
