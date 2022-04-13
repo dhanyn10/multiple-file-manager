@@ -1,11 +1,20 @@
 version: '3.8'
 services:
 
-  ubuntu:
+  windows:
+    working_dir: /app
+    container_name: mfm-windows
+    build:
+      context: .
+      dockerfile: ./dockerfile/Dockerfile.windows
+    volumes:
+    - ./output/windows:/app/dist_electron
+
+  linux:
     container_name: mfm-linux
     build:
       context: .
-      dockerfile: Dockerfile.ubuntu
+      dockerfile: ./dockerfile/Dockerfile.ubuntu
     volumes:
     - ./output/ubuntu:/app/dist_electron
   
@@ -14,6 +23,6 @@ services:
     container_name: mfm-macos
     build:
       context: .
-      dockerfile: Dockerfile.macos
+      dockerfile: ./dockerfile/Dockerfile.macos
     volumes:
     - ./output/macos:/app/dist_electron

@@ -1,4 +1,4 @@
-name: Docker Build Ubuntu & macOS
+name: docker build windows, linux, macos
 
 on:
   push:
