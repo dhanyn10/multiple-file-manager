@@ -1,6 +1,7 @@
 .DS_Store
 /output/ubuntu/*
 /output/macos/*
+/output/windows/*
 !.gitkeep
 
 # local env files

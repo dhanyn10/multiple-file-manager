@@ -1,7 +1,16 @@
 version: '3.8'
 services:
 
-  ubuntu:
+  windows:
+    working_dir: /app
+    container_name: mfm-windows
+    build:
+      context: .
+      dockerfile: Dockerfile.windows
+    volumes:
+    - ./output/windows:/app/dist_electron
+
+  linux:
     container_name: mfm-linux
     build:
       context: .
