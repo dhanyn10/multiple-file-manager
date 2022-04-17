@@ -1,8 +1,8 @@
-from electronuserland/builder
+from sickcodes/docker-osx:auto
 
-WORKDIR /app
-COPY /app /app
-run yarn install
-run yarn global add electron-builder
 
-CMD yarn electron:build --macos dmg
+USER root
+
+RUN xcode-select --install
+
+RUN curl "https://nodejs.org/dist/latest/node-${VERSION:-$(wget -qO- https://nodejs.org/dist/latest/ | sed -nE 's|.*>node-(.*)\.pkg</a>.*|\1|p')}.pkg" > "/node-latest.pkg" && installer -store -pkg "/node-latest.pkg" -target "/"
