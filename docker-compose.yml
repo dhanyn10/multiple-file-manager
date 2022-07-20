@@ -17,12 +17,3 @@ services:
       dockerfile: ./dockerfile/Dockerfile.ubuntu
     volumes:
     - ./output/ubuntu:/app/dist_electron
-  
-  macos:
-    working_dir: /app
-    container_name: mfm-macos
-    build:
-      context: .
-      dockerfile: ./dockerfile/Dockerfile.macos
-    volumes:
-    - ./output/macos:/app/dist_electron
