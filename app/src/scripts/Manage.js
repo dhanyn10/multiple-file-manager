@@ -125,5 +125,31 @@ export const Manage = {
             }
             return report
         }
+    },
+
+    runCommand: function (fulldir, listfile, txtCmmand) {
+        const fulldir = Utils.fulldirFunc(fulldir)
+        
+        //get total of list file with selected: true
+        const listlength = listfile.length
+        let listSelected = 0
+        for(let l = 0; l < listlength; l++)
+        {
+            if(listfile[l].selected == true)
+            {
+                const originalname = listfile[l].name.split(".")
+                let tempname = originalname[0]
+                fileEx = originalname[1]
+                //insert all file name
+                arrfilename.push(tempname)
+                //insert all file extension
+                arrfileExtension.push(fileEx)
+                listSelected++
+            }
+        }
+        if(listSelected == 0)
+        {
+            report.push('You dont choose any file yet')
+        }
     }
 }
