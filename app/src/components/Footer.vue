@@ -84,7 +84,8 @@ export default {
                 { value: null, text: 'select an option' },
                 { value: '1', text: 'Rename : replace' },
                 { value: '2', text: 'Rename : insert' },
-                { value: '3', text: 'Manage : delete duplicated' }
+                { value: '3', text: 'Manage : delete duplicated' },
+                { value: '4', text: 'Manage : run command' }
             ],
             dataPreview: []
         }
