@@ -1,4 +1,4 @@
-from electronuserland/builder:16
+from electronuserland/builder:18
 
 WORKDIR /app
 COPY /app /app
