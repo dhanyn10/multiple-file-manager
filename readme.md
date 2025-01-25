@@ -1,8 +1,6 @@
 <div align="center">
 
 # Multiple File Manager  
-[![devDependencies Status](https://david-dm.org/dhanyn10/multiple-file-manager/dev-status.svg)](https://david-dm.org/dhanyn10/multiple-file-manager?type=dev)
-[![dependencies Status](https://david-dm.org/dhanyn10/multiple-file-manager/status.svg)](https://david-dm.org/dhanyn10/multiple-file-manager)
 [![version](https://badge.fury.io/gh/dhanyn10%2Fmultiple-file-manager.svg)](https://badge.fury.io/gh/dhanyn10%2Fmultiple-file-manager)
 </div>
 
