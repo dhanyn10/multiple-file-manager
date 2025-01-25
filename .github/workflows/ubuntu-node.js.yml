@@ -28,6 +28,6 @@ jobs:
         cache: 'yarn'
         cache-dependency-path: './app/yarn.lock'
     - name: install dep
-      run: yarn install
+      run: npm install
     - name: Build App
-      run: yarn electron:build --linux deb
+      run: npm electron:build --linux deb
