@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useClickOutside } from '../hooks/useClickOutside';
 
 interface ActionSidebarProps {
@@ -17,8 +17,43 @@ const ActionSidebar = ({ selectedFiles, onClose }: ActionSidebarProps) => {
   const [selectedAction, setSelectedAction] = useState('');
   const [isActionDropdownOpen, setIsActionDropdownOpen] = useState(false);
   const actionDropdownRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLElement>(null);
+
+  const [isResizing, setIsResizing] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(384); // Corresponds to w-96
 
   useClickOutside(actionDropdownRef, () => setIsActionDropdownOpen(false));
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsResizing(true);
+  };
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (isResizing) {
+      const newWidth = window.innerWidth - e.clientX;
+      if (newWidth > 320 && newWidth < window.innerWidth * 0.75) { // Min 320px, Max 75% of window
+        setSidebarWidth(newWidth);
+      }
+    }
+  }, [isResizing]);
+
+  const handleMouseUp = useCallback(() => setIsResizing(false), []);
+
+  useEffect(() => {
+    if (isResizing) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing, handleMouseMove, handleMouseUp]);
 
   const handleClose = () => {
     onClose();
@@ -30,7 +65,17 @@ const ActionSidebar = ({ selectedFiles, onClose }: ActionSidebarProps) => {
   };
 
   return (
-    <aside className="w-96 bg-slate-50 border-l border-slate-200 flex flex-col h-full">
+    <aside
+      ref={sidebarRef}
+      className="bg-slate-50 border-l border-slate-200 flex flex-col h-full relative"
+      style={{ width: `${sidebarWidth}px` }}
+    >
+      <div
+        onMouseDown={handleMouseDown}
+        className="absolute top-0 left-0 -ml-1 w-2 h-full cursor-col-resize z-30"
+        title="Resize sidebar"
+      />
+
       <div className="flex justify-between items-center p-4 border-b border-slate-200 flex-shrink-0">
         <h3 className="text-lg font-semibold text-slate-900">Actions</h3>
         <button
