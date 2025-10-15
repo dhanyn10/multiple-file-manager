@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Form, InputGroup, ListGroup, Pagination } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, InputGroup } from 'react-bootstrap';
 import NavigationBar from './components/NavigationBar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFolder, faFile } from '@fortawesome/free-solid-svg-icons';
-
-import './App.css'
+import FileList from './components/FileList';
+import FilePagination from './components/FilePagination';
+import './App.css';
 
 interface FileEntry {
   name: string;
@@ -50,18 +49,6 @@ function App() {
 
   const pageCount = Math.ceil(files.length / itemsPerPage);
 
-  const renderPaginationItems = () => {
-    const items = [];
-    for (let number = 1; number <= pageCount; number++) {
-      items.push(
-        <Pagination.Item key={number} active={number === currentPage} onClick={() => setCurrentPage(number)}>
-          {number}
-        </Pagination.Item>
-      );
-    }
-    return items;
-  };
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <NavigationBar />
@@ -84,49 +71,16 @@ function App() {
           <div className="d-flex flex-column flex-grow-1 mt-4" style={{ minHeight: 0 }}>
             <Row className="flex-grow-1 mt-3" style={{ minHeight: 0 }}>
               <Col>
-                <div style={{ height: '100%', overflowY: 'auto' }}>
-                  <ListGroup>
-                    {currentFiles.map((file) => (
-                      <ListGroup.Item key={file.name}>
-                        <FontAwesomeIcon
-                          icon={file.isDirectory ? faFolder : faFile}
-                          className="me-2"
-                          style={{ color: file.isDirectory ? '#58a6ff' : '#8b949e' }}
-                        />
-                        {file.name}
-                      </ListGroup.Item>
-                    ))}
-                  </ListGroup>
-                </div>
+                <FileList currentFiles={currentFiles} />
               </Col>
             </Row>
-            <Row className="mt-3 flex-shrink-0 align-items-center">
-              <Col xs="auto">
-                <Form.Group as={Row} className="align-items-center gx-2">
-                  <Form.Label column xs="auto">Show:</Form.Label>
-                  <Col xs="auto">
-                    <Form.Select
-                      style={{ width: '80px' }}
-                      value={itemsPerPage}
-                      onChange={(e) => {
-                        setItemsPerPage(Number(e.target.value));
-                        setCurrentPage(1);
-                      }}
-                    >
-                      <option value={10}>10</option>
-                      <option value={25}>25</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
-                    </Form.Select>
-                  </Col>
-                </Form.Group>
-              </Col>
-              <Col>
-                {pageCount > 1 && (
-                  <Pagination className="justify-content-end mb-0">{renderPaginationItems()}</Pagination>
-                )}
-              </Col>
-            </Row>
+            <FilePagination
+              itemsPerPage={itemsPerPage}
+              setItemsPerPage={setItemsPerPage}
+              setCurrentPage={setCurrentPage}
+              pageCount={pageCount}
+              currentPage={currentPage}
+            />
           </div>
         )}
       </Container>
