@@ -18,7 +18,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
       onClick={onClose} // Close modal on overlay click
     >
       <div
-        className="bg-white border border-slate-200 rounded-lg shadow-2xl shadow-black/20 w-full max-w-2xl max-h-[80vh] flex flex-col"
+        className="bg-white border border-slate-200 shadow-2xl shadow-black/20 w-full max-w-2xl max-h-[80vh] flex flex-col"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal content
       >
         <div className="flex justify-between items-center p-4 border-b border-slate-200 flex-shrink-0">
