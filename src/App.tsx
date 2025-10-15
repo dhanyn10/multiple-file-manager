@@ -20,6 +20,9 @@ function App() {
   const [showActionsInNavbar, setShowActionsInNavbar] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const actionsToolbarRef = useRef<HTMLDivElement>(null);
+  const [actionFrom, setActionFrom] = useState('');
+  const [actionTo, setActionTo] = useState('');
+  const [selectedAction, setSelectedAction] = useState('');
 
   useEffect(() => {
     const handleDirectorySelected = (_event: any, path: string) => {
@@ -72,12 +75,14 @@ function App() {
   };
 
   const handleExecuteClick = () => {
-    // Placeholder for execution logic
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setActionFrom(''); // Reset form on close
+    setActionTo('');   // Reset form on close
+    setSelectedAction(''); // Reset selected action
   };
   const handleFileSelect = (fileName: string, isShiftClick: boolean) => {
     const newSelectedFiles = new Set(selectedFiles);
@@ -193,19 +198,69 @@ function App() {
           onClose={handleCloseModal}
           title="Selected Files for Execution"
         >
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          {/* Action Form */}
+          <div className="p-4 space-y-4 border-b dark:border-gray-600">
+            <div>
+              <label htmlFor="action-select" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Action</label>
+              <select
+                id="action-select"
+                value={selectedAction}
+                onChange={(e) => setSelectedAction(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+              >
+                <option value="">-- Select an Action --</option>
+                <option value="rename">Rename by name</option>
+              </select>
+            </div>
+
+            {selectedAction === 'rename' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pt-2">
+                <div>
+                  <label htmlFor="action-from" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">From</label>
+                  <input
+                    type="text"
+                    id="action-from"
+                    value={actionFrom}
+                    onChange={(e) => setActionFrom(e.target.value)}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                    placeholder="text to replace"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="action-to" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">To</label>
+                  <input
+                    type="text"
+                    id="action-to"
+                    value={actionTo}
+                    onChange={(e) => setActionTo(e.target.value)}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                    placeholder="new text"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Files Table */}
+          <div className="p-4 overflow-y-auto">
+            <h4 className="text-lg font-medium mb-2">Preview Changes</h4>
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className="px-6 py-3">File Name</th>
+                  <th scope="col" className="px-6 py-3">Original Name</th>
+                  <th scope="col" className="px-6 py-3">New Name (Preview)</th>
                 </tr>
               </thead>
               <tbody>
-                {Array.from(selectedFiles).map(file => (
-                  <tr key={file} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">{file}</td>
-                  </tr>
-                ))}
+                {Array.from(selectedFiles).map(file => {
+                  const newName = actionFrom ? file.replace(new RegExp(actionFrom, 'g'), actionTo) : file;
+                  return (
+                    <tr key={file} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <td className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">{file}</td>
+                      <td className={`px-6 py-4 whitespace-nowrap ${newName !== file ? 'text-green-400' : ''}`}>{newName}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
