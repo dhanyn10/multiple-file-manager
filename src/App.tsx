@@ -14,12 +14,16 @@ function App() {
   const [files, setFiles] = useState<FileEntry[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
+  const [lastSelectedFile, setLastSelectedFile] = useState<string | null>(null);
 
   useEffect(() => {
     const handleDirectorySelected = (_event: any, path: string) => {
       if (path) {
         setDirectory(path);
         window.ipcRenderer.send('get-directory-contents', path);
+        setSelectedFiles(new Set()); // Reset seleksi saat ganti direktori
+        setLastSelectedFile(null);
       }
     };
 
@@ -39,6 +43,43 @@ function App() {
 
   const handleBrowseClick = () => {
     window.ipcRenderer.send('open-directory-dialog');
+  };
+
+  const handleFileSelect = (fileName: string, isShiftClick: boolean) => {
+    const newSelectedFiles = new Set(selectedFiles);
+
+    // Logika untuk Shift-klik
+    if (isShiftClick && lastSelectedFile) {
+      const lastIndex = files.findIndex(f => f.name === lastSelectedFile);
+      const currentIndex = files.findIndex(f => f.name === fileName);
+
+      if (lastIndex !== -1 && currentIndex !== -1) {
+        const start = Math.min(lastIndex, currentIndex);
+        const end = Math.max(lastIndex, currentIndex);
+
+        for (let i = start; i <= end; i++) {
+          if (!files[i].isDirectory) {
+            newSelectedFiles.add(files[i].name);
+          }
+        }
+      } else {
+        // Fallback jika salah satu file tidak ditemukan (misal beda halaman)
+        if (newSelectedFiles.has(fileName)) {
+          newSelectedFiles.delete(fileName);
+        } else {
+          newSelectedFiles.add(fileName);
+        }
+      }
+    } else {
+      // Logika untuk klik biasa (toggle)
+      if (newSelectedFiles.has(fileName)) {
+        newSelectedFiles.delete(fileName);
+      } else {
+        newSelectedFiles.add(fileName);
+      }
+    }
+    setSelectedFiles(newSelectedFiles);
+    setLastSelectedFile(fileName);
   };
 
   // Logika Paginasi
@@ -78,7 +119,11 @@ function App() {
         {files.length > 0 && (
           <div className="flex flex-col flex-grow mt-4 min-h-0">
             <div className="flex-grow mt-3 min-h-0">
-              <FileList currentFiles={currentFiles} />
+              <FileList
+                currentFiles={currentFiles}
+                selectedFiles={selectedFiles}
+                onFileSelect={handleFileSelect}
+              />
             </div>
             <FilePagination
               itemsPerPage={itemsPerPage}

@@ -8,20 +8,35 @@ interface FileEntry {
 
 interface FileListProps {
   currentFiles: FileEntry[];
+  selectedFiles: Set<string>;
+  onFileSelect: (fileName: string, isShiftClick: boolean) => void;
 }
 
-const FileList = ({ currentFiles }: FileListProps) => {
+const FileList = ({ currentFiles, selectedFiles, onFileSelect }: FileListProps) => {
+  const handleItemClick = (e: React.MouseEvent, file: FileEntry) => {
+    // Seleksi hanya berlaku untuk file, bukan folder
+    if (file.isDirectory) {
+      return;
+    }
+    onFileSelect(file.name, e.shiftKey);
+  };
+
   return (
     <div className="h-full overflow-y-auto bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
-      <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+      <ul className="divide-y divide-gray-200 dark:divide-gray-700 select-none">
         {currentFiles.map((file) => (
           <li
             key={file.name}
-            className={`p-2 flex items-center cursor-pointer transition-colors duration-150 ${
-              file.isDirectory
+            onClick={(e) => handleItemClick(e, file)}
+            className={`p-2 flex items-center transition-colors duration-150 ${
+              file.isDirectory ? 'cursor-default' : 'cursor-pointer'
+            } ${
+              selectedFiles.has(file.name)
+                ? 'bg-blue-100 dark:bg-blue-900/50' // Style untuk item terpilih
+                : file.isDirectory
                 ? 'hover:bg-gray-100 dark:hover:bg-gray-700'
                 : 'hover:bg-blue-50 dark:hover:bg-blue-900/20'
-            }`}
+            } `}
           >
             <FontAwesomeIcon
               icon={file.isDirectory ? faFolder : faFile}
