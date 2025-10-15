@@ -141,13 +141,13 @@ function App() {
   const pageCount = Math.ceil(files.length / itemsPerPage);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-200">
+    <div className="flex flex-col h-screen bg-slate-100 text-slate-800">
       <NavigationBar
         actionsSlot={showActionsInNavbar && selectedFiles.size > 0 ? <ActionButtons /> : null}
       />
       <main className="flex flex-col flex-grow p-4">
         <div className="flex-shrink-0">
-          <label htmlFor="directory-input" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="directory-input" className="block text-sm font-medium text-slate-700 mb-1">
             Select Directory:
           </label>
           <div className="flex rounded-md shadow-sm">
@@ -157,12 +157,12 @@ function App() {
               value={directory}
               readOnly
               placeholder="No directory selected"
-              className="flex-1 block w-full min-w-0 rounded-none rounded-l-md border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="flex-1 block w-full min-w-0 rounded-none rounded-l-md border-slate-300 bg-slate-50 px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
             <button
               type="button"
               onClick={handleBrowseClick}
-              className="inline-flex items-center px-4 py-2 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-md bg-gray-50 dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-l-0 border-slate-300 rounded-r-md bg-slate-50 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
             >
               Browse...
             </button>
@@ -172,7 +172,7 @@ function App() {
         {files.length > 0 && (
           <div className="flex flex-col flex-grow mt-4 min-h-0">
             {selectedFiles.size > 0 && (
-              <div ref={actionsToolbarRef} className={`flex-shrink-0 mb-2 p-2 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-between ${showActionsInNavbar ? 'opacity-0' : 'opacity-100'}`}>
+              <div ref={actionsToolbarRef} className={`flex-shrink-0 mb-2 p-2 bg-slate-200 rounded-md flex items-center justify-between ${showActionsInNavbar ? 'opacity-0' : 'opacity-100'}`}>
                 <ActionButtons />
               </div>
             )}
@@ -199,70 +199,75 @@ function App() {
           title="Selected Files for Execution"
         >
           {/* Action Form */}
-          <div className="p-4 space-y-4 border-b dark:border-gray-600">
-            <div>
-              <label htmlFor="action-select" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Action</label>
-              <select
-                id="action-select"
-                value={selectedAction}
-                onChange={(e) => setSelectedAction(e.target.value)}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-              >
-                <option value="">-- Select an Action --</option>
-                <option value="rename">Rename by name</option>
-              </select>
-            </div>
-
-            {selectedAction === 'rename' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pt-2">
-                <div>
-                  <label htmlFor="action-from" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">From</label>
-                  <input
-                    type="text"
-                    id="action-from"
-                    value={actionFrom}
-                    onChange={(e) => setActionFrom(e.target.value)}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                    placeholder="text to replace"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="action-to" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">To</label>
-                  <input
-                    type="text"
-                    id="action-to"
-                    value={actionTo}
-                    onChange={(e) => setActionTo(e.target.value)}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-                    placeholder="new text"
-                  />
-                </div>
+          <div className="p-4 border-b border-slate-200">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+              <div>
+                <select
+                  id="action-select"
+                  value={selectedAction}
+                  onChange={(e) => setSelectedAction(e.target.value)}
+                  className="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 appearance-none bg-no-repeat bg-right pr-8 bg-[url('data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20fill=%27none%27%20viewBox=%270%200%2020%2020%27%3e%3cpath%20stroke=%27%236b7280%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%20stroke-width=%271.5%27%20d=%27M6%208l4%204%204-4%27/%3e%3c/svg%3e')]"
+                >
+                  <option value="">-- Select --</option>
+                  <option value="rename">Rename by name</option>
+                </select>
               </div>
-            )}
+              {selectedAction === 'rename' && (
+                <>
+                  <div>
+                    <label htmlFor="action-from" className="block mb-2 text-sm font-medium text-slate-900">From</label>
+                    <input
+                      type="text"
+                      id="action-from"
+                      value={actionFrom}
+                      onChange={(e) => setActionFrom(e.target.value)}
+                      className="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="text to replace"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="action-to" className="block mb-2 text-sm font-medium text-slate-900">To</label>
+                    <input
+                      type="text"
+                      id="action-to"
+                      value={actionTo}
+                      onChange={(e) => setActionTo(e.target.value)}
+                      className="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="new text"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Files Table */}
-          <div className="p-4 overflow-y-auto">
-            <h4 className="text-lg font-medium mb-2">Preview Changes</h4>
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">Original Name</th>
-                  <th scope="col" className="px-6 py-3">New Name (Preview)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.from(selectedFiles).map(file => {
-                  const newName = actionFrom ? file.replace(new RegExp(actionFrom, 'g'), actionTo) : file;
-                  return (
-                    <tr key={file} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                      <td className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">{file}</td>
-                      <td className={`px-6 py-4 whitespace-nowrap ${newName !== file ? 'text-green-400' : ''}`}>{newName}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="p-4 flex flex-col overflow-hidden">
+            <div className="relative overflow-x-auto flex-shrink-0">
+              <table className="w-full text-sm text-left text-slate-500">
+                <thead className="text-xs text-slate-700 uppercase bg-slate-100">
+                  <tr>
+                    <th scope="col" className="px-4 py-3">Original Name</th>
+                    <th scope="col" className="px-4 py-3">New Name (Preview)</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+            <div className="overflow-y-auto">
+              <table className="w-full text-sm text-left text-slate-500">
+                <tbody>
+                  {Array.from(selectedFiles).map(file => {
+                    const newName = selectedAction === 'rename' && actionFrom ? file.replace(new RegExp(actionFrom, 'g'), actionTo) : file;
+                    return (
+                      <tr key={file} className="bg-white border-b border-slate-200/60 hover:bg-slate-50">
+                        <td className="px-4 py-3 font-medium text-slate-900 break-all">{file}</td>
+                        <td className={`px-4 py-3 break-all ${newName !== file ? 'text-green-400 font-semibold' : ''}`}>{newName}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </Modal>
       </main>

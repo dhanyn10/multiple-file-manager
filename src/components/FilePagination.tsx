@@ -23,7 +23,7 @@ const FilePagination = ({
   return (
     <div className="mt-4 flex-shrink-0 flex items-center justify-between text-sm">
       <div>
-        <p className="text-gray-700 dark:text-gray-400">
+        <p className="text-gray-700">
           Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-medium">{Math.min(currentPage * itemsPerPage, totalItems)}</span> of{' '}
           <span className="font-medium">{totalItems}</span> files
         </p>
@@ -38,9 +38,8 @@ const FilePagination = ({
               aria-current={number === currentPage ? 'page' : undefined}
               className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium
                 ${
-                  number === currentPage
-                    ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600 dark:bg-gray-900 dark:border-indigo-400 dark:text-white'
-                    : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700'
+                  number === currentPage ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
+                    : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                 }
                 ${number === 1 ? 'rounded-l-md' : ''}
                 ${number === pageCount ? 'rounded-r-md' : ''}
