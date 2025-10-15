@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -37,7 +37,20 @@ app.on("activate", () => {
     createWindow();
   }
 });
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+  ipcMain.on("open-directory-dialog", (event) => {
+    dialog.showOpenDialog({
+      properties: ["openDirectory"]
+    }).then((result) => {
+      if (!result.canceled && result.filePaths.length > 0) {
+        event.sender.send("directory-selected", result.filePaths[0]);
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  });
+});
 export {
   MAIN_DIST,
   RENDERER_DIST,
