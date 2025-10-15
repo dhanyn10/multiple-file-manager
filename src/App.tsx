@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form, InputGroup, ListGroup } from 'react-bootstrap';
-import NavigationBar from './NavigationBar.tsx';
+import NavigationBar from './components/NavigationBar';
 import './App.css'
 
 interface FileEntry {
