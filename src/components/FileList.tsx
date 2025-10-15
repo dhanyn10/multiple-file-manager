@@ -30,11 +30,13 @@ const FileList = ({ currentFiles, selectedFiles, highlightedFiles, onFileSelect 
             key={file.name}
             onClick={(e) => handleItemClick(e, file)}
             className={`p-2 flex items-center file-item ${
-              file.isDirectory
-                ? 'cursor-default hover:bg-gray-100'
-                : 'cursor-pointer hover:bg-blue-50'
-            } ${selectedFiles.has(file.name) ? 'bg-blue-100' : ''} ${
-              highlightedFiles.has(file.name) ? 'bg-blue-100' : ''
+              file.isDirectory // Folder
+                ? 'cursor-default hover:bg-gray-100' // Gray hover
+                : highlightedFiles.has(file.name) // Newly renamed file
+                ? 'bg-blue-100 hover:bg-white cursor-pointer' // Blue background, white on hover
+                : selectedFiles.has(file.name) // Selected file
+                ? 'bg-blue-100 hover:bg-blue-50 cursor-pointer' // Blue background, light blue on hover
+                : 'cursor-pointer hover:bg-blue-50' // Normal file, light blue on hover
             }`}
           >
             <FontAwesomeIcon
