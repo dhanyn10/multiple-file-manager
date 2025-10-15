@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import { createRequire } from "node:module";
+import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 createRequire(import.meta.url);
@@ -48,6 +49,25 @@ app.whenReady().then(() => {
       }
     }).catch((err) => {
       console.log(err);
+    });
+  });
+  ipcMain.on("get-directory-contents", (event, dirPath) => {
+    fs.readdir(dirPath, { withFileTypes: true }, (err, dirents) => {
+      if (err) {
+        console.error("Gagal membaca direktori:", err);
+        event.sender.send("directory-contents", []);
+        return;
+      }
+      const fileList = dirents.map((dirent) => ({
+        name: dirent.name,
+        isDirectory: dirent.isDirectory()
+      }));
+      fileList.sort((a, b) => {
+        if (a.isDirectory && !b.isDirectory) return -1;
+        if (!a.isDirectory && b.isDirectory) return 1;
+        return a.name.localeCompare(b.name);
+      });
+      event.sender.send("directory-contents", fileList);
     });
   });
 });

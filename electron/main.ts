@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import { createRequire } from 'node:module'
+import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
@@ -77,6 +78,29 @@ app.whenReady().then(() => {
       }
     }).catch(err => {
       console.log(err);
+    });
+  });
+
+  ipcMain.on('get-directory-contents', (event, dirPath) => {
+    fs.readdir(dirPath, { withFileTypes: true }, (err, dirents) => {
+      if (err) {
+        console.error("Failed to read directory:", err);
+        event.sender.send('directory-contents', []);
+        return;
+      }
+      const fileList = dirents.map(dirent => ({
+        name: dirent.name,
+        isDirectory: dirent.isDirectory(),
+      }));
+      
+      // Sort the list: folders first, then files, then alphabetically
+      fileList.sort((a, b) => {
+        if (a.isDirectory && !b.isDirectory) return -1;
+        if (!a.isDirectory && b.isDirectory) return 1;
+        return a.name.localeCompare(b.name);
+      });
+
+      event.sender.send('directory-contents', fileList);
     });
   });
 })
