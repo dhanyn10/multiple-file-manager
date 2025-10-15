@@ -54,7 +54,7 @@ app.whenReady().then(() => {
   ipcMain.on("get-directory-contents", (event, dirPath) => {
     fs.readdir(dirPath, { withFileTypes: true }, (err, dirents) => {
       if (err) {
-        console.error("Gagal membaca direktori:", err);
+        console.error("Failed to read directory:", err);
         event.sender.send("directory-contents", []);
         return;
       }
