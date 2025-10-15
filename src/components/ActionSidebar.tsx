@@ -76,7 +76,8 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
     const operations: RenameOperation[] = [];
     if (selectedAction === 'rename' && actionFrom) {
       Array.from(selectedFiles).forEach(file => {
-        const newName = file.replace(new RegExp(actionFrom, 'g'), actionTo);
+        // Replace only the first occurrence by not using a global regex
+        const newName = file.replace(actionFrom, actionTo);
         if (newName !== file) {
           operations.push({ originalName: file, newName });
         }
@@ -195,7 +196,7 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
               </thead>
               <tbody>
                 {Array.from(selectedFiles).map(file => {
-                  const newName = selectedAction === 'rename' && actionFrom ? file.replace(new RegExp(actionFrom, 'g'), actionTo) : file;
+                  const newName = selectedAction === 'rename' && actionFrom ? file.replace(actionFrom, actionTo) : file;
                   return (
                     <tr key={file} className="bg-white border-b border-slate-200/60 hover:bg-slate-50">
                       <td className="px-4 py-2 font-medium text-slate-900 break-all">{file}</td>

@@ -4,6 +4,7 @@ import FileList from './components/FileList';
 import FilePagination from './components/FilePagination';
 import ActionButtons from './components/ActionButtons';
 import ActionSidebar, { RenameOperation } from './components/ActionSidebar';
+import HistorySidebar from './components/HistorySidebar';
 import { useIpcListeners } from './hooks/useIpcListeners';
 import './App.css';
  
@@ -21,6 +22,9 @@ function App() {
   const [lastSelectedFile, setLastSelectedFile] = useState<string | null>(null);
   const [showActionsInNavbar, setShowActionsInNavbar] = useState(false); // This state can be repurposed or removed if sidebar is always open when files are selected
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
+  const [history, setHistory] = useState<RenameOperation[]>([]);
+  const [recentlyRenamed, setRecentlyRenamed] = useState<Set<string>>(new Set());
   const actionsToolbarRef = useRef<HTMLDivElement>(null);
 
   const handleDirectorySelected = useCallback((path: string) => {
@@ -35,6 +39,7 @@ function App() {
     if (directory) {
       window.ipcRenderer.send('get-directory-contents', directory);
     }
+    // Clear selection and modal state, but keep recentlyRenamed for highlighting
     setSelectedFiles(new Set());
     setLastSelectedFile(null);
     setIsModalOpen(false);
@@ -45,6 +50,10 @@ function App() {
     const onlyFiles = fileList.filter(file => !file.isDirectory);
     setFiles(onlyFiles);
     setCurrentPage(1); // Reset to the first page every time the directory changes
+    // After the file list is updated, clear the highlight after a delay
+    setTimeout(() => {
+      setRecentlyRenamed(new Set());
+    }, 5000); // Highlight will last for 5 seconds
   }, []);
 
   useIpcListeners({
@@ -89,6 +98,10 @@ function App() {
   const handleExecuteRename = (operations: RenameOperation[]) => {
     if (operations.length > 0) {
       window.ipcRenderer.send('execute-rename', directory, operations);
+      const newNames = new Set(operations.map(op => op.newName));
+      setRecentlyRenamed(newNames);
+      setHistory(prevHistory => [...prevHistory, ...operations]);
+      setIsHistorySidebarOpen(true);
     }
   };
 
@@ -144,6 +157,7 @@ function App() {
             <ActionButtons selectedFileCount={selectedFiles.size} onExecuteClick={handleExecuteClick} />
           ) : null
         }
+        onHistoryClick={() => setIsHistorySidebarOpen(true)}
       />
       <div className="flex flex-row flex-grow overflow-hidden">
         <main className="flex flex-col flex-grow p-4">
@@ -181,6 +195,7 @@ function App() {
                 <FileList
                   currentFiles={currentFiles}
                   selectedFiles={selectedFiles}
+                  highlightedFiles={recentlyRenamed}
                   onFileSelect={handleFileSelect}
                 />
               </div>
@@ -200,6 +215,12 @@ function App() {
             selectedFiles={selectedFiles}
             onClose={handleCloseModal}
             onExecute={handleExecuteRename}
+          />
+        )}
+        {isHistorySidebarOpen && (
+          <HistorySidebar
+            history={history}
+            onClose={() => setIsHistorySidebarOpen(false)}
           />
         )}
       </div>

@@ -9,10 +9,11 @@ interface FileEntry {
 interface FileListProps {
   currentFiles: FileEntry[];
   selectedFiles: Set<string>;
+  highlightedFiles: Set<string>;
   onFileSelect: (fileName: string, isShiftClick: boolean) => void;
 }
 
-const FileList = ({ currentFiles, selectedFiles, onFileSelect }: FileListProps) => {
+const FileList = ({ currentFiles, selectedFiles, highlightedFiles, onFileSelect }: FileListProps) => {
   const handleItemClick = (e: React.MouseEvent, file: FileEntry) => {
     // Selection only applies to files, not folders
     if (file.isDirectory) {
@@ -28,12 +29,13 @@ const FileList = ({ currentFiles, selectedFiles, onFileSelect }: FileListProps) 
           <li
             key={file.name}
             onClick={(e) => handleItemClick(e, file)}
-            className={`p-2 flex items-center transition-colors duration-150 ${
-              file.isDirectory ? 'cursor-default' : 'cursor-pointer'
-            } ${selectedFiles.has(file.name)
-                ? 'bg-blue-100' // Style for selected item
-                : file.isDirectory ? 'hover:bg-gray-100' : 'hover:bg-blue-50'
-              } `}
+            className={`p-2 flex items-center file-item ${
+              file.isDirectory
+                ? 'cursor-default hover:bg-gray-100'
+                : 'cursor-pointer hover:bg-blue-50'
+            } ${selectedFiles.has(file.name) ? 'bg-blue-100' : ''} ${
+              highlightedFiles.has(file.name) ? 'bg-blue-100' : ''
+            }`}
           >
             <FontAwesomeIcon
               icon={file.isDirectory ? faFolder : faFile}
