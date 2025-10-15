@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Container, Row, Col, Button, Form, InputGroup } from 'react-bootstrap';
 import NavigationBar from './components/NavigationBar';
 import FileList from './components/FileList';
 import FilePagination from './components/FilePagination';
@@ -50,40 +49,48 @@ function App() {
   const pageCount = Math.ceil(files.length / itemsPerPage);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div className="flex flex-col h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-200">
       <NavigationBar />
-      <Container fluid className="d-flex flex-column flex-grow-1 p-4">
-        <Row className="flex-shrink-0">
-          <Col>
-            <Form.Group>
-              <Form.Label>Select Directory:</Form.Label>
-              <InputGroup>
-                <Form.Control type="text" value={directory} readOnly placeholder="No directory selected" />
-                <Button variant="outline-secondary" onClick={handleBrowseClick}>
-                  Browse...
-                </Button>
-              </InputGroup>
-            </Form.Group>
-          </Col>
-        </Row>
+      <main className="flex flex-col flex-grow p-4">
+        <div className="flex-shrink-0">
+          <label htmlFor="directory-input" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Select Directory:
+          </label>
+          <div className="flex rounded-md shadow-sm">
+            <input
+              type="text"
+              id="directory-input"
+              value={directory}
+              readOnly
+              placeholder="No directory selected"
+              className="flex-1 block w-full min-w-0 rounded-none rounded-l-md border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 px-3 py-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+            <button
+              type="button"
+              onClick={handleBrowseClick}
+              className="inline-flex items-center px-4 py-2 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-md bg-gray-50 dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              Browse...
+            </button>
+          </div>
+        </div>
 
         {files.length > 0 && (
-          <div className="d-flex flex-column flex-grow-1 mt-4" style={{ minHeight: 0 }}>
-            <Row className="flex-grow-1 mt-3" style={{ minHeight: 0 }}>
-              <Col>
-                <FileList currentFiles={currentFiles} />
-              </Col>
-            </Row>
+          <div className="flex flex-col flex-grow mt-4 min-h-0">
+            <div className="flex-grow mt-3 min-h-0">
+              <FileList currentFiles={currentFiles} />
+            </div>
             <FilePagination
               itemsPerPage={itemsPerPage}
               setItemsPerPage={setItemsPerPage}
               setCurrentPage={setCurrentPage}
               pageCount={pageCount}
+              totalItems={files.length}
               currentPage={currentPage}
             />
           </div>
         )}
-      </Container>
+      </main>
     </div>
   )
 }
