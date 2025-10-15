@@ -1,17 +1,23 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useClickOutside } from '../hooks/useClickOutside';
 
+export interface RenameOperation {
+  originalName: string;
+  newName: string;
+}
+
 interface ActionSidebarProps {
   selectedFiles: Set<string>;
   onClose: () => void;
+  onExecute: (operations: RenameOperation[]) => void;
 }
 
 const availableActions = [
   { value: 'rename', label: 'Rename by name' },
-  // Anda bisa menambahkan aksi lain di sini
+  // You can add other actions here
 ];
 
-const ActionSidebar = ({ selectedFiles, onClose }: ActionSidebarProps) => {
+const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps) => {
   const [actionFrom, setActionFrom] = useState('');
   const [actionTo, setActionTo] = useState('');
   const [selectedAction, setSelectedAction] = useState('');
@@ -57,11 +63,26 @@ const ActionSidebar = ({ selectedFiles, onClose }: ActionSidebarProps) => {
 
   const handleClose = () => {
     onClose();
-    // Reset form saat ditutup
+    // Reset form on close
     setActionFrom('');
     setActionTo('');
     setIsActionDropdownOpen(false);
     setSelectedAction('');
+  };
+
+  const handleExecute = () => {
+    if (!selectedAction) return;
+
+    const operations: RenameOperation[] = [];
+    if (selectedAction === 'rename' && actionFrom) {
+      Array.from(selectedFiles).forEach(file => {
+        const newName = file.replace(new RegExp(actionFrom, 'g'), actionTo);
+        if (newName !== file) {
+          operations.push({ originalName: file, newName });
+        }
+      });
+    }
+    onExecute(operations);
   };
 
   return (
@@ -183,6 +204,17 @@ const ActionSidebar = ({ selectedFiles, onClose }: ActionSidebarProps) => {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Footer with Execute Button */}
+      <div className="p-4 border-t border-slate-200 mt-auto flex-shrink-0">
+        <button
+          onClick={handleExecute}
+          disabled={!selectedAction || (selectedAction === 'rename' && !actionFrom)}
+          className="w-full px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
+        >
+          Execute Rename
+        </button>
       </div>
     </aside>
   );

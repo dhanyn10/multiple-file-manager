@@ -70,6 +70,20 @@ app.whenReady().then(() => {
       event.sender.send("directory-contents", fileList);
     });
   });
+  ipcMain.on("execute-rename", (event, dirPath, operations) => {
+    const renamePromises = operations.map((op) => {
+      const oldPath = path.join(dirPath, op.originalName);
+      const newPath = path.join(dirPath, op.newName);
+      return fs.promises.rename(oldPath, newPath);
+    });
+    Promise.all(renamePromises).then(() => {
+      console.log("All files renamed successfully");
+      event.sender.send("rename-complete");
+    }).catch((err) => {
+      console.error("An error occurred during rename:", err);
+      event.sender.send("rename-complete");
+    });
+  });
 });
 export {
   MAIN_DIST,

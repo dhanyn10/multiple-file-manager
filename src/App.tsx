@@ -3,7 +3,7 @@ import NavigationBar from './components/NavigationBar';
 import FileList from './components/FileList';
 import FilePagination from './components/FilePagination';
 import ActionButtons from './components/ActionButtons';
-import ActionSidebar from './components/ActionSidebar';
+import ActionSidebar, { RenameOperation } from './components/ActionSidebar';
 import { useIpcListeners } from './hooks/useIpcListeners';
 import './App.css';
  
@@ -30,6 +30,16 @@ function App() {
     setLastSelectedFile(null);
   }, []);
 
+  const handleRenameComplete = useCallback(() => {
+    // Refresh directory contents after rename
+    if (directory) {
+      window.ipcRenderer.send('get-directory-contents', directory);
+    }
+    setSelectedFiles(new Set());
+    setLastSelectedFile(null);
+    setIsModalOpen(false);
+  }, [directory]);
+
   const handleDirectoryContents = useCallback((fileList: FileEntry[]) => {
     // Filter out directories and only show files
     const onlyFiles = fileList.filter(file => !file.isDirectory);
@@ -40,6 +50,7 @@ function App() {
   useIpcListeners({
     onDirectorySelected: handleDirectorySelected,
     onDirectoryContents: handleDirectoryContents,
+    onRenameComplete: handleRenameComplete,
   });
 
   useEffect(() => {
@@ -74,6 +85,13 @@ function App() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleExecuteRename = (operations: RenameOperation[]) => {
+    if (operations.length > 0) {
+      window.ipcRenderer.send('execute-rename', directory, operations);
+    }
+  };
+
   const handleFileSelect = (fileName: string, isShiftClick: boolean) => {
     const newSelectedFiles = new Set(selectedFiles);
 
@@ -177,7 +195,13 @@ function App() {
             </div>
           )}
         </main>
-        {isModalOpen && <ActionSidebar selectedFiles={selectedFiles} onClose={handleCloseModal} />}
+        {isModalOpen && (
+          <ActionSidebar
+            selectedFiles={selectedFiles}
+            onClose={handleCloseModal}
+            onExecute={handleExecuteRename}
+          />
+        )}
       </div>
     </div>
   )

@@ -103,4 +103,25 @@ app.whenReady().then(() => {
       event.sender.send('directory-contents', fileList);
     });
   });
+
+  ipcMain.on('execute-rename', (event, dirPath, operations) => {
+    const renamePromises = operations.map(op => {
+      const oldPath = path.join(dirPath, op.originalName);
+      const newPath = path.join(dirPath, op.newName);
+      return fs.promises.rename(oldPath, newPath);
+    });
+
+    Promise.all(renamePromises)
+      .then(() => {
+        console.log('All files renamed successfully');
+        // Send 'rename-complete' event back to the renderer
+        event.sender.send('rename-complete');
+      })
+      .catch(err => {
+        console.error('An error occurred during rename:', err);
+        // Send 'rename-complete' event even if there is an error,
+        // so the UI can refresh and show the current state.
+        event.sender.send('rename-complete');
+      });
+  });
 })

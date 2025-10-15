@@ -1,33 +1,35 @@
 import { useEffect } from 'react';
+import { IpcRendererEvent } from 'electron';
 
 interface FileEntry {
   name: string;
   isDirectory: boolean;
 }
 
-interface UseIpcListenersParams {
+interface IpcListeners {
   onDirectorySelected: (path: string) => void;
   onDirectoryContents: (files: FileEntry[]) => void;
+  onRenameComplete: () => void;
 }
 
-export function useIpcListeners({ onDirectorySelected, onDirectoryContents }: UseIpcListenersParams) {
+export const useIpcListeners = ({
+  onDirectorySelected,
+  onDirectoryContents,
+  onRenameComplete,
+}: IpcListeners) => {
   useEffect(() => {
-    const handleDirectorySelected = (_event: any, path: string) => {
-      if (path) {
-        onDirectorySelected(path);
-      }
-    };
-
-    const handleDirectoryContents = (_event: any, fileList: FileEntry[]) => {
-      onDirectoryContents(fileList);
-    };
+    const handleDirectorySelected = (_event: IpcRendererEvent, path: string) => onDirectorySelected(path);
+    const handleDirectoryContents = (_event: IpcRendererEvent, files: FileEntry[]) => onDirectoryContents(files);
+    const handleRenameComplete = () => onRenameComplete();
 
     window.ipcRenderer.on('directory-selected', handleDirectorySelected);
     window.ipcRenderer.on('directory-contents', handleDirectoryContents);
+    window.ipcRenderer.on('rename-complete', handleRenameComplete);
 
     return () => {
-      window.ipcRenderer.off('directory-selected', handleDirectorySelected);
-      window.ipcRenderer.off('directory-contents', handleDirectoryContents);
+      window.ipcRenderer.removeListener('directory-selected', handleDirectorySelected);
+      window.ipcRenderer.removeListener('directory-contents', handleDirectoryContents);
+      window.ipcRenderer.removeListener('rename-complete', handleRenameComplete);
     };
-  }, [onDirectorySelected, onDirectoryContents]);
-}
+  }, [onDirectorySelected, onDirectoryContents, onRenameComplete]);
+};
