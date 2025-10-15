@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import NavigationBar from './components/NavigationBar';
 import FileList from './components/FileList';
 import FilePagination from './components/FilePagination';
@@ -16,6 +16,8 @@ function App() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
   const [lastSelectedFile, setLastSelectedFile] = useState<string | null>(null);
+  const [showActionsInNavbar, setShowActionsInNavbar] = useState(false);
+  const actionsToolbarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleDirectorySelected = (_event: any, path: string) => {
@@ -28,7 +30,9 @@ function App() {
     };
 
     const handleDirectoryContents = (_event: any, fileList: FileEntry[]) => {
-      setFiles(fileList);
+      // Filter out directories and only show files
+      const onlyFiles = fileList.filter(file => !file.isDirectory);
+      setFiles(onlyFiles);
       setCurrentPage(1); // Reset to the first page every time the directory changes
     };
 
@@ -41,10 +45,35 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // If the toolbar is not visible (isIntersecting is false), show it in the navbar
+        setShowActionsInNavbar(!entry.isIntersecting);
+      },
+      {
+        root: null, // relative to the viewport
+        rootMargin: '-60px 0px 0px 0px', // ~60px is the estimated navbar height
+        threshold: 1.0,
+      }
+    );
+
+    if (actionsToolbarRef.current) {
+      observer.observe(actionsToolbarRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [selectedFiles.size]); // Re-observe if the toolbar appears/disappears
+
   const handleBrowseClick = () => {
     window.ipcRenderer.send('open-directory-dialog');
   };
 
+  const handleExecuteClick = () => {
+    // Placeholder for execution logic
+    console.log('Executing files:', Array.from(selectedFiles));
+    alert(`Will execute: ${Array.from(selectedFiles).join(', ')}`);
+  };
   const handleFileSelect = (fileName: string, isShiftClick: boolean) => {
     const newSelectedFiles = new Set(selectedFiles);
 
@@ -87,11 +116,25 @@ function App() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentFiles = files.slice(indexOfFirstItem, indexOfLastItem);
 
+  const ActionButtons = () => (
+    <div className="flex items-center space-x-4">
+      <span className="text-sm font-medium">{selectedFiles.size} file(s) selected</span>
+      <button
+        onClick={handleExecuteClick}
+        className="px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+      >
+        Execute
+      </button>
+    </div>
+  );
+
   const pageCount = Math.ceil(files.length / itemsPerPage);
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-200">
-      <NavigationBar />
+      <NavigationBar
+        actionsSlot={showActionsInNavbar && selectedFiles.size > 0 ? <ActionButtons /> : null}
+      />
       <main className="flex flex-col flex-grow p-4">
         <div className="flex-shrink-0">
           <label htmlFor="directory-input" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -109,7 +152,7 @@ function App() {
             <button
               type="button"
               onClick={handleBrowseClick}
-              className="inline-flex items-center px-4 py-2 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-md bg-gray-50 dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-l-0 border-gray-300 dark:border-gray-600 rounded-r-md bg-gray-50 dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
             >
               Browse...
             </button>
@@ -118,7 +161,12 @@ function App() {
 
         {files.length > 0 && (
           <div className="flex flex-col flex-grow mt-4 min-h-0">
-            <div className="flex-grow mt-3 min-h-0">
+            {selectedFiles.size > 0 && (
+              <div ref={actionsToolbarRef} className={`flex-shrink-0 mb-2 p-2 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-between ${showActionsInNavbar ? 'opacity-0' : 'opacity-100'}`}>
+                <ActionButtons />
+              </div>
+            )}
+            <div className={`flex-grow ${selectedFiles.size === 0 ? 'mt-3' : ''} min-h-0`}>
               <FileList
                 currentFiles={currentFiles}
                 selectedFiles={selectedFiles}
