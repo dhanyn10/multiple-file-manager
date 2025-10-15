@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import NavigationBar from './components/NavigationBar';
 import FileList from './components/FileList';
 import FilePagination from './components/FilePagination';
+import Modal from './components/Modal';
 import './App.css';
 
 interface FileEntry {
@@ -17,6 +18,7 @@ function App() {
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
   const [lastSelectedFile, setLastSelectedFile] = useState<string | null>(null);
   const [showActionsInNavbar, setShowActionsInNavbar] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const actionsToolbarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -71,8 +73,11 @@ function App() {
 
   const handleExecuteClick = () => {
     // Placeholder for execution logic
-    console.log('Executing files:', Array.from(selectedFiles));
-    alert(`Will execute: ${Array.from(selectedFiles).join(', ')}`);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
   const handleFileSelect = (fileName: string, isShiftClick: boolean) => {
     const newSelectedFiles = new Set(selectedFiles);
@@ -183,6 +188,28 @@ function App() {
             />
           </div>
         )}
+        <Modal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          title="Selected Files for Execution"
+        >
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">File Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from(selectedFiles).map(file => (
+                  <tr key={file} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">{file}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Modal>
       </main>
     </div>
   )
