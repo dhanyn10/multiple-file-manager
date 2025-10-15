@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form, InputGroup, ListGroup } from 'react-bootstrap';
 import NavigationBar from './components/NavigationBar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolder, faFile } from '@fortawesome/free-solid-svg-icons';
+
 import './App.css'
 
 interface FileEntry {
@@ -59,7 +62,13 @@ function App() {
             <Col>
               <ListGroup>
                 {files.map((file) => (
-                  <ListGroup.Item key={file.name}>{file.isDirectory ? '📁' : '📄'} {file.name}</ListGroup.Item>
+                  <ListGroup.Item key={file.name}>
+                    <FontAwesomeIcon 
+                      icon={file.isDirectory ? faFolder : faFile} 
+                      className="me-2" 
+                      style={{ color: file.isDirectory ? '#58a6ff' : '#8b949e' }}
+                    /> 
+                    {file.name}</ListGroup.Item>
                 ))}
               </ListGroup>
             </Col>
