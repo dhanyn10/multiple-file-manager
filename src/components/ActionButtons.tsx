@@ -10,7 +10,7 @@ const ActionButtons = ({ selectedFileCount, onExecuteClick }: ActionButtonsProps
       onClick={onExecuteClick}
       className="px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
     >
-      Execute
+      Next
     </button>
   </div>
 );
