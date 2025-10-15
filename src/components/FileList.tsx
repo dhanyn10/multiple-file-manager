@@ -16,7 +16,7 @@ const FileList = ({ currentFiles }: FileListProps) => {
     <div style={{ height: '100%', overflowY: 'auto' }}>
       <ListGroup>
         {currentFiles.map((file) => (
-          <ListGroup.Item key={file.name}>
+          <ListGroup.Item key={file.name} className={file.isDirectory ? 'list-group-item-folder' : 'list-group-item-file'}>
             <FontAwesomeIcon
               icon={file.isDirectory ? faFolder : faFile}
               className="me-2"
