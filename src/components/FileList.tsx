@@ -14,7 +14,7 @@ interface FileListProps {
 
 const FileList = ({ currentFiles, selectedFiles, onFileSelect }: FileListProps) => {
   const handleItemClick = (e: React.MouseEvent, file: FileEntry) => {
-    // Seleksi hanya berlaku untuk file, bukan folder
+    // Selection only applies to files, not folders
     if (file.isDirectory) {
       return;
     }
@@ -32,7 +32,7 @@ const FileList = ({ currentFiles, selectedFiles, onFileSelect }: FileListProps) 
               file.isDirectory ? 'cursor-default' : 'cursor-pointer'
             } ${
               selectedFiles.has(file.name)
-                ? 'bg-blue-100 dark:bg-blue-900/50' // Style untuk item terpilih
+                ? 'bg-blue-100 dark:bg-blue-900/50' // Style for selected item
                 : file.isDirectory
                 ? 'hover:bg-gray-100 dark:hover:bg-gray-700'
                 : 'hover:bg-blue-50 dark:hover:bg-blue-900/20'

@@ -22,7 +22,7 @@ function App() {
       if (path) {
         setDirectory(path);
         window.ipcRenderer.send('get-directory-contents', path);
-        setSelectedFiles(new Set()); // Reset seleksi saat ganti direktori
+        setSelectedFiles(new Set()); // Reset selection on directory change
         setLastSelectedFile(null);
       }
     };
@@ -48,7 +48,7 @@ function App() {
   const handleFileSelect = (fileName: string, isShiftClick: boolean) => {
     const newSelectedFiles = new Set(selectedFiles);
 
-    // Logika untuk Shift-klik
+    // Logic for Shift-click
     if (isShiftClick && lastSelectedFile) {
       const lastIndex = files.findIndex(f => f.name === lastSelectedFile);
       const currentIndex = files.findIndex(f => f.name === fileName);
@@ -63,7 +63,7 @@ function App() {
           }
         }
       } else {
-        // Fallback jika salah satu file tidak ditemukan (misal beda halaman)
+        // Fallback if one of the files is not found (e.g., on a different page)
         if (newSelectedFiles.has(fileName)) {
           newSelectedFiles.delete(fileName);
         } else {
@@ -71,7 +71,7 @@ function App() {
         }
       }
     } else {
-      // Logika untuk klik biasa (toggle)
+      // Logic for single click (toggle)
       if (newSelectedFiles.has(fileName)) {
         newSelectedFiles.delete(fileName);
       } else {
@@ -82,7 +82,7 @@ function App() {
     setLastSelectedFile(fileName);
   };
 
-  // Logika Paginasi
+  // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentFiles = files.slice(indexOfFirstItem, indexOfLastItem);
