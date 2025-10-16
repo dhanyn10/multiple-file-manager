@@ -13,6 +13,11 @@ interface FileEntry {
   isDirectory: boolean;
 }
 
+interface ClearHistoryResult {
+  success: boolean;
+  error?: string;
+}
+
 function App() {
   const [directory, setDirectory] = useState('');
   const [files, setFiles] = useState<FileEntry[]>([]);
@@ -152,6 +157,16 @@ function App() {
     setUndoStack(prev => [operationToRedo, ...prev]);
   };
 
+  const handleClearHistory = async () => {
+    const result: ClearHistoryResult = await window.ipcRenderer.invoke('clear-rename-history');
+    if (result.success) {
+      setUndoStack([]);
+      setRedoStack([]);
+      // Optionally, close the history sidebar after clearing
+      // setIsHistorySidebarOpen(false);
+    }
+  };
+
   const handleFileSelect = (fileName: string, isShiftClick: boolean) => {
     const newSelectedFiles = new Set(selectedFiles);
 
@@ -201,7 +216,7 @@ function App() {
       <NavigationBar
         actionsSlot={
           showActionsInNavbar && selectedFiles.size > 0 ? (
-            <ActionButtons selectedFileCount={selectedFiles.size} onExecuteClick={handleExecuteClick} />
+            <ActionButtons selectedFileCount={selectedFiles.size} onExecuteClick={handleExecuteClick} isNavbarVersion={true} />
           ) : null
         }
         onHistoryClick={() => setIsHistorySidebarOpen(prevState => !prevState)}
@@ -271,6 +286,7 @@ function App() {
             onClose={() => setIsHistorySidebarOpen(false)}
             onUndo={handleUndo}
             onRedo={handleRedo}
+            onClearHistory={handleClearHistory}
           />
         )}
       </div>
