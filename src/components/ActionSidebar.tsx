@@ -4,6 +4,7 @@ import { useClickOutside } from '../hooks/useClickOutside';
 export interface RenameOperation {
   originalName: string;
   newName: string;
+  timestamp?: string;
 }
 
 interface ActionSidebarProps {

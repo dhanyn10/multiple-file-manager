@@ -23,7 +23,8 @@ function App() {
   const [showActionsInNavbar, setShowActionsInNavbar] = useState(false); // This state can be repurposed or removed if sidebar is always open when files are selected
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
-  const [history, setHistory] = useState<RenameOperation[]>([]);
+  const [undoStack, setUndoStack] = useState<RenameOperation[]>([]);
+  const [redoStack, setRedoStack] = useState<RenameOperation[]>([]);
   const [recentlyRenamed, setRecentlyRenamed] = useState<Set<string>>(new Set());
   const actionsToolbarRef = useRef<HTMLDivElement>(null);
 
@@ -60,17 +61,16 @@ function App() {
   useIpcListeners({
     onDirectorySelected: handleDirectorySelected,
     onDirectoryContents: handleDirectoryContents,
-    onRenameComplete: handleRenameComplete,
+    onRenameComplete: handleRenameComplete, // onRenameComplete no longer reloads the history
   });
 
   useEffect(() => {
     const fetchHistory = async () => {
       const savedHistory = await window.ipcRenderer.invoke('get-rename-history');
-      // Ensure we only set an array of RenameOperation, fall back to empty array
+      // When the app loads, all history is considered "undoable"
       if (Array.isArray(savedHistory)) {
-        setHistory(savedHistory as RenameOperation[]);
-      } else {
-        setHistory([]);
+        setUndoStack(savedHistory as RenameOperation[]);
+        setRedoStack([]); // Ensure the redo stack is empty at the start
       }
     };
     fetchHistory();
@@ -112,26 +112,44 @@ function App() {
   const handleExecuteRename = (operations: RenameOperation[]) => {
     if (operations.length > 0) {
       window.ipcRenderer.send('execute-rename', directory, operations);
-      // Update local state immediately for responsiveness
-      setHistory(prevHistory => [...operations, ...prevHistory]);
+      // Add to undo stack and clear redo stack
+      setUndoStack(prev => [...operations, ...prev]);
+      setRedoStack([]); // A new action will clear the redo possibility
       const newNames = new Set(operations.map(op => op.newName));
       setRecentlyRenamed(newNames);
       setIsHistorySidebarOpen(true);
     }
   };
 
-  const handleUndoRename = (operationToUndo: RenameOperation) => {
-    // To undo, we simply reverse the operation
-    const undoOperation: RenameOperation = {
+  const handleUndo = (operationToUndo: RenameOperation) => {
+    // Remove the operation from the undoStack
+    const newUndoStack = undoStack.filter(op => op.timestamp !== operationToUndo.timestamp);
+    if (newUndoStack.length === undoStack.length) return; // Operation not found
+
+    // Create the reverse operation
+    const reversedOp: RenameOperation = {
       originalName: operationToUndo.newName,
       newName: operationToUndo.originalName,
+      timestamp: new Date().toISOString() // Give a new timestamp for this reverse operation
     };
-    handleExecuteRename([undoOperation]);
+
+    // Execute the reverse operation
+    window.ipcRenderer.send('execute-rename', directory, [reversedOp]);
+
+    // Move the undone operation to the redoStack
+    setUndoStack(newUndoStack);
+    setRedoStack(prev => [operationToUndo, ...prev]);
   };
 
-  const handleRedoRename = (operationToRedo: RenameOperation) => {
-    // To redo, we execute the original operation again.
-    handleExecuteRename([operationToRedo]);
+  const handleRedo = (operationToRedo: RenameOperation) => {
+    // Remove the operation from the redoStack
+    const newRedoStack = redoStack.filter(op => op.timestamp !== operationToRedo.timestamp);
+    if (newRedoStack.length === redoStack.length) return; // Operation not found
+
+    // Re-execute the original operation
+    window.ipcRenderer.send('execute-rename', directory, [operationToRedo]);
+    setRedoStack(newRedoStack);
+    setUndoStack(prev => [operationToRedo, ...prev]);
   };
 
   const handleFileSelect = (fileName: string, isShiftClick: boolean) => {
@@ -248,10 +266,11 @@ function App() {
         )}
         {isHistorySidebarOpen && (
           <HistorySidebar
-            history={history}
+            undoStack={undoStack}
+            redoStack={redoStack}
             onClose={() => setIsHistorySidebarOpen(false)}
-            onUndo={handleUndoRename}
-            onRedo={handleRedoRename}
+            onUndo={handleUndo}
+            onRedo={handleRedo}
           />
         )}
       </div>

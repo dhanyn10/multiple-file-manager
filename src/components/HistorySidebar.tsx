@@ -1,20 +1,63 @@
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
 import { RenameOperation } from './ActionSidebar';
 
 interface HistorySidebarProps {
-  history: RenameOperation[];
+  undoStack: RenameOperation[];
+  redoStack: RenameOperation[];
   onClose: () => void;
   onUndo: (operation: RenameOperation) => void;
   onRedo: (operation: RenameOperation) => void;
 }
 
-const HistorySidebar = ({ history, onClose, onUndo, onRedo }: HistorySidebarProps) => {
+const HistorySidebar = ({ undoStack, redoStack, onClose, onUndo, onRedo }: HistorySidebarProps) => {
+  const sidebarRef = useRef<HTMLElement>(null);
+  const [isResizing, setIsResizing] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(384); // Corresponds to w-96
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsResizing(true);
+  };
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (isResizing) {
+      const newWidth = window.innerWidth - e.clientX;
+      if (newWidth > 320 && newWidth < window.innerWidth * 0.75) { // Min 320px, Max 75% of window
+        setSidebarWidth(newWidth);
+      }
+    }
+  }, [isResizing]);
+
+  const handleMouseUp = useCallback(() => setIsResizing(false), []);
+
+  useEffect(() => {
+    if (isResizing) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing, handleMouseMove, handleMouseUp]);
+
   return (
     <aside
-      className="bg-slate-100 border-l border-slate-200 flex flex-col h-full"
-      style={{ width: '384px' }}
+      ref={sidebarRef}
+      className="bg-slate-100 border-l border-slate-200 flex flex-col h-full relative"
+      style={{ width: `${sidebarWidth}px` }}
     >
+      <div
+        onMouseDown={handleMouseDown}
+        className="absolute top-0 left-0 -ml-1 w-2 h-full cursor-col-resize z-30"
+        title="Resize sidebar"
+      />
       <div className="flex justify-between items-center p-4 border-b border-slate-200 flex-shrink-0">
         <h3 className="text-lg font-semibold text-slate-900">Activity History</h3>
         <button
@@ -27,23 +70,24 @@ const HistorySidebar = ({ history, onClose, onUndo, onRedo }: HistorySidebarProp
       </div>
 
       <div className="flex-grow overflow-y-auto p-4">
-        {history.length === 0 ? (
+        {undoStack.length === 0 && redoStack.length === 0 ? (
           <p className="text-slate-500">No activities yet.</p>
         ) : (
           <div className="overflow-y-auto border-t border-slate-200">
             <table className="w-full text-sm text-left text-slate-500">
               <thead className="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0">
                 <tr>
-                  <th scope="col" className="px-4 py-2">Old Name</th>
+                  <th scope="col" className="px-4 py-2">Original Name</th>
                   <th scope="col" className="px-4 py-2">New Name</th>
                 </tr>
               </thead>
               <tbody>
-                {history.slice().reverse().map((op, index) => (
-                  <tr key={`${op.originalName}-${index}`} className="bg-white border-b border-slate-200/60 hover:bg-slate-50">
-                    <td className="px-4 py-2 font-medium text-slate-900 break-all group/item relative">
+                {/* Displaying items that can be redone */}
+                {redoStack.map((op, index) => (
+                  <tr key={`redo-${op.originalName}-${op.newName}-${index}`} className="bg-white border-b border-slate-200/60 opacity-60 group/item">
+                    <td className="px-4 py-2 font-medium text-slate-500 break-all relative">
                       <div className="flex items-center">
-                        <span className="line-through">{op.originalName}</span>
+                        <span>{op.originalName}</span>
                       </div>
                       <div className="absolute inset-0 flex items-center justify-center bg-slate-50/80 opacity-0 group-hover/item:opacity-100 transition-opacity">
                         <button onClick={() => onRedo(op)} className="text-slate-500 hover:text-red-600" title="Redo rename">
@@ -51,10 +95,17 @@ const HistorySidebar = ({ history, onClose, onUndo, onRedo }: HistorySidebarProp
                         </button>
                       </div>
                     </td>
-                    <td className="px-4 py-2 break-all text-green-600 font-semibold group/item relative">
-                      <div className="flex items-center justify-between">
-                        <span>{op.newName}</span>
-                      </div>
+                    <td className="px-4 py-2 font-medium text-slate-500 break-all relative">
+                      <span>{op.newName}</span>
+                    </td>
+                  </tr>
+                ))}
+                {/* Displaying items that can be undone */}
+                {undoStack.map((op, index) => (
+                  <tr key={`undo-${op.originalName}-${op.newName}-${index}`} className="bg-white border-b border-slate-200/60 group/item">
+                    <td className="px-4 py-2 font-medium text-slate-900 break-all">{op.originalName}</td>
+                    <td className="px-4 py-2 break-all text-green-600 font-semibold relative">
+                      <span>{op.newName}</span>
                       <div className="absolute inset-0 flex items-center justify-center bg-slate-50/80 opacity-0 group-hover/item:opacity-100 transition-opacity">
                         <button onClick={() => onUndo(op)} className="text-slate-500 hover:text-blue-600" title="Undo rename">
                           <FontAwesomeIcon icon={faUndo} size="lg" />
