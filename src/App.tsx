@@ -139,24 +139,60 @@ function App() {
     }
   };
 
+  const handleExecuteDelete = (operations: { fileName: string; timestamp: string }[]) => {
+    if (operations.length > 0) {
+      const filesToDelete = operations.map(op => op.fileName);
+      window.ipcRenderer.send('execute-delete', directory, filesToDelete);
+
+      // Adapt delete operations to look like rename operations for the undo stack
+      const undoOps: RenameOperation[] = operations.map(op => ({
+        originalName: op.fileName,
+        newName: `DELETED_${op.timestamp}`, // Placeholder for deleted state
+        timestamp: op.timestamp,
+      }));
+
+      setUndoStack(prev => [...undoOps, ...prev]);
+      setRedoStack([]);
+
+      // No need to highlight deleted files, so we can clear recent changes
+      setRecentlyRenamed(new Set());
+      setIsHistorySidebarOpen(true);
+
+      // We also need to clear the selection as the files are gone
+      const newSelectedFiles = new Set(selectedFiles);
+      filesToDelete.forEach(file => newSelectedFiles.delete(file));
+      setSelectedFiles(newSelectedFiles);
+      setLastSelectedFile(null);
+    }
+  };
+
   const handleUndo = (operationToUndo: RenameOperation) => {
     // Remove the operation from the undoStack
     const newUndoStack = undoStack.filter(op => op.timestamp !== operationToUndo.timestamp);
     if (newUndoStack.length === undoStack.length) return; // Operation not found
 
     // Create the reverse operation
-    const reversedOp: RenameOperation = {
-      originalName: operationToUndo.newName,
-      newName: operationToUndo.originalName,
-      timestamp: new Date().toISOString() // Give a new timestamp for this reverse operation
-    };
+    if (operationToUndo.newName.startsWith('DELETED_')) {
+      // This is an undo for a delete operation. We pass the directory.
+      window.ipcRenderer.send('execute-restore', directory, [operationToUndo.originalName]);
+      // Move the undone operation to the redoStack
+      setUndoStack(newUndoStack);
+      setRedoStack(prev => [operationToUndo, ...prev]);
+    } else {
+      // This is an undo for a rename operation
+      const reversedOp: RenameOperation = {
+        originalName: operationToUndo.newName,
+        newName: operationToUndo.originalName,
+        timestamp: new Date().toISOString() // Give a new timestamp for this reverse operation
+      };
 
-    // Execute the reverse operation
-    window.ipcRenderer.send('execute-rename', directory, [reversedOp]);
+      // Execute the reverse operation
+      window.ipcRenderer.send('execute-rename', directory, [reversedOp]);
 
-    // Move the undone operation to the redoStack
-    setUndoStack(newUndoStack);
-    setRedoStack(prev => [operationToUndo, ...prev]);
+      // Move the undone operation to the redoStack
+      setUndoStack(newUndoStack);
+      setRedoStack(prev => [operationToUndo, ...prev]);
+    }
   };
 
   const handleRedo = (operationToRedo: RenameOperation) => {
@@ -164,10 +200,17 @@ function App() {
     const newRedoStack = redoStack.filter(op => op.timestamp !== operationToRedo.timestamp);
     if (newRedoStack.length === redoStack.length) return; // Operation not found
 
-    // Re-execute the original operation
-    window.ipcRenderer.send('execute-rename', directory, [operationToRedo]);
-    setRedoStack(newRedoStack);
-    setUndoStack(prev => [operationToRedo, ...prev]);
+    if (operationToRedo.newName.startsWith('DELETED_')) {
+      // This is a redo for a delete operation
+      window.ipcRenderer.send('execute-delete', directory, [operationToRedo.originalName]);
+      setRedoStack(newRedoStack);
+      setUndoStack(prev => [operationToRedo, ...prev]);
+    } else {
+      // Re-execute the original rename operation
+      window.ipcRenderer.send('execute-rename', directory, [operationToRedo]);
+      setRedoStack(newRedoStack);
+      setUndoStack(prev => [operationToRedo, ...prev]);
+    }
   };
 
   const handleClearHistory = async () => {
@@ -327,6 +370,7 @@ function App() {
             selectedFiles={selectedFiles}
             onClose={handleCloseModal}
             onExecute={handleExecuteRename}
+            onExecuteDelete={handleExecuteDelete}
             actionFrom={actionFrom}
             onActionFromChange={setActionFrom}
             actionTo={actionTo}

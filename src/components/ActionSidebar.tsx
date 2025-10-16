@@ -16,6 +16,7 @@ interface ActionSidebarProps {
   onActionFromChange: (value: string) => void;
   actionTo: string;
   onActionToChange: (value: string) => void;
+  onExecuteDelete: (operations: { fileName: string; timestamp: string }[]) => void;
   selectedAction: string;
   onSelectedActionChange: (value: string) => void;
   startIndex: string;
@@ -29,7 +30,7 @@ const availableActions = [
   { value: 'rename', label: 'Rename by name' },
   { value: 'rename-by-index', label: 'Rename by index' },
   { value: 'insert-at-index', label: 'Insert text at index' },
-  // You can add other actions here
+  { value: 'delete-duplicated', label: 'Delete Duplicates' }
 ];
 
 const ActionSidebar = ({
@@ -37,6 +38,7 @@ const ActionSidebar = ({
   onClose,
   onExecute,
   actionFrom,
+  onExecuteDelete,
   onActionFromChange,
   actionTo,
   onActionToChange,
@@ -161,6 +163,43 @@ const ActionSidebar = ({
     onExecute(operations);
   };
 
+  const handleDeleteDuplicates = () => {
+    const files = Array.from(selectedFiles);
+    const baseFiles = new Map<string, string>();
+
+    // Regex to match patterns like `_0`, `_1`, `_copy`, `(1)`
+    const duplicatePattern = /(.+?)(?:_(\d+)|_copy|\s*\((\d+)\))?(\.\w+)$/;
+
+    // First pass: identify base files
+    files.forEach(file => {
+      const match = file.match(duplicatePattern);
+      if (match) {
+        const baseName = match[1];
+        const extension = match[4];
+        const fullBaseName = `${baseName}${extension}`;
+
+        // If the base file itself exists in the selection, mark it.
+        if (files.includes(fullBaseName)) {
+          if (!baseFiles.has(fullBaseName)) {
+            baseFiles.set(fullBaseName, fullBaseName);
+          }
+        }
+      }
+    });
+
+    // Second pass: identify duplicates to be deleted
+    const operations: { fileName: string; timestamp: string }[] = [];
+    files.forEach(file => {
+      // A file is a duplicate if it's NOT a base file itself
+      if (!baseFiles.has(file)) {
+        const timestamp = new Date().toISOString();
+        operations.push({ fileName: file, timestamp });
+      }
+    });
+
+    onExecuteDelete(operations);
+  };
+
   return (
     <aside
       ref={sidebarRef}
@@ -198,10 +237,10 @@ const ActionSidebar = ({
                 >
                   <span className="block truncate">
                     {selectedAction
-                      ? availableActions.find(a => a.value === selectedAction)?.label
+                      ? [...availableActions].find(a => a.value === selectedAction)?.label
                       : '-- Select Action --'}
                   </span>
-                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2" >
                     <svg className="h-5 w-5 text-slate-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                       <path fillRule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.7 9.2a.75.75 0 011.06-.02L10 15.148l2.64-2.968a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                     </svg>
@@ -211,7 +250,7 @@ const ActionSidebar = ({
                   <div className="absolute z-10 mt-1 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg focus:outline-none sm:text-sm max-h-60">
                     <div
                       key="default-action"
-                    onClick={() => { onSelectedActionChange(''); setIsActionDropdownOpen(false); }}
+                      onClick={() => { onSelectedActionChange(''); setIsActionDropdownOpen(false); }}
                       className="text-slate-500 relative cursor-pointer select-none py-2 pl-3 pr-9 hover:bg-blue-600 hover:text-white"
                     >
                       <span className="font-normal block truncate">-- Select Action --</span>
@@ -335,36 +374,55 @@ const ActionSidebar = ({
               <thead className="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0">
                 <tr>
                   <th scope="col" className="px-4 py-2">Original Name</th>
-                  <th scope="col" className="px-4 py-2">New Name</th>
+                  <th scope="col" className="px-4 py-2">{selectedAction === 'delete-duplicated' ? 'Status' : 'New Name'}</th>
                 </tr>
               </thead>
               <tbody>
                 {Array.from(selectedFiles).map(file => {
                   let newName = file;
-                  if (selectedAction === 'rename' && actionFrom) {
-                    newName = file.replace(actionFrom, actionTo);
-                  } else if (selectedAction === 'rename-by-index' && startIndex !== '') {
-                    const start = parseInt(startIndex, 10);
-                    const end = endIndex !== '' ? parseInt(endIndex, 10) : start + 1;
-                    if (!isNaN(start) && !isNaN(end) && start < end) {
-                      const lastDotIndex = file.lastIndexOf('.');
-                      // If there's an extension and the end goes beyond it, cap it at the dot.
-                      // Make sure the dot is after the startIndex.
-                      const effectiveEnd = (lastDotIndex > start && end > lastDotIndex)
-                        ? lastDotIndex
-                        : end;
-                      newName = file.slice(0, start) + actionTo + file.slice(effectiveEnd);
+                  let status = '';
+
+                  if (selectedAction === 'delete-duplicated') {
+                    const duplicatePattern = /(.+?)(?:_(\d+)|_copy|\s*\((\d+)\))?(\.\w+)$/;
+                    const match = file.match(duplicatePattern);
+                    if (match) {
+                      const baseName = match[1];
+                      const extension = match[4];
+                      const fullBaseName = `${baseName}${extension}`;
+                      if (file !== fullBaseName && selectedFiles.has(fullBaseName)) {
+                        status = 'Will be deleted';
+                      } else {
+                        status = 'Will be kept';
+                      }
+                    } else {
+                      status = 'Will be kept';
                     }
-                  } else if (selectedAction === 'insert-at-index' && startIndex !== '') {
-                    const insertIndex = parseInt(startIndex, 10);
-                    if (!isNaN(insertIndex)) {
-                      newName = file.slice(0, insertIndex) + actionTo + file.slice(insertIndex);
+                  } else {
+                    if (selectedAction === 'rename' && actionFrom) {
+                      newName = file.replace(actionFrom, actionTo);
+                    } else if (selectedAction === 'rename-by-index' && startIndex !== '') {
+                      const start = parseInt(startIndex, 10);
+                      const end = endIndex !== '' ? parseInt(endIndex, 10) : start + 1;
+                      if (!isNaN(start) && !isNaN(end) && start < end) {
+                        const lastDotIndex = file.lastIndexOf('.');
+                        const effectiveEnd = (lastDotIndex > start && end > lastDotIndex) ? lastDotIndex : end;
+                        newName = file.slice(0, start) + actionTo + file.slice(effectiveEnd);
+                      }
+                    } else if (selectedAction === 'insert-at-index' && startIndex !== '') {
+                      const insertIndex = parseInt(startIndex, 10);
+                      if (!isNaN(insertIndex)) {
+                        newName = file.slice(0, insertIndex) + actionTo + file.slice(insertIndex);
+                      }
                     }
                   }
                   return (
                     <tr key={file} className="bg-white border-b border-slate-200/60 hover:bg-slate-50">
                       <td className="px-4 py-2 font-medium text-slate-900 break-all">{file}</td>
-                      <td className={`px-4 py-2 break-all ${newName !== file ? 'text-blue-500 font-semibold' : ''}`}>{newName}</td>
+                      {selectedAction === 'delete-duplicated' ? (
+                        <td className={`px-4 py-2 break-all ${status === 'Will be deleted' ? 'text-red-500 font-semibold' : 'text-green-600'}`}>{status}</td>
+                      ) : (
+                        <td className={`px-4 py-2 break-all ${newName !== file ? 'text-blue-500 font-semibold' : ''}`}>{newName}</td>
+                      )}
                     </tr>
                   );
                 })}
@@ -376,13 +434,23 @@ const ActionSidebar = ({
 
       {/* Footer with Execute Button */}
       <div className="p-4 border-t border-slate-200 flex-shrink-0">
-        <button
-          onClick={handleExecute}
-          disabled={!selectedAction || (selectedAction === 'rename' && !actionFrom) || (selectedAction === 'rename-by-index' && startIndex === '') || (selectedAction === 'insert-at-index' && startIndex === '')}
-          className="w-full px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
-        >
-          Execute Rename
-        </button>
+        {selectedAction === 'delete-duplicated' ? (
+          <button
+            onClick={handleDeleteDuplicates}
+            disabled={!selectedAction}
+            className="w-full px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
+          >
+            Delete Duplicates
+          </button>
+        ) : (
+          <button
+            onClick={handleExecute}
+            disabled={!selectedAction || (selectedAction === 'rename' && !actionFrom) || (selectedAction === 'rename-by-index' && startIndex === '') || (selectedAction === 'insert-at-index' && startIndex === '')}
+            className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
+          >
+            Execute Rename
+          </button>
+        )}
       </div>
     </aside>
   );

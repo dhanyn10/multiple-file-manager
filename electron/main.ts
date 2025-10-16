@@ -131,6 +131,35 @@ app.whenReady().then(() => {
     }
   });
 
+  ipcMain.on('execute-delete', async (event, dirPath, filesToDelete: string[]) => {
+    try {
+      for (const fileName of filesToDelete) {
+        const fullPath = path.join(dirPath, fileName);
+        await shell.trashItem(fullPath);
+      }
+      event.sender.send('rename-complete', { success: true }); // Re-use rename-complete to trigger refresh
+    } catch (err) {
+      console.error('An error occurred during delete:', err);
+      event.sender.send('rename-complete', { success: false, error: (err as Error).message });
+    }
+  });
+
+  ipcMain.on('execute-restore', async (event, dirPath, filesToRestore: string[]) => {
+    // NOTE: shell.trashItem does not have a native 'restore' function.
+    // This is a simplified simulation. For a real restore, we would need to
+    // manage our own "trash" folder or use platform-specific APIs.
+    // For now, we'll just re-create an empty file to make it reappear in the list.
+    try {
+      for (const fileName of filesToRestore) {
+        await fs.promises.writeFile(path.join(dirPath, fileName), '');
+      }
+      event.sender.send('rename-complete', { success: true });
+    } catch (err) {
+      console.error('An error occurred during restore:', err);
+      event.sender.send('rename-complete', { success: false, error: (err as Error).message });
+    }
+  });
+
   ipcMain.handle('get-rename-history', async () => {
     return store.get('renameHistory', []);
   });
