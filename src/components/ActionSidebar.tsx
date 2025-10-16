@@ -16,6 +16,7 @@ interface ActionSidebarProps {
 const availableActions = [
   { value: 'rename', label: 'Rename by name' },
   { value: 'rename-by-index', label: 'Rename by index' },
+  { value: 'insert-at-index', label: 'Insert text at index' },
   // You can add other actions here
 ];
 
@@ -101,6 +102,14 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
           if (newName !== file) {
             operations.push({ originalName: file, newName });
           }
+        });
+      }
+    } else if (selectedAction === 'insert-at-index' && startIndex !== '') {
+      const insertIndex = parseInt(startIndex, 10);
+      if (!isNaN(insertIndex)) {
+        Array.from(selectedFiles).forEach(file => {
+          const newName = file.slice(0, insertIndex) + actionTo + file.slice(insertIndex);
+          operations.push({ originalName: file, newName: newName });
         });
       }
     }
@@ -238,6 +247,32 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
                 </div>
               </>
             )}
+            {selectedAction === 'insert-at-index' && (
+              <>
+                <div>
+                  <label htmlFor="insert-index" className="block mb-1 text-sm font-medium text-slate-900">Insertion Index</label>
+                  <input
+                    type="number"
+                    id="insert-index"
+                    value={startIndex}
+                    onChange={(e) => setStartIndex(e.target.value)}
+                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                    placeholder="e.g., 0 for start"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="action-to-insert" className="block mb-1 text-sm font-medium text-slate-900">Text to Insert</label>
+                  <input
+                    type="text"
+                    id="action-to-insert"
+                    value={actionTo}
+                    onChange={(e) => setActionTo(e.target.value)}
+                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                    placeholder="e.g., _copy"
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -263,6 +298,11 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
                     if (!isNaN(start) && !isNaN(end) && start < end) {
                       newName = file.slice(0, start) + actionTo + file.slice(end);
                     }
+                  } else if (selectedAction === 'insert-at-index' && startIndex !== '') {
+                    const insertIndex = parseInt(startIndex, 10);
+                    if (!isNaN(insertIndex)) {
+                      newName = file.slice(0, insertIndex) + actionTo + file.slice(insertIndex);
+                    }
                   }
                   return (
                     <tr key={file} className="bg-white border-b border-slate-200/60 hover:bg-slate-50">
@@ -281,7 +321,7 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
       <div className="p-4 border-t border-slate-200 flex-shrink-0">
         <button
           onClick={handleExecute}
-          disabled={!selectedAction || (selectedAction === 'rename' && !actionFrom) || (selectedAction === 'rename-by-index' && startIndex === '')}
+          disabled={!selectedAction || (selectedAction === 'rename' && !actionFrom) || (selectedAction === 'rename-by-index' && startIndex === '') || (selectedAction === 'insert-at-index' && startIndex === '')}
           className="w-full px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
         >
           Execute Rename
