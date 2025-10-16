@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, CSSProperties, useCallback } from 'react';
 
 interface ActionButtonsProps {
   selectedFileCount: number;
@@ -15,33 +15,34 @@ const ActionButtons = ({
   onDeselectAll,
   isNavbarVersion = false
 }: ActionButtonsProps) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [buttonStyle, setButtonStyle] = useState<CSSProperties>({});
   const containerRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLSpanElement>(null);
+  const leftContentRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (containerRef.current && textRef.current && buttonRef.current) {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (containerRef.current && leftContentRef.current && buttonRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
-      
-      // Calculate the right edge of the left-side content
-      const leftContentWidth = textRef.current.offsetWidth;
-      
-      // Get button width to prevent overlap
       const buttonWidth = buttonRef.current.offsetWidth;
-      
-      // Add a larger margin
-      const margin = 32; // Add a 32px margin
+      const leftContentWidth = leftContentRef.current.offsetWidth;
+
+      // Determine the minimum X-axis boundary to prevent the button from overlapping the left content
+      const margin = 32; // 32px margin from the left content
       const minX = leftContentWidth + margin + (buttonWidth / 2);
 
-      // Get the cursor's X position relative to the container
-      let newX = e.clientX - containerRect.left;
+      // Cursor's X position relative to the container
+      const cursorX = e.clientX - containerRect.left;
 
-      // Clamp the position so it doesn't go past the minimum X
-      setPosition({ x: Math.max(newX, minX), y: 0 });
+      // Ensure the button's position does not go below the minimum boundary
+      const newX = Math.max(cursorX, minX);
+
+      setButtonStyle({
+        transform: `translate(${newX}px, -50%) translateX(-50%) scale(1.1)`,
+      });
     }
-  };
+  }, [isHovered]); // Re-create function only if isHovered changes
+
 
   if (isNavbarVersion) {
     return (
@@ -63,11 +64,14 @@ const ActionButtons = ({
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        setButtonStyle({}); // Reset style to avoid jump on first enter
+      }}
       onMouseLeave={() => setIsHovered(false)}
       className="relative flex items-center justify-between w-full h-full"
     >
-      <div ref={textRef} className="flex items-center gap-4">
+      <div ref={leftContentRef} className="flex items-center gap-4">
         <span className="text-sm font-medium text-slate-700">{selectedFileCount} file(s) selected</span>
         <div className="flex items-center gap-2">
           <button
@@ -84,8 +88,12 @@ const ActionButtons = ({
       <button
         ref={buttonRef}
         onClick={onExecuteClick}
-        style={{ left: isHovered ? `${position.x}px` : 'auto', right: isHovered ? 'auto' : '0' }}
-        className={`absolute top-1/2 -translate-y-1/2 -translate-x-1/2 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-100 ease-out cursor-pointer ${isHovered ? 'scale-110' : 'translate-x-0'}`}
+        style={isHovered ? buttonStyle : {}}
+        className={`absolute top-1/2 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform duration-100 ease-out cursor-pointer ${
+          isHovered
+            ? 'left-0 right-auto'
+            : 'right-0 -translate-y-1/2'
+        }`}
       >
         Next
       </button>
