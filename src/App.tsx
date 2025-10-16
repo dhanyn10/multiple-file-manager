@@ -172,7 +172,7 @@ function App() {
             <ActionButtons selectedFileCount={selectedFiles.size} onExecuteClick={handleExecuteClick} />
           ) : null
         }
-        onHistoryClick={() => setIsHistorySidebarOpen(true)}
+        onHistoryClick={() => setIsHistorySidebarOpen(prevState => !prevState)}
       />
       <div className="flex flex-row flex-grow overflow-hidden">
         <main className="flex flex-col flex-grow p-4">
