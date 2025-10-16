@@ -15,6 +15,7 @@ interface ActionSidebarProps {
 
 const availableActions = [
   { value: 'rename', label: 'Rename by name' },
+  { value: 'rename-by-index', label: 'Rename by index' },
   // You can add other actions here
 ];
 
@@ -22,6 +23,8 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
   const [actionFrom, setActionFrom] = useState('');
   const [actionTo, setActionTo] = useState('');
   const [selectedAction, setSelectedAction] = useState('');
+  const [startIndex, setStartIndex] = useState('');
+  const [endIndex, setEndIndex] = useState('');
   const [isActionDropdownOpen, setIsActionDropdownOpen] = useState(false);
   const actionDropdownRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
@@ -67,6 +70,8 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
     // Reset form on close
     setActionFrom('');
     setActionTo('');
+    setStartIndex('');
+    setEndIndex('');
     setIsActionDropdownOpen(false);
     setSelectedAction('');
   };
@@ -83,6 +88,21 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
           operations.push({ originalName: file, newName });
         }
       });
+    } else if (selectedAction === 'rename-by-index' && startIndex !== '') {
+      // Convert 1-based index from user to 0-based for JS
+      const start = parseInt(startIndex, 10) - 1;
+      // If endIndex is not provided, it means we replace only one character at startIndex.
+      // So, the 0-based end index will be `start + 1`.
+      const end = endIndex ? parseInt(endIndex, 10) : start + 2;
+
+      if (!isNaN(start) && !isNaN(end) && start < end) {
+        Array.from(selectedFiles).forEach(file => {
+          const newName = file.slice(0, start) + actionTo + file.slice(end);
+          if (newName !== file) {
+            operations.push({ originalName: file, newName });
+          }
+        });
+      }
     }
     onExecute(operations);
   };
@@ -181,6 +201,43 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
                 </div>
               </>
             )}
+            {selectedAction === 'rename-by-index' && (
+              <>
+                <div>
+                  <label htmlFor="start-index" className="block mb-1 text-sm font-medium text-slate-900">Start Index</label>
+                  <input
+                    type="number"
+                    id="start-index"
+                    value={startIndex}
+                    onChange={(e) => setStartIndex(e.target.value)}
+                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                    placeholder="e.g., 0"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="end-index" className="block mb-1 text-sm font-medium text-slate-900">End Index (optional)</label>
+                  <input
+                    type="number"
+                    id="end-index"
+                    value={endIndex}
+                    onChange={(e) => setEndIndex(e.target.value)}
+                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                    placeholder="replace up to this index"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="action-to-index" className="block mb-1 text-sm font-medium text-slate-900">To</label>
+                  <input
+                    type="text"
+                    id="action-to-index"
+                    value={actionTo}
+                    onChange={(e) => setActionTo(e.target.value)}
+                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                    placeholder="new text"
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -197,7 +254,16 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
               </thead>
               <tbody>
                 {Array.from(selectedFiles).map(file => {
-                  const newName = selectedAction === 'rename' && actionFrom ? file.replace(actionFrom, actionTo) : file;
+                  let newName = file;
+                  if (selectedAction === 'rename' && actionFrom) {
+                    newName = file.replace(actionFrom, actionTo);
+                  } else if (selectedAction === 'rename-by-index' && startIndex !== '') {
+                    const start = parseInt(startIndex, 10) - 1;
+                    const end = endIndex ? parseInt(endIndex, 10) : start + 2;
+                    if (!isNaN(start) && !isNaN(end) && start < end) {
+                      newName = file.slice(0, start) + actionTo + file.slice(end);
+                    }
+                  }
                   return (
                     <tr key={file} className="bg-white border-b border-slate-200/60 hover:bg-slate-50">
                       <td className="px-4 py-2 font-medium text-slate-900 break-all">{file}</td>
@@ -215,7 +281,7 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
       <div className="p-4 border-t border-slate-200 flex-shrink-0">
         <button
           onClick={handleExecute}
-          disabled={!selectedAction || (selectedAction === 'rename' && !actionFrom)}
+          disabled={!selectedAction || (selectedAction === 'rename' && !actionFrom) || (selectedAction === 'rename-by-index' && startIndex === '')}
           className="w-full px-4 py-2 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:bg-slate-400 disabled:cursor-not-allowed"
         >
           Execute Rename

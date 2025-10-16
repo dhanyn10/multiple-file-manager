@@ -43,7 +43,26 @@ const FileList = ({ currentFiles, selectedFiles, highlightedFiles, onFileSelect 
               icon={file.isDirectory ? faFolder : faFile}
               className={`mr-3 ${file.isDirectory ? 'text-blue-500' : 'text-gray-500'}`}
             />
-            {file.name}
+            {file.isDirectory ? (
+              <span className="break-all font-mono">{file.name}</span>
+            ) : (
+              <span className="break-all font-mono">
+                {file.name.split('').map((char, index) => {
+                  // Whitespace needs to be handled specially to be visible and hoverable
+                  const isWhitespace = char.trim() === '';
+                  return (
+                    <span key={index} className="relative group inline-block">
+                      <span className={`hover:bg-yellow-200 px-px ${isWhitespace ? 'w-2' : ''}`}>
+                        {isWhitespace ? '\u00A0' : char}
+                      </span>
+                      <span role="tooltip" className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max min-w-[1.5rem] text-center px-2 py-1 bg-gray-900 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                        {index + 1}
+                      </span>
+                    </span>
+                  );
+                })}
+              </span>
+            )}
           </li>
         ))}
       </ul>
