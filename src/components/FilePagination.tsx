@@ -9,16 +9,11 @@ interface FilePaginationProps {
 
 const FilePagination = ({
   itemsPerPage,
-  setItemsPerPage,
   setCurrentPage,
   pageCount,
   currentPage,
   totalItems,
 }: FilePaginationProps) => {
-  const handleItemsPerPageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setItemsPerPage(Number(e.target.value));
-    setCurrentPage(1); // Reset to first page when items per page changes
-  }
 
   return (
     <div className="mt-4 flex-shrink-0 flex items-center justify-between text-sm">

@@ -56,11 +56,25 @@ function App() {
     }, 5000); // Highlight will last for 5 seconds
   }, []);
 
+  // Define the actual rename complete handler separately
   useIpcListeners({
     onDirectorySelected: handleDirectorySelected,
     onDirectoryContents: handleDirectoryContents,
     onRenameComplete: handleRenameComplete,
   });
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      const savedHistory = await window.ipcRenderer.invoke('get-rename-history');
+      // Ensure we only set an array of RenameOperation, fall back to empty array
+      if (Array.isArray(savedHistory)) {
+        setHistory(savedHistory as RenameOperation[]);
+      } else {
+        setHistory([]);
+      }
+    };
+    fetchHistory();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -98,9 +112,10 @@ function App() {
   const handleExecuteRename = (operations: RenameOperation[]) => {
     if (operations.length > 0) {
       window.ipcRenderer.send('execute-rename', directory, operations);
+      // Update local state immediately for responsiveness
+      setHistory(prevHistory => [...operations, ...prevHistory]);
       const newNames = new Set(operations.map(op => op.newName));
       setRecentlyRenamed(newNames);
-      setHistory(prevHistory => [...prevHistory, ...operations]);
       setIsHistorySidebarOpen(true);
     }
   };

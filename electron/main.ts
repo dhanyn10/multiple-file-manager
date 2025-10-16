@@ -1,10 +1,9 @@
 import { app, BrowserWindow, ipcMain, dialog } from 'electron'
-import { createRequire } from 'node:module'
 import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import Store from 'electron-store'
 import path from 'node:path'
 
-const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // The built directory structure
@@ -26,6 +25,14 @@ export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
 
 let win: BrowserWindow | null
+
+// Initialize electron-store
+const store = new Store({
+  defaults: { renameHistory: [] }
+})
+
+// Log the path to the console for easy access
+console.log('Electron-store data path:', store.path);
 
 function createWindow() {
   win = new BrowserWindow({
@@ -104,24 +111,37 @@ app.whenReady().then(() => {
     });
   });
 
-  ipcMain.on('execute-rename', (event, dirPath, operations) => {
-    const renamePromises = operations.map(op => {
-      const oldPath = path.join(dirPath, op.originalName);
-      const newPath = path.join(dirPath, op.newName);
-      return fs.promises.rename(oldPath, newPath);
-    });
+  ipcMain.on('execute-rename', async (event, dirPath, operations: any[]) => {
+    try {
+      const currentHistory = (store.get('renameHistory') || []) as any[];
+      // Execute all operations sequentially
+      for (const op of operations) {
+        const oldPath = path.join(dirPath, op.originalName);
+        const newPath = path.join(dirPath, op.newName);
+        await fs.promises.rename(oldPath, newPath);
+        // Add the operation to the beginning of the history array
+        currentHistory.unshift({ ...op, timestamp: new Date().toISOString() });
+      }
+      // Save the updated history array
+      store.set('renameHistory', currentHistory.slice(0, 1000)); // Limit history to 1000 entries
+      event.sender.send('rename-complete', { success: true });
+    } catch (err) {
+      console.error('An error occurred during rename or history update:', err);
+      event.sender.send('rename-complete', { success: false, error: (err as Error).message });
+    }
+  });
 
-    Promise.all(renamePromises)
-      .then(() => {
-        console.log('All files renamed successfully');
-        // Send 'rename-complete' event back to the renderer
-        event.sender.send('rename-complete');
-      })
-      .catch(err => {
-        console.error('An error occurred during rename:', err);
-        // Send 'rename-complete' event even if there is an error,
-        // so the UI can refresh and show the current state.
-        event.sender.send('rename-complete');
-      });
+  ipcMain.handle('get-rename-history', async () => {
+    return store.get('renameHistory', []);
+  });
+
+  ipcMain.handle('clear-rename-history', async () => {
+    try {
+      store.set('renameHistory', []);
+      return { success: true };
+    } catch (err: any) {
+      console.error('Failed to clear history:', err);
+      return { success: false, error: err.message };
+    }
   });
 })
