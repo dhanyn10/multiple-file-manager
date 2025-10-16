@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
+import { faUndo, faRedo, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { RenameOperation } from './ActionSidebar';
 
 interface HistorySidebarProps {
@@ -9,9 +9,10 @@ interface HistorySidebarProps {
   onClose: () => void;
   onUndo: (operation: RenameOperation) => void;
   onRedo: (operation: RenameOperation) => void;
+  onClearHistory: () => void;
 }
 
-const HistorySidebar = ({ undoStack, redoStack, onClose, onUndo, onRedo }: HistorySidebarProps) => {
+const HistorySidebar = ({ undoStack, redoStack, onClose, onUndo, onRedo, onClearHistory }: HistorySidebarProps) => {
   const sidebarRef = useRef<HTMLElement>(null);
   const [isResizing, setIsResizing] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(384); // Corresponds to w-96
@@ -59,7 +60,17 @@ const HistorySidebar = ({ undoStack, redoStack, onClose, onUndo, onRedo }: Histo
         title="Resize sidebar"
       />
       <div className="flex justify-between items-center p-4 border-b border-slate-200 flex-shrink-0">
-        <h3 className="text-lg font-semibold text-slate-900">Activity History</h3>
+        <div className="flex items-center space-x-2">
+          <h3 className="text-lg font-semibold text-slate-900">Activity History</h3>
+          <button
+            onClick={onClearHistory}
+            className="text-slate-400 bg-transparent hover:bg-slate-200 hover:text-slate-900 rounded-lg text-sm p-1.5 inline-flex items-center"
+            title="Clear history"
+            aria-label="Clear history"
+          >
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
         <button
           onClick={onClose}
           className="text-slate-400 bg-transparent hover:bg-slate-200 hover:text-slate-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
