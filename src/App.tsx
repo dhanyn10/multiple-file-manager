@@ -215,6 +215,16 @@ function App() {
     setLastSelectedFile(fileName);
   };
 
+  const handleSelectAll = () => {
+    const allFileNames = new Set(files.map(f => f.name));
+    setSelectedFiles(allFileNames);
+    setLastSelectedFile(null); // Reset last selected after bulk action
+  };
+
+  const handleDeselectAll = () => {
+    setSelectedFiles(new Set());
+    setLastSelectedFile(null);
+  };
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -226,8 +236,12 @@ function App() {
     <div className="flex flex-col h-screen bg-slate-100 text-slate-800">
       <NavigationBar
         actionsSlot={
-          showActionsInNavbar && selectedFiles.size > 0 ? (
-            <ActionButtons selectedFileCount={selectedFiles.size} onExecuteClick={handleExecuteClick} isNavbarVersion={true} />
+          showActionsInNavbar && selectedFiles.size > 0 ? ( // This logic seems to be for the navbar version
+            <ActionButtons
+              selectedFileCount={selectedFiles.size}
+              onExecuteClick={handleExecuteClick}
+              isNavbarVersion={true}
+            />
           ) : null
         }
         onHistoryClick={() => setIsHistorySidebarOpen(prevState => !prevState)}
@@ -261,7 +275,12 @@ function App() {
             <div className="flex flex-col flex-grow mt-4 min-h-0 min-w-0">
               {selectedFiles.size > 0 && (
                 <div ref={actionsToolbarRef} className={`flex-shrink-0 mb-2 p-2 bg-slate-200 rounded-md flex items-center justify-between ${showActionsInNavbar ? 'opacity-0' : 'opacity-100'}`}>
-                  <ActionButtons selectedFileCount={selectedFiles.size} onExecuteClick={handleExecuteClick} />
+                  <ActionButtons
+                    selectedFileCount={selectedFiles.size}
+                    onExecuteClick={handleExecuteClick}
+                    onSelectAll={handleSelectAll}
+                    onDeselectAll={handleDeselectAll}
+                  />
                 </div>
               )}
               <div className={`flex-grow ${selectedFiles.size === 0 ? 'mt-3' : ''} min-h-0 min-w-0`}>
