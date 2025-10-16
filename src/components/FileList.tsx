@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFolder, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faFolder } from '@fortawesome/free-solid-svg-icons';
+import { getFileIcon } from '../utils/getFileIcon';
 
 interface FileEntry {
   name: string;
@@ -24,7 +25,7 @@ const FileList = ({ currentFiles, selectedFiles, highlightedFiles, onFileSelect 
 
   return (
     <div className="h-full overflow-y-auto bg-white rounded-md border border-gray-200">
-      <ul className="divide-y divide-gray-200 select-none pt-8 pb-1">
+      <ul className="divide-y divide-gray-200 select-none">
         {currentFiles.map((file) => (
           <li
             key={file.name}
@@ -40,28 +41,13 @@ const FileList = ({ currentFiles, selectedFiles, highlightedFiles, onFileSelect 
             }`}
           >
             <FontAwesomeIcon
-              icon={file.isDirectory ? faFolder : faFile}
+              icon={file.isDirectory ? faFolder : getFileIcon(file.name)}
               className={`mr-3 ${file.isDirectory ? 'text-blue-500' : 'text-gray-500'}`}
             />
             {file.isDirectory ? (
               <span className="break-all font-mono">{file.name}</span>
             ) : (
-              <span className="break-all font-mono">
-                {file.name.split('').map((char, index) => {
-                  // Whitespace needs to be handled specially to be visible and hoverable
-                  const isWhitespace = char.trim() === '';
-                  return (
-                    <span key={index} className="relative group inline-block">
-                      <span className={`hover:bg-yellow-200 px-px ${isWhitespace ? 'w-2' : ''}`}>
-                        {isWhitespace ? '\u00A0' : char}
-                      </span>
-                      <span role="tooltip" className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max min-w-[1.5rem] text-center px-2 py-1 bg-gray-900 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                        {index + 1}
-                      </span>
-                    </span>
-                  );
-                })}
-              </span>
+              <span className="break-all font-mono">{file.name}</span>
             )}
           </li>
         ))}

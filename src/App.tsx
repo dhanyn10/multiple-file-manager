@@ -222,7 +222,7 @@ function App() {
         onHistoryClick={() => setIsHistorySidebarOpen(prevState => !prevState)}
       />
       <div className="flex flex-row flex-grow overflow-hidden">
-        <main className="flex flex-col flex-grow p-4">
+        <main className="flex flex-col flex-grow p-4 min-w-0">
           <div className="flex-shrink-0">
             <label htmlFor="directory-input" className="block text-sm font-medium text-slate-700 mb-1">
               Select Directory:
@@ -247,13 +247,13 @@ function App() {
           </div>
 
           {files.length > 0 && (
-            <div className="flex flex-col flex-grow mt-4 min-h-0">
+            <div className="flex flex-col flex-grow mt-4 min-h-0 min-w-0">
               {selectedFiles.size > 0 && (
                 <div ref={actionsToolbarRef} className={`flex-shrink-0 mb-2 p-2 bg-slate-200 rounded-md flex items-center justify-between ${showActionsInNavbar ? 'opacity-0' : 'opacity-100'}`}>
                   <ActionButtons selectedFileCount={selectedFiles.size} onExecuteClick={handleExecuteClick} />
                 </div>
               )}
-              <div className={`flex-grow ${selectedFiles.size === 0 ? 'mt-3' : ''} min-h-0`}>
+              <div className={`flex-grow ${selectedFiles.size === 0 ? 'mt-3' : ''} min-h-0 min-w-0`}>
                 <FileList
                   currentFiles={currentFiles}
                   selectedFiles={selectedFiles}
@@ -277,6 +277,7 @@ function App() {
             selectedFiles={selectedFiles}
             onClose={handleCloseModal}
             onExecute={handleExecuteRename}
+            otherSidebarOpen={isHistorySidebarOpen}
           />
         )}
         {isHistorySidebarOpen && (
@@ -287,6 +288,7 @@ function App() {
             onUndo={handleUndo}
             onRedo={handleRedo}
             onClearHistory={handleClearHistory}
+            otherSidebarOpen={isModalOpen}
           />
         )}
       </div>

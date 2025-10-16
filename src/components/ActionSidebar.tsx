@@ -11,6 +11,7 @@ interface ActionSidebarProps {
   selectedFiles: Set<string>;
   onClose: () => void;
   onExecute: (operations: RenameOperation[]) => void;
+  otherSidebarOpen: boolean;
 }
 
 const availableActions = [
@@ -20,7 +21,7 @@ const availableActions = [
   // You can add other actions here
 ];
 
-const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps) => {
+const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: ActionSidebarProps) => {
   const [actionFrom, setActionFrom] = useState('');
   const [actionTo, setActionTo] = useState('');
   const [selectedAction, setSelectedAction] = useState('');
@@ -32,39 +33,42 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
 
   const [isResizing, setIsResizing] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(384); // Corresponds to w-96
+  const initialPos = useRef({ x: 0, width: 0 });
 
   useClickOutside(actionDropdownRef, () => setIsActionDropdownOpen(false));
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsResizing(true);
+    initialPos.current = { x: e.clientX, width: sidebarWidth };
   };
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (isResizing) {
-      const newWidth = window.innerWidth - e.clientX;
-      if (newWidth > 320 && newWidth < window.innerWidth * 0.75) { // Min 320px, Max 75% of window
-        setSidebarWidth(newWidth);
-      }
-    }
-  }, [isResizing]);
-
-  const handleMouseUp = useCallback(() => setIsResizing(false), []);
-
   useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isResizing) {
+        const dx = e.clientX - initialPos.current.x;
+        const newWidth = initialPos.current.width - dx;
+        const maxWidth = otherSidebarOpen ? window.innerWidth * 0.75 : window.innerWidth * 0.5;
+        if (newWidth > 320 && newWidth < maxWidth) { // Min 320px
+          setSidebarWidth(newWidth);
+        }
+      }
+    };
+
+    const handleMouseUp = () => setIsResizing(false);
+
     if (isResizing) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
-    } else {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
+      document.body.classList.add('resizing-sidebar');
     }
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
+      document.body.classList.remove('resizing-sidebar');
     };
-  }, [isResizing, handleMouseMove, handleMouseUp]);
+  }, [isResizing, otherSidebarOpen]);
 
   const handleClose = () => {
     onClose();
@@ -280,7 +284,7 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute }: ActionSidebarProps
         <div className="p-4 flex flex-col overflow-hidden flex-grow">
           <h4 className="text-md font-semibold text-slate-800 mb-2 flex-shrink-0">Preview Changes ({selectedFiles.size} files)</h4>
           <div className="overflow-y-auto border-t border-slate-200">
-            <table className="w-full text-sm text-left text-slate-500">
+            <table className="w-full text-sm text-left text-slate-500 table-fixed">
               <thead className="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0">
                 <tr>
                   <th scope="col" className="px-4 py-2">Original Name</th>

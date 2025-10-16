@@ -37,3 +37,12 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Prevent layout reflows and text selection during sidebar resize */
+body.resizing-sidebar main {
+  pointer-events: none;
+  user-select: none;
+}
+body.resizing-sidebar {
+  cursor: col-resize;
+}
