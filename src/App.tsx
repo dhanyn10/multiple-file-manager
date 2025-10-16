@@ -237,6 +237,7 @@ function App() {
   return (
     <div className="flex flex-col h-screen bg-slate-100 text-slate-800">
       <NavigationBar
+        isHistorySidebarOpen={isHistorySidebarOpen}
         actionsSlot={
           showActionsInNavbar && selectedFiles.size > 0 ? ( // This logic seems to be for the navbar version
             <ActionButtons

@@ -1,9 +1,10 @@
 interface NavigationBarProps {
   actionsSlot?: React.ReactNode;
   onHistoryClick: () => void;
+  isHistorySidebarOpen: boolean;
 }
 
-function NavigationBar({ actionsSlot, onHistoryClick }: NavigationBarProps) {
+function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen }: NavigationBarProps) {
   const handleExternalLink = (url: string) => {
     window.ipcRenderer.send('open-external-link', url);
   };
@@ -16,7 +17,11 @@ function NavigationBar({ actionsSlot, onHistoryClick }: NavigationBarProps) {
           {actionsSlot}
           <button
             onClick={onHistoryClick}
-            className="text-blue-100 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              isHistorySidebarOpen
+                ? 'bg-blue-700 text-white'
+                : 'text-blue-100 hover:bg-blue-700 hover:text-white'
+            }`}
           >
             History
           </button>
