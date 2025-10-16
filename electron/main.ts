@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron'
 import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import Store from 'electron-store'
@@ -143,5 +143,9 @@ app.whenReady().then(() => {
       console.error('Failed to clear history:', err);
       return { success: false, error: err.message };
     }
+  });
+
+  ipcMain.on('open-external-link', (event, url) => {
+    shell.openExternal(url);
   });
 })
