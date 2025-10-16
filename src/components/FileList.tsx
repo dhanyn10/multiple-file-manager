@@ -24,7 +24,7 @@ const FileList = ({ currentFiles, selectedFiles, highlightedFiles, onFileSelect 
 
   return (
     <div className="h-full overflow-y-auto bg-white rounded-md border border-gray-200">
-      <ul className="divide-y divide-gray-200 select-none">
+      <ul className="divide-y divide-gray-200 select-none pt-8 pb-1">
         {currentFiles.map((file) => (
           <li
             key={file.name}
