@@ -22,23 +22,24 @@ const ActionButtons = ({
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (containerRef.current && leftContentRef.current && buttonRef.current) {
+    if (isHovered && containerRef.current && leftContentRef.current && buttonRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
       const buttonWidth = buttonRef.current.offsetWidth;
       const leftContentWidth = leftContentRef.current.offsetWidth;
 
-      // Determine the minimum X-axis boundary to prevent the button from overlapping the left content
-      const margin = 32; // 32px margin from the left content
-      const minX = leftContentWidth + margin + (buttonWidth / 2);
-
-      // Cursor's X position relative to the container
+      // Cursor's X position relative to the container's left edge
       const cursorX = e.clientX - containerRect.left;
 
-      // Ensure the button's position does not go below the minimum boundary
-      const newX = Math.max(cursorX, minX);
+      // Calculate the maximum right position to avoid overlapping the left content
+      const margin = 32; // 32px margin
+      const maxRight = containerRect.width - (leftContentWidth + margin + (buttonWidth / 2));
+
+      // Calculate the button's new right position based on cursor
+      const newRight = containerRect.width - cursorX;
+      const finalRight = Math.min(newRight, maxRight);
 
       setButtonStyle({
-        transform: `translate(${newX}px, -50%) translateX(-50%) scale(1.1)`,
+        transform: `translateX(${-finalRight}px) translateY(-50%) translateX(50%) scale(1.1)`,
       });
     }
   }, [isHovered]); // Re-create function only if isHovered changes
@@ -89,10 +90,8 @@ const ActionButtons = ({
         ref={buttonRef}
         onClick={onExecuteClick}
         style={isHovered ? buttonStyle : {}}
-        className={`absolute top-1/2 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform duration-100 ease-out cursor-pointer ${
-          isHovered
-            ? 'left-0 right-auto'
-            : 'right-0 -translate-y-1/2'
+        className={`absolute top-1/2 right-0 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform duration-100 ease-out cursor-pointer ${
+          isHovered ? '' : '-translate-y-1/2'
         }`}
       >
         Next
