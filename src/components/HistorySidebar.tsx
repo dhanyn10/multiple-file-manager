@@ -1,11 +1,15 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUndo, faRedo } from '@fortawesome/free-solid-svg-icons';
 import { RenameOperation } from './ActionSidebar';
 
 interface HistorySidebarProps {
   history: RenameOperation[];
   onClose: () => void;
+  onUndo: (operation: RenameOperation) => void;
+  onRedo: (operation: RenameOperation) => void;
 }
 
-const HistorySidebar = ({ history, onClose }: HistorySidebarProps) => {
+const HistorySidebar = ({ history, onClose, onUndo, onRedo }: HistorySidebarProps) => {
   return (
     <aside
       className="bg-slate-100 border-l border-slate-200 flex flex-col h-full"
@@ -37,8 +41,26 @@ const HistorySidebar = ({ history, onClose }: HistorySidebarProps) => {
               <tbody>
                 {history.slice().reverse().map((op, index) => (
                   <tr key={`${op.originalName}-${index}`} className="bg-white border-b border-slate-200/60 hover:bg-slate-50">
-                    <td className="px-4 py-2 font-medium text-slate-900 break-all line-through">{op.originalName}</td>
-                    <td className="px-4 py-2 break-all text-green-600 font-semibold">{op.newName}</td>
+                    <td className="px-4 py-2 font-medium text-slate-900 break-all group/item relative">
+                      <div className="flex items-center">
+                        <span className="line-through">{op.originalName}</span>
+                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center bg-slate-50/80 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                        <button onClick={() => onRedo(op)} className="text-slate-500 hover:text-red-600" title="Redo rename">
+                          <FontAwesomeIcon icon={faRedo} size="lg" />
+                        </button>
+                      </div>
+                    </td>
+                    <td className="px-4 py-2 break-all text-green-600 font-semibold group/item relative">
+                      <div className="flex items-center justify-between">
+                        <span>{op.newName}</span>
+                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center bg-slate-50/80 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                        <button onClick={() => onUndo(op)} className="text-slate-500 hover:text-blue-600" title="Undo rename">
+                          <FontAwesomeIcon icon={faUndo} size="lg" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

@@ -120,6 +120,20 @@ function App() {
     }
   };
 
+  const handleUndoRename = (operationToUndo: RenameOperation) => {
+    // To undo, we simply reverse the operation
+    const undoOperation: RenameOperation = {
+      originalName: operationToUndo.newName,
+      newName: operationToUndo.originalName,
+    };
+    handleExecuteRename([undoOperation]);
+  };
+
+  const handleRedoRename = (operationToRedo: RenameOperation) => {
+    // To redo, we execute the original operation again.
+    handleExecuteRename([operationToRedo]);
+  };
+
   const handleFileSelect = (fileName: string, isShiftClick: boolean) => {
     const newSelectedFiles = new Set(selectedFiles);
 
@@ -236,6 +250,8 @@ function App() {
           <HistorySidebar
             history={history}
             onClose={() => setIsHistorySidebarOpen(false)}
+            onUndo={handleUndoRename}
+            onRedo={handleRedoRename}
           />
         )}
       </div>
