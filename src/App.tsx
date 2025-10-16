@@ -6,6 +6,8 @@ import ActionButtons from './components/ActionButtons';
 import ActionSidebar, { RenameOperation } from './components/ActionSidebar';
 import HistorySidebar from './components/HistorySidebar';
 import { useIpcListeners } from './hooks/useIpcListeners';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import './App.css';
  
 interface FileEntry {
@@ -271,7 +273,21 @@ function App() {
             </div>
           </div>
 
-          {files.length > 0 && (
+          {files.length === 0 && directory === '' ? (
+            <div 
+              className="flex-grow flex flex-col items-center justify-center text-center p-4 mt-4 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:bg-slate-200 transition-colors"
+              onClick={handleBrowseClick}
+            >
+              <FontAwesomeIcon icon={faFolderPlus} className="text-5xl text-slate-400 mb-4" />
+              <h2 className="text-xl font-semibold text-slate-600">Select a folder to get started</h2>
+              <p className="text-slate-500 mt-1">Click here to browse for a folder on your computer.</p>
+            </div>
+          ) : files.length === 0 && directory !== '' ? (
+            <div className="flex-grow flex flex-col items-center justify-center text-center p-4 mt-4 border-2 border-dashed border-slate-300 rounded-lg">
+              <h2 className="text-xl font-semibold text-slate-600">This folder is empty</h2>
+              <p className="text-slate-500 mt-1">There are no files to display in this directory.</p>
+            </div>
+          ) : (
             <div className="flex flex-col flex-grow mt-4 min-h-0 min-w-0">
               {selectedFiles.size > 0 && (
                 <div ref={actionsToolbarRef} className={`flex-shrink-0 mb-2 p-2 bg-slate-200 rounded-md flex items-center justify-between ${showActionsInNavbar ? 'opacity-0' : 'opacity-100'}`}>
