@@ -23,6 +23,8 @@ const RangeSlider = ({ id, min, max, value, onChange }: RangeSliderProps) => {
       <input
         type="number"
         value={value}
+        min={min}
+        max={max}
         onChange={onChange}
         className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2 w-20 text-center"
       />

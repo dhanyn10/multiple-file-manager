@@ -13,7 +13,8 @@ interface FileListProps {
   selectedFiles: Set<string>;
   highlightedFiles: Set<string>;
   activeAction: string;
-  cursorIndex: number | null;
+  startIndex: number | null;
+  endIndex: number | null;
   onFileSelect: (fileName: string, isShiftClick: boolean) => void;
 }
 
@@ -22,7 +23,8 @@ const FileList = ({
   selectedFiles,
   highlightedFiles,
   activeAction,
-  cursorIndex,
+  startIndex,
+  endIndex,
   onFileSelect,
 }: FileListProps) => {
   const handleItemClick = (e: React.MouseEvent, file: FileEntry) => {
@@ -61,9 +63,10 @@ const FileList = ({
             ) : (
               <FileNameWithCursor
                 fileName={file.name}
-                cursorIndex={
-                  showCursor && selectedFiles.has(file.name) ? cursorIndex : null
+                startIndex={
+                  showCursor && selectedFiles.has(file.name) ? startIndex : null
                 }
+                endIndex={showCursor && selectedFiles.has(file.name) ? endIndex : null}
               />
             )}
           </li>

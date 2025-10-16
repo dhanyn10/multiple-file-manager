@@ -35,6 +35,7 @@ function App() {
   const [actionTo, setActionTo] = useState('');
   const [selectedAction, setSelectedAction] = useState('');
   const [startIndex, setStartIndex] = useState('');
+  const [endIndex, setEndIndex] = useState('');
   const actionsToolbarRef = useRef<HTMLDivElement>(null);
 
   const handleDirectorySelected = useCallback((path: string) => {
@@ -121,6 +122,7 @@ function App() {
     setActionTo('');
     setSelectedAction('');
     setStartIndex('');
+    setEndIndex('');
   };
 
   const handleExecuteRename = (operations: RenameOperation[]) => {
@@ -269,7 +271,8 @@ function App() {
                   highlightedFiles={recentlyRenamed}
                   onFileSelect={handleFileSelect}
                   activeAction={selectedAction}
-                  cursorIndex={startIndex !== '' ? parseInt(startIndex, 10) : null}
+                  startIndex={startIndex !== '' ? parseInt(startIndex, 10) : null}
+                  endIndex={endIndex !== '' ? parseInt(endIndex, 10) : null}
                 />
               </div>
               <FilePagination
@@ -296,6 +299,8 @@ function App() {
             onSelectedActionChange={setSelectedAction}
             startIndex={startIndex}
             onStartIndexChange={setStartIndex}
+            endIndex={endIndex}
+            onEndIndexChange={setEndIndex}
             otherSidebarOpen={isHistorySidebarOpen}
           />
         )}

@@ -20,6 +20,8 @@ interface ActionSidebarProps {
   onSelectedActionChange: (value: string) => void;
   startIndex: string;
   onStartIndexChange: (value: string) => void;
+  endIndex: string;
+  onEndIndexChange: (value: string) => void;
   otherSidebarOpen: boolean;
 }
 
@@ -42,10 +44,11 @@ const ActionSidebar = ({
   onSelectedActionChange,
   startIndex,
   onStartIndexChange,
+  endIndex,
+  onEndIndexChange,
   otherSidebarOpen,
 }: ActionSidebarProps) => {
-  const [endIndex, setEndIndex] = useState('');
-  const [indexOffset, setIndexOffset] = useState<number>(1);
+  const [indexOffset, setIndexOffset] = useState<number>(0);
   const [isActionDropdownOpen, setIsActionDropdownOpen] = useState(false);
   const actionDropdownRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
@@ -66,12 +69,12 @@ const ActionSidebar = ({
   // Effect to sync endIndex with startIndex
   useEffect(() => {
     if (startIndex === '') {
-      setEndIndex('');
+      onEndIndexChange('');
       return;
     }
     const startNum = parseInt(startIndex, 10);
     if (!isNaN(startNum)) {
-      setEndIndex(String(startNum + indexOffset));
+      onEndIndexChange(String(startNum + indexOffset));
     }
   }, [startIndex, indexOffset]);
 
@@ -110,8 +113,8 @@ const ActionSidebar = ({
 
   const handleClose = () => {
     onClose();
-    setEndIndex('');
-    setIndexOffset(1); // Reset offset on close
+    onEndIndexChange('');
+    setIndexOffset(0); // Reset offset on close
     setIsActionDropdownOpen(false);
   };
 
@@ -130,11 +133,17 @@ const ActionSidebar = ({
     } else if (selectedAction === 'rename-by-index' && startIndex !== '') {
       const start = parseInt(startIndex, 10);
       // If endIndex is not provided, it means we replace only one character at startIndex.
-      const end = endIndex ? parseInt(endIndex, 10) : start + 1;
+      const end = endIndex !== '' ? parseInt(endIndex, 10) : start + 1;
 
       if (!isNaN(start) && !isNaN(end) && start < end) {
         Array.from(selectedFiles).forEach(file => {
-          const newName = file.slice(0, start) + actionTo + file.slice(end);
+          const lastDotIndex = file.lastIndexOf('.');
+          // If there's an extension and the end goes beyond it, cap it at the dot.
+          // Make sure the dot is after the startIndex.
+          const effectiveEnd = (lastDotIndex > start && end > lastDotIndex)
+            ? lastDotIndex
+            : end;
+          const newName = file.slice(0, start) + actionTo + file.slice(effectiveEnd);
           if (newName !== file) {
             operations.push({ originalName: file, newName });
           }
@@ -262,13 +271,18 @@ const ActionSidebar = ({
                   <label htmlFor="end-index" className="block mb-1 text-sm font-medium text-slate-900">End Index (optional)</label>
                   <RangeSlider
                     id="end-index"
-                    min={0}
+                    min={parseInt(startIndex, 10) || 0}
                     max={maxFileNameLength + 1}
                     value={endIndex}
                     onChange={(e) => {
-                      const newEndIndex = e.target.value;
-                      setEndIndex(newEndIndex);
-                      setIndexOffset(parseInt(newEndIndex, 10) - parseInt(startIndex, 10));
+                      const newEndValue = parseInt(e.target.value, 10);
+                      const startValue = parseInt(startIndex, 10) || 0;
+
+                      // Ensure newEndValue is not less than startValue
+                      const newEndIndex = isNaN(newEndValue) ? startValue : Math.max(startValue, newEndValue);
+
+                      onEndIndexChange(String(newEndIndex));
+                      setIndexOffset(newEndIndex - startValue);
                     }}
                   />
                 </div>
@@ -330,10 +344,16 @@ const ActionSidebar = ({
                   if (selectedAction === 'rename' && actionFrom) {
                     newName = file.replace(actionFrom, actionTo);
                   } else if (selectedAction === 'rename-by-index' && startIndex !== '') {
-                    const start = parseInt(startIndex, 10) - 1;
-                    const end = endIndex ? parseInt(endIndex, 10) : start + 2;
+                    const start = parseInt(startIndex, 10);
+                    const end = endIndex !== '' ? parseInt(endIndex, 10) : start + 1;
                     if (!isNaN(start) && !isNaN(end) && start < end) {
-                      newName = file.slice(0, start) + actionTo + file.slice(end);
+                      const lastDotIndex = file.lastIndexOf('.');
+                      // If there's an extension and the end goes beyond it, cap it at the dot.
+                      // Make sure the dot is after the startIndex.
+                      const effectiveEnd = (lastDotIndex > start && end > lastDotIndex)
+                        ? lastDotIndex
+                        : end;
+                      newName = file.slice(0, start) + actionTo + file.slice(effectiveEnd);
                     }
                   } else if (selectedAction === 'insert-at-index' && startIndex !== '') {
                     const insertIndex = parseInt(startIndex, 10);
