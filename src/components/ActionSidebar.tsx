@@ -1,5 +1,6 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useClickOutside } from '../hooks/useClickOutside';
+import RangeSlider from './RangeSlider';
 
 export interface RenameOperation {
   originalName: string;
@@ -11,6 +12,14 @@ interface ActionSidebarProps {
   selectedFiles: Set<string>;
   onClose: () => void;
   onExecute: (operations: RenameOperation[]) => void;
+  actionFrom: string;
+  onActionFromChange: (value: string) => void;
+  actionTo: string;
+  onActionToChange: (value: string) => void;
+  selectedAction: string;
+  onSelectedActionChange: (value: string) => void;
+  startIndex: string;
+  onStartIndexChange: (value: string) => void;
   otherSidebarOpen: boolean;
 }
 
@@ -21,12 +30,22 @@ const availableActions = [
   // You can add other actions here
 ];
 
-const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: ActionSidebarProps) => {
-  const [actionFrom, setActionFrom] = useState('');
-  const [actionTo, setActionTo] = useState('');
-  const [selectedAction, setSelectedAction] = useState('');
-  const [startIndex, setStartIndex] = useState('');
+const ActionSidebar = ({
+  selectedFiles,
+  onClose,
+  onExecute,
+  actionFrom,
+  onActionFromChange,
+  actionTo,
+  onActionToChange,
+  selectedAction,
+  onSelectedActionChange,
+  startIndex,
+  onStartIndexChange,
+  otherSidebarOpen,
+}: ActionSidebarProps) => {
   const [endIndex, setEndIndex] = useState('');
+  const [indexOffset, setIndexOffset] = useState<number>(1);
   const [isActionDropdownOpen, setIsActionDropdownOpen] = useState(false);
   const actionDropdownRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
@@ -35,7 +54,26 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: 
   const [sidebarWidth, setSidebarWidth] = useState(384); // Corresponds to w-96
   const initialPos = useRef({ x: 0, width: 0 });
 
+  const maxFileNameLength = useMemo(() => {
+    if (selectedFiles.size === 0) {
+      return 100; // Default max length
+    }
+    return Math.max(...Array.from(selectedFiles).map(name => name.length));
+  }, [selectedFiles]);
+
   useClickOutside(actionDropdownRef, () => setIsActionDropdownOpen(false));
+
+  // Effect to sync endIndex with startIndex
+  useEffect(() => {
+    if (startIndex === '') {
+      setEndIndex('');
+      return;
+    }
+    const startNum = parseInt(startIndex, 10);
+    if (!isNaN(startNum)) {
+      setEndIndex(String(startNum + indexOffset));
+    }
+  }, [startIndex, indexOffset]);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -72,13 +110,9 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: 
 
   const handleClose = () => {
     onClose();
-    // Reset form on close
-    setActionFrom('');
-    setActionTo('');
-    setStartIndex('');
     setEndIndex('');
+    setIndexOffset(1); // Reset offset on close
     setIsActionDropdownOpen(false);
-    setSelectedAction('');
   };
 
   const handleExecute = () => {
@@ -94,11 +128,9 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: 
         }
       });
     } else if (selectedAction === 'rename-by-index' && startIndex !== '') {
-      // Convert 1-based index from user to 0-based for JS
-      const start = parseInt(startIndex, 10) - 1;
+      const start = parseInt(startIndex, 10);
       // If endIndex is not provided, it means we replace only one character at startIndex.
-      // So, the 0-based end index will be `start + 1`.
-      const end = endIndex ? parseInt(endIndex, 10) : start + 2;
+      const end = endIndex ? parseInt(endIndex, 10) : start + 1;
 
       if (!isNaN(start) && !isNaN(end) && start < end) {
         Array.from(selectedFiles).forEach(file => {
@@ -170,7 +202,7 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: 
                   <div className="absolute z-10 mt-1 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg focus:outline-none sm:text-sm max-h-60">
                     <div
                       key="default-action"
-                      onClick={() => { setSelectedAction(''); setIsActionDropdownOpen(false); }}
+                    onClick={() => { onSelectedActionChange(''); setIsActionDropdownOpen(false); }}
                       className="text-slate-500 relative cursor-pointer select-none py-2 pl-3 pr-9 hover:bg-blue-600 hover:text-white"
                     >
                       <span className="font-normal block truncate">-- Select Action --</span>
@@ -178,7 +210,7 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: 
                     {availableActions.map((action) => (
                       <div
                         key={action.value}
-                        onClick={() => { setSelectedAction(action.value); setIsActionDropdownOpen(false); }}
+                        onClick={() => { onSelectedActionChange(action.value); setIsActionDropdownOpen(false); }}
                         className="text-slate-900 relative cursor-pointer select-none py-2 pl-3 pr-9 hover:bg-blue-600 hover:text-white"
                       >
                         <span className="font-normal block truncate">{action.label}</span>
@@ -196,7 +228,7 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: 
                     type="text"
                     id="action-from"
                     value={actionFrom}
-                    onChange={(e) => setActionFrom(e.target.value)}
+                    onChange={(e) => onActionFromChange(e.target.value)}
                     className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                     placeholder="text to replace"
                   />
@@ -207,7 +239,7 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: 
                     type="text"
                     id="action-to"
                     value={actionTo}
-                    onChange={(e) => setActionTo(e.target.value)}
+                    onChange={(e) => onActionToChange(e.target.value)}
                     className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                     placeholder="new text"
                   />
@@ -218,24 +250,26 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: 
               <>
                 <div>
                   <label htmlFor="start-index" className="block mb-1 text-sm font-medium text-slate-900">Start Index</label>
-                  <input
-                    type="number"
+                  <RangeSlider
                     id="start-index"
+                    min={0}
+                    max={maxFileNameLength}
                     value={startIndex}
-                    onChange={(e) => setStartIndex(e.target.value)}
-                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="e.g., 0"
+                    onChange={(e) => onStartIndexChange(e.target.value)}
                   />
                 </div>
                 <div>
                   <label htmlFor="end-index" className="block mb-1 text-sm font-medium text-slate-900">End Index (optional)</label>
-                  <input
-                    type="number"
+                  <RangeSlider
                     id="end-index"
+                    min={0}
+                    max={maxFileNameLength + 1}
                     value={endIndex}
-                    onChange={(e) => setEndIndex(e.target.value)}
-                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="replace up to this index"
+                    onChange={(e) => {
+                      const newEndIndex = e.target.value;
+                      setEndIndex(newEndIndex);
+                      setIndexOffset(parseInt(newEndIndex, 10) - parseInt(startIndex, 10));
+                    }}
                   />
                 </div>
                 <div>
@@ -244,7 +278,7 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: 
                     type="text"
                     id="action-to-index"
                     value={actionTo}
-                    onChange={(e) => setActionTo(e.target.value)}
+                    onChange={(e) => onActionToChange(e.target.value)}
                     className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                     placeholder="new text"
                   />
@@ -255,13 +289,12 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: 
               <>
                 <div>
                   <label htmlFor="insert-index" className="block mb-1 text-sm font-medium text-slate-900">Insertion Index</label>
-                  <input
-                    type="number"
+                  <RangeSlider
                     id="insert-index"
+                    min={0}
+                    max={maxFileNameLength}
                     value={startIndex}
-                    onChange={(e) => setStartIndex(e.target.value)}
-                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="e.g., 0 for start"
+                    onChange={(e) => onStartIndexChange(e.target.value)}
                   />
                 </div>
                 <div>
@@ -270,7 +303,7 @@ const ActionSidebar = ({ selectedFiles, onClose, onExecute, otherSidebarOpen }: 
                     type="text"
                     id="action-to-insert"
                     value={actionTo}
-                    onChange={(e) => setActionTo(e.target.value)}
+                    onChange={(e) => onActionToChange(e.target.value)}
                     className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                     placeholder="e.g., _copy"
                   />

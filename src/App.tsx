@@ -31,6 +31,10 @@ function App() {
   const [undoStack, setUndoStack] = useState<RenameOperation[]>([]);
   const [redoStack, setRedoStack] = useState<RenameOperation[]>([]);
   const [recentlyRenamed, setRecentlyRenamed] = useState<Set<string>>(new Set());
+  const [actionFrom, setActionFrom] = useState('');
+  const [actionTo, setActionTo] = useState('');
+  const [selectedAction, setSelectedAction] = useState('');
+  const [startIndex, setStartIndex] = useState('');
   const actionsToolbarRef = useRef<HTMLDivElement>(null);
 
   const handleDirectorySelected = useCallback((path: string) => {
@@ -112,6 +116,11 @@ function App() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    // Reset action form state when sidebar closes
+    setActionFrom('');
+    setActionTo('');
+    setSelectedAction('');
+    setStartIndex('');
   };
 
   const handleExecuteRename = (operations: RenameOperation[]) => {
@@ -259,6 +268,8 @@ function App() {
                   selectedFiles={selectedFiles}
                   highlightedFiles={recentlyRenamed}
                   onFileSelect={handleFileSelect}
+                  activeAction={selectedAction}
+                  cursorIndex={startIndex !== '' ? parseInt(startIndex, 10) : null}
                 />
               </div>
               <FilePagination
@@ -277,6 +288,14 @@ function App() {
             selectedFiles={selectedFiles}
             onClose={handleCloseModal}
             onExecute={handleExecuteRename}
+            actionFrom={actionFrom}
+            onActionFromChange={setActionFrom}
+            actionTo={actionTo}
+            onActionToChange={setActionTo}
+            selectedAction={selectedAction}
+            onSelectedActionChange={setSelectedAction}
+            startIndex={startIndex}
+            onStartIndexChange={setStartIndex}
             otherSidebarOpen={isHistorySidebarOpen}
           />
         )}

@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolder } from '@fortawesome/free-solid-svg-icons';
 import { getFileIcon } from '../utils/getFileIcon';
+import FileNameWithCursor from './FileNameWithCursor';
 
 interface FileEntry {
   name: string;
@@ -11,10 +12,19 @@ interface FileListProps {
   currentFiles: FileEntry[];
   selectedFiles: Set<string>;
   highlightedFiles: Set<string>;
+  activeAction: string;
+  cursorIndex: number | null;
   onFileSelect: (fileName: string, isShiftClick: boolean) => void;
 }
 
-const FileList = ({ currentFiles, selectedFiles, highlightedFiles, onFileSelect }: FileListProps) => {
+const FileList = ({
+  currentFiles,
+  selectedFiles,
+  highlightedFiles,
+  activeAction,
+  cursorIndex,
+  onFileSelect,
+}: FileListProps) => {
   const handleItemClick = (e: React.MouseEvent, file: FileEntry) => {
     // Selection only applies to files, not folders
     if (file.isDirectory) {
@@ -22,6 +32,8 @@ const FileList = ({ currentFiles, selectedFiles, highlightedFiles, onFileSelect 
     }
     onFileSelect(file.name, e.shiftKey);
   };
+
+  const showCursor = activeAction === 'rename-by-index' || activeAction === 'insert-at-index';
 
   return (
     <div className="h-full overflow-y-auto bg-white rounded-md border border-gray-200">
@@ -47,7 +59,12 @@ const FileList = ({ currentFiles, selectedFiles, highlightedFiles, onFileSelect 
             {file.isDirectory ? (
               <span className="break-all font-mono">{file.name}</span>
             ) : (
-              <span className="break-all font-mono">{file.name}</span>
+              <FileNameWithCursor
+                fileName={file.name}
+                cursorIndex={
+                  showCursor && selectedFiles.has(file.name) ? cursorIndex : null
+                }
+              />
             )}
           </li>
         ))}
