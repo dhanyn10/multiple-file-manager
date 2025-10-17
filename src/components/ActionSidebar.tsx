@@ -70,10 +70,11 @@ const ActionSidebar = ({
   const sidebarRef = useRef<HTMLElement>(null);
   const resizerRef = useRef<HTMLDivElement>(null);
   
-  const { sidebarWidth, handleMouseDown } = useResizableSidebar({
+  const { sidebarWidth, maxWidth, handleMouseDown } = useResizableSidebar({
     initialWidth: 384,
     minWidth: 320,
     otherSidebarOpen,
+    maxWidth: '50vw', // You can still customize it here if needed
   });
 
   const maxFileNameLength = useMemo(() => {
@@ -196,7 +197,7 @@ const ActionSidebar = ({
     <aside
       ref={sidebarRef}
       className="bg-slate-50 border-l border-slate-200 flex flex-col h-full relative select-none"
-      style={{ width: `${sidebarWidth}px` }}
+      style={{ width: `${sidebarWidth}px`, maxWidth: maxWidth }}
     >
       <div
         ref={resizerRef}
