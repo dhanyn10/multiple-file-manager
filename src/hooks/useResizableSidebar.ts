@@ -6,6 +6,7 @@ interface UseResizableSidebarProps {
   maxWidth?: number | string;
   otherSidebarOpen?: boolean;
   onResizeStart?: () => void;
+  onResizeMove?: (direction: 'left' | 'right') => void;
   onResizeEnd?: () => void;
 }
 
@@ -14,6 +15,7 @@ export const useResizableSidebar = ({
   minWidth = 320,
   maxWidth = '50vw',
   onResizeStart,
+  onResizeMove,
   onResizeEnd,
 }: UseResizableSidebarProps) => {
   const [isResizing, setIsResizing] = useState(false);
@@ -37,11 +39,13 @@ export const useResizableSidebar = ({
     if (isResizing) {      
       const deltaX = e.clientX - startX.current;
       const newWidth = startWidth.current - deltaX;
+      const direction = deltaX < 0 ? 'left' : 'right';
+      onResizeMove?.(direction);
       if (newWidth >= minWidth) {
         setSidebarWidth(newWidth);
       }
     }
-  }, [isResizing, minWidth, startX, startWidth]);
+  }, [isResizing, minWidth, onResizeMove, startX, startWidth]);
 
   useEffect(() => {
     if (isResizing) {

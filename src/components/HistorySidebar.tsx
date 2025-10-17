@@ -11,15 +11,17 @@ interface HistorySidebarProps {
   onRedo: (operation: RenameOperation) => void;
   onClearHistory: () => void;
   otherSidebarOpen: boolean;
+  onResizeMove: (direction: 'left' | 'right') => void;
   onResizeStart: () => void;
   onResizeEnd: () => void;
 }
 
-const HistorySidebar = ({ undoStack, redoStack, onClose, onUndo, onRedo, onClearHistory, otherSidebarOpen, onResizeStart, onResizeEnd }: HistorySidebarProps) => {
+const HistorySidebar = ({ undoStack, redoStack, onClose, onUndo, onRedo, onClearHistory, otherSidebarOpen, onResizeStart, onResizeMove, onResizeEnd }: HistorySidebarProps) => {
   const { sidebarWidth, handleMouseDown } = useResizableSidebar({
     initialWidth: 384,
     minWidth: 320,
     otherSidebarOpen,
+    onResizeMove,
     onResizeStart,
     onResizeEnd,
   });

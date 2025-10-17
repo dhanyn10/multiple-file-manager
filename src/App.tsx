@@ -33,6 +33,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [showResizeButtons, setShowResizeButtons] = useState(false);
+  const [resizeDirection, setResizeDirection] = useState<'left' | 'right' | null>(null);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [undoStack, setUndoStack] = useState<RenameOperation[]>([]);
   const [redoStack, setRedoStack] = useState<RenameOperation[]>([]);
@@ -127,7 +128,11 @@ function App() {
     }
   }, [isModalOpen, isHistorySidebarOpen]);
 
-
+  useEffect(() => {
+    if (!isResizing) {
+      setResizeDirection(null);
+    }
+  }, [isResizing]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -321,6 +326,7 @@ function App() {
       <NavigationBar
         isHistorySidebarOpen={isHistorySidebarOpen}
         showResizeButtons={showResizeButtons}
+        resizeDirection={resizeDirection}
         actionsSlot={
           showActionsInNavbar && selectedFiles.size > 0 ? ( // This logic seems to be for the navbar version
             <ActionButtons
@@ -420,6 +426,7 @@ function App() {
             endIndex={endIndex} onEndIndexChange={setEndIndex}
             setIndexOffset={setIndexOffset}
             onResizeStart={() => setIsResizing(true)}
+            onResizeMove={setResizeDirection}
             onResizeEnd={() => setIsResizing(false)}
           />
         )}
@@ -432,6 +439,7 @@ function App() {
             onRedo={handleRedo}
             onClearHistory={handleClearHistory}
             otherSidebarOpen={isModalOpen}
+            onResizeMove={setResizeDirection}
             onResizeStart={() => setIsResizing(true)}
             onResizeEnd={() => setIsResizing(false)}
           />

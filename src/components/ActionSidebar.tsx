@@ -36,6 +36,7 @@ interface BaseActionSidebarProps {
   otherSidebarOpen: boolean;
   onClose: () => void;
   onResizeStart: () => void;
+  onResizeMove: (direction: 'left' | 'right') => void;
   onResizeEnd: () => void;
 }
 const availableActions = [
@@ -59,6 +60,7 @@ const ActionSidebar = ({
   onEndIndexChange,
   setIndexOffset,
   onResizeStart,
+  onResizeMove,
   onResizeEnd,
 }: BaseActionSidebarProps) => {
 
@@ -80,6 +82,7 @@ const ActionSidebar = ({
     minWidth: 320,
     otherSidebarOpen,
     onResizeStart,
+    onResizeMove,
     onResizeEnd,
     maxWidth: '50vw', // You can still customize it here if needed
   });

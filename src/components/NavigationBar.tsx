@@ -6,9 +6,10 @@ interface NavigationBarProps {
   onHistoryClick: () => void;
   isHistorySidebarOpen: boolean;
   showResizeButtons: boolean;
+  resizeDirection: 'left' | 'right' | null;
 }
 
-function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen, showResizeButtons }: NavigationBarProps) {
+function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen, showResizeButtons, resizeDirection }: NavigationBarProps) {
   const handleExternalLink = (url: string) => {
     window.ipcRenderer.send('open-external-link', url);
   };
@@ -22,12 +23,16 @@ function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen, show
           {showResizeButtons && (
             <div className="flex items-center">
               <button
-                className="bg-white text-blue-600 hover:bg-blue-100 px-2 py-1 rounded-l-md text-xs"
+                className={`text-blue-600 px-2 py-1 rounded-l-md text-xs transition-colors ${
+                  resizeDirection === 'left' ? 'bg-blue-200' : 'bg-white hover:bg-blue-100'
+                }`}
               >
                 <FontAwesomeIcon icon={faChevronLeft} />
               </button>
               <button
-                className="bg-white text-blue-600 hover:bg-blue-100 px-2 py-1 rounded-r-md border-l border-blue-200 text-xs"
+                className={`text-blue-600 px-2 py-1 rounded-r-md border-l border-blue-200 text-xs transition-colors ${
+                  resizeDirection === 'right' ? 'bg-blue-200' : 'bg-white hover:bg-blue-100'
+                }`}
               >
                 <FontAwesomeIcon icon={faChevronRight} />
               </button>
