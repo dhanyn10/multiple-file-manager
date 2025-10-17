@@ -5,13 +5,16 @@ interface UseResizableSidebarProps {
   minWidth?: number;
   maxWidth?: number | string;
   otherSidebarOpen?: boolean;
+  onResizeStart?: () => void;
+  onResizeEnd?: () => void;
 }
 
 export const useResizableSidebar = ({
   initialWidth = 384,
   minWidth = 320,
   maxWidth = '50vw',
-  otherSidebarOpen = false,
+  onResizeStart,
+  onResizeEnd,
 }: UseResizableSidebarProps) => {
   const [isResizing, setIsResizing] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(initialWidth);
@@ -23,7 +26,8 @@ export const useResizableSidebar = ({
     setIsResizing(true);
     startX.current = e.clientX;
     startWidth.current = sidebarWidth;
-  }, [sidebarWidth]);
+    onResizeStart?.();
+  }, [sidebarWidth, onResizeStart]);
 
   const handleMouseUp = useCallback(() => {
     setIsResizing(false);
@@ -38,6 +42,15 @@ export const useResizableSidebar = ({
       }
     }
   }, [isResizing, minWidth, startX, startWidth]);
+
+  useEffect(() => {
+    if (isResizing) {
+      onResizeStart?.();
+    } else {
+      onResizeEnd?.();
+    }
+  }, [isResizing, onResizeStart, onResizeEnd]);
+
 
   useEffect(() => {
     if (isResizing) {

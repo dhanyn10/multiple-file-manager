@@ -1,10 +1,14 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+
 interface NavigationBarProps {
   actionsSlot?: React.ReactNode;
   onHistoryClick: () => void;
   isHistorySidebarOpen: boolean;
+  showResizeButtons: boolean;
 }
 
-function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen }: NavigationBarProps) {
+function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen, showResizeButtons }: NavigationBarProps) {
   const handleExternalLink = (url: string) => {
     window.ipcRenderer.send('open-external-link', url);
   };
@@ -15,6 +19,20 @@ function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen }: Na
         <a href="#" className="font-bold text-xl">File Manager</a>
         <div className="flex items-center space-x-4">
           {actionsSlot}
+          {showResizeButtons && (
+            <div className="flex items-center space-x-1">
+              <button
+                className="text-blue-100 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                <FontAwesomeIcon icon={faChevronLeft} />
+              </button>
+              <button
+                className="text-blue-100 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+            </div>
+          )}
           <button
             onClick={onHistoryClick}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${

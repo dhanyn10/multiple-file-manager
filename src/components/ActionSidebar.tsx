@@ -35,6 +35,8 @@ interface BaseActionSidebarProps {
   setIndexOffset: (value: number) => void;
   otherSidebarOpen: boolean;
   onClose: () => void;
+  onResizeStart: () => void;
+  onResizeEnd: () => void;
 }
 const availableActions = [
   { value: 'rename', label: 'Rename by name' },
@@ -56,7 +58,10 @@ const ActionSidebar = ({
   endIndex,
   onEndIndexChange,
   setIndexOffset,
+  onResizeStart,
+  onResizeEnd,
 }: BaseActionSidebarProps) => {
+
   const dispatch: AppDispatch = useDispatch();
   const {
     selectedAction,
@@ -74,6 +79,8 @@ const ActionSidebar = ({
     initialWidth: 384,
     minWidth: 320,
     otherSidebarOpen,
+    onResizeStart,
+    onResizeEnd,
     maxWidth: '50vw', // You can still customize it here if needed
   });
 

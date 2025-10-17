@@ -31,6 +31,8 @@ function App() {
   const [lastSelectedFile, setLastSelectedFile] = useState<string | null>(null);
   const [showActionsInNavbar, setShowActionsInNavbar] = useState(false); // This state can be repurposed or removed if sidebar is always open when files are selected
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [showResizeButtons, setShowResizeButtons] = useState(false);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [undoStack, setUndoStack] = useState<RenameOperation[]>([]);
   const [redoStack, setRedoStack] = useState<RenameOperation[]>([]);
@@ -102,6 +104,28 @@ function App() {
       setEndIndex(String(startNum + indexOffset));
     }
   }, [startIndex, indexOffset, selectedAction]);
+
+  // Add a class to the body while resizing to prevent unwanted interactions
+  useEffect(() => {
+    if (isResizing) {
+      document.body.classList.add('resizing-sidebar');
+    } else {
+      document.body.classList.remove('resizing-sidebar');
+    }
+  }, [isResizing]);
+
+  // Show resize buttons when resizing starts, and hide them when both sidebars are closed.
+  useEffect(() => {
+    if (isResizing) {
+      setShowResizeButtons(true);
+    }
+  }, [isResizing]);
+
+  useEffect(() => {
+    if (!isModalOpen && !isHistorySidebarOpen) {
+      setShowResizeButtons(false);
+    }
+  }, [isModalOpen, isHistorySidebarOpen]);
 
 
 
@@ -296,6 +320,7 @@ function App() {
     <div className="flex flex-col h-screen bg-slate-100 text-slate-800">
       <NavigationBar
         isHistorySidebarOpen={isHistorySidebarOpen}
+        showResizeButtons={showResizeButtons}
         actionsSlot={
           showActionsInNavbar && selectedFiles.size > 0 ? ( // This logic seems to be for the navbar version
             <ActionButtons
@@ -394,6 +419,8 @@ function App() {
             startIndex={startIndex} onStartIndexChange={setStartIndex}
             endIndex={endIndex} onEndIndexChange={setEndIndex}
             setIndexOffset={setIndexOffset}
+            onResizeStart={() => setIsResizing(true)}
+            onResizeEnd={() => setIsResizing(false)}
           />
         )}
         {isHistorySidebarOpen && (
@@ -405,6 +432,8 @@ function App() {
             onRedo={handleRedo}
             onClearHistory={handleClearHistory}
             otherSidebarOpen={isModalOpen}
+            onResizeStart={() => setIsResizing(true)}
+            onResizeEnd={() => setIsResizing(false)}
           />
         )}
       </div>
