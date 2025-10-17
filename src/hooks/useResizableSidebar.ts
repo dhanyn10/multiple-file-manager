@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, RefObject } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface UseResizableSidebarProps {
   initialWidth?: number;
