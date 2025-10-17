@@ -32,9 +32,3 @@ jobs:
 
     - name: Build application
       run: npm run build
-
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-${{ matrix.os }}
-        path: dist/
