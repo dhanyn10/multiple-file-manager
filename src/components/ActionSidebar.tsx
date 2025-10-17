@@ -38,8 +38,8 @@ interface BaseActionSidebarProps {
 }
 const availableActions = [
   { value: 'rename', label: 'Rename by name' },
-  { value: 'rename-by-index', label: 'Rename by index' },
-  { value: 'insert-at-index', label: 'Insert text at index' },
+  { value: 'rename-by-index', label: 'Rename by position' },
+  { value: 'insert-at-index', label: 'Insert text at position' },
   { value: 'delete-duplicated', label: 'Delete Duplicates' },
   { value: 'detect-missing', label: 'Detect Missing Files' }
 ];
