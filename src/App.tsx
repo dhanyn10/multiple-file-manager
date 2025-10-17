@@ -41,10 +41,6 @@ function App() {
 
   // Use the selectedAction from Redux store as the single source of truth
   const selectedAction = useSelector((state: RootState) => state.actions.selectedAction);
-  const handleSelectedActionChange = (action: string) => {
-    // This function is now a placeholder if we need to dispatch changes from App.tsx
-    // For now, ActionSidebar handles dispatching.
-  };
   const actionsToolbarRef = useRef<HTMLDivElement>(null);
 
   const handleDirectorySelected = useCallback((path: string) => {
