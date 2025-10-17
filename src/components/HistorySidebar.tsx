@@ -15,6 +15,8 @@ interface HistorySidebarProps {
   onResizeMove: (direction: 'left' | 'right') => void;
   onResizeStart: () => void;
   onResizeEnd: () => void;
+  showResizeButtons: boolean;
+  onCloseResizeButtons: () => void;
 }
 
 export interface HistorySidebarRef {
@@ -23,7 +25,7 @@ export interface HistorySidebarRef {
 }
 
 const HistorySidebar = forwardRef<HistorySidebarRef, HistorySidebarProps>((props, ref) => {
-  const { otherSidebarOpen, onResizeMove, onResizeStart, onResizeEnd, undoStack, redoStack, onClose, onUndo, onRedo, onClearHistory } = props;
+  const { otherSidebarOpen, onResizeMove, onResizeStart, onResizeEnd, undoStack, redoStack, onClose, onUndo, onRedo, onClearHistory, showResizeButtons, onCloseResizeButtons } = props;
 
   const { sidebarWidth, setSidebarWidth, handleMouseDown } = useResizableSidebar({
     initialWidth: 384,
@@ -46,9 +48,18 @@ const HistorySidebar = forwardRef<HistorySidebarRef, HistorySidebarProps>((props
     >
       <div
         onMouseDown={handleMouseDown}
-        className="absolute top-0 left-0 -ml-1 w-2 h-full cursor-col-resize z-30"
+        className="absolute top-0 left-0 -ml-2 w-4 h-full cursor-col-resize z-30 flex items-center justify-center"
         title="Resize sidebar"
-      />
+      >
+        <button
+          onClick={(e) => { e.stopPropagation(); onCloseResizeButtons(); }}
+          className={`bg-red-500 text-white hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center transition-opacity duration-200 ${showResizeButtons ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          aria-label="Close resize controls"
+          title="Close resize controls"
+        >
+          <FontAwesomeIcon icon={faTimes} className="w-2 h-2" />
+        </button>
+      </div>
       <div className="flex justify-between items-center p-4 border-b border-slate-200 flex-shrink-0">
         <div className="flex items-center space-x-2">
           <h3 className="text-lg font-semibold text-slate-900">Activity History</h3>

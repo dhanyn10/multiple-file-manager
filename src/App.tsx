@@ -193,6 +193,10 @@ function App() {
     }
   };
 
+  const handleCloseResizeButtons = () => {
+    setShowResizeButtons(false);
+  };
+
   const handleBrowseClick = () => {
     window.ipcRenderer.send('open-directory-dialog');
   };
@@ -470,6 +474,8 @@ function App() {
             onResizeStart={() => setIsResizing(true)}
             onResizeMove={setResizeDirection}
             onResizeEnd={() => setIsResizing(false)}
+            showResizeButtons={showResizeButtons}
+            onCloseResizeButtons={handleCloseResizeButtons}
           />
         )}
         {isHistorySidebarOpen && (
@@ -485,6 +491,8 @@ function App() {
             onResizeMove={setResizeDirection}
             onResizeStart={() => setIsResizing(true)}
             onResizeEnd={() => setIsResizing(false)}
+            showResizeButtons={showResizeButtons}
+            onCloseResizeButtons={handleCloseResizeButtons}
           />
         )}
       </div>
