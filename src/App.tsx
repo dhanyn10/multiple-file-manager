@@ -4,8 +4,8 @@ import NavigationBar from './components/NavigationBar';
 import FileList from './components/FileList';
 import FilePagination from './components/FilePagination';
 import ActionButtons from './components/ActionButtons';
-import ActionSidebar, { RenameOperation } from './components/ActionSidebar';
-import HistorySidebar from './components/HistorySidebar';
+import ActionSidebar, { RenameOperation, ActionSidebarRef } from './components/ActionSidebar';
+import HistorySidebar, { HistorySidebarRef } from './components/HistorySidebar';
 import { useIpcListeners } from './hooks/useIpcListeners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RootState } from './store/store';
@@ -45,6 +45,9 @@ function App() {
   // Use the selectedAction from Redux store as the single source of truth
   const selectedAction = useSelector((state: RootState) => state.actions.selectedAction);
   const actionsToolbarRef = useRef<HTMLDivElement>(null);
+  const actionSidebarRef = useRef<ActionSidebarRef>(null);
+  const historySidebarRef = useRef<HistorySidebarRef>(null);
+  const resizeIntervalRef = useRef<number | null>(null);
 
   const handleDirectorySelected = useCallback((path: string) => {
     setDirectory(path);
@@ -154,6 +157,41 @@ function App() {
     return () => observer.disconnect();
   }, [selectedFiles.size]); // Re-observe if the toolbar appears/disappears
 
+  const handleResizeClick = (direction: 'left' | 'right') => {
+    const step = 10; // Smaller step for smoother continuous resize
+    const multiplier = direction === 'left' ? -1 : 1; // 'left' should decrease width, 'right' should increase it.
+    const change = step * multiplier;
+
+    if (isModalOpen && actionSidebarRef.current) {
+      const currentWidth = actionSidebarRef.current.getWidth();
+      actionSidebarRef.current.setWidth(currentWidth + change);
+    }
+
+    if (isHistorySidebarOpen && historySidebarRef.current) {
+      const currentWidth = historySidebarRef.current.getWidth();
+      historySidebarRef.current.setWidth(currentWidth + change);
+    }
+  };
+
+  const handleResizeMouseDown = (direction: 'left' | 'right') => {
+    // Clear any existing interval first
+    if (resizeIntervalRef.current) {
+      clearInterval(resizeIntervalRef.current);
+    }
+    // Immediately resize once
+    handleResizeClick(direction);
+    // Then start resizing continuously
+    resizeIntervalRef.current = window.setInterval(() => {
+      handleResizeClick(direction);
+    }, 50); // Adjust interval for speed, e.g., 50ms
+  };
+
+  const handleResizeMouseUp = () => {
+    if (resizeIntervalRef.current) {
+      clearInterval(resizeIntervalRef.current);
+      resizeIntervalRef.current = null;
+    }
+  };
 
   const handleBrowseClick = () => {
     window.ipcRenderer.send('open-directory-dialog');
@@ -326,6 +364,8 @@ function App() {
       <NavigationBar
         isHistorySidebarOpen={isHistorySidebarOpen}
         showResizeButtons={showResizeButtons}
+        onResizeMouseDown={handleResizeMouseDown}
+        onResizeMouseUp={handleResizeMouseUp}
         resizeDirection={resizeDirection}
         actionsSlot={
           showActionsInNavbar && selectedFiles.size > 0 ? ( // This logic seems to be for the navbar version
@@ -415,15 +455,17 @@ function App() {
         </main>
         {isModalOpen && (
           <ActionSidebar
-            // selectedAction is now managed by Redux and read from the store inside ActionSidebar
+            ref={actionSidebarRef}
             selectedFiles={selectedFiles}
             allFiles={files}
             onClose={handleCloseModal}
             onExecute={handleExecuteRename}
             onExecuteDelete={handleExecuteDelete}
             otherSidebarOpen={isHistorySidebarOpen}
-            startIndex={startIndex} onStartIndexChange={setStartIndex}
-            endIndex={endIndex} onEndIndexChange={setEndIndex}
+            startIndex={startIndex}
+            onStartIndexChange={setStartIndex}
+            endIndex={endIndex}
+            onEndIndexChange={setEndIndex}
             setIndexOffset={setIndexOffset}
             onResizeStart={() => setIsResizing(true)}
             onResizeMove={setResizeDirection}
@@ -432,6 +474,7 @@ function App() {
         )}
         {isHistorySidebarOpen && (
           <HistorySidebar
+            ref={historySidebarRef}
             undoStack={undoStack}
             redoStack={redoStack}
             onClose={() => setIsHistorySidebarOpen(false)}

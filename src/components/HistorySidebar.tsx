@@ -1,6 +1,7 @@
+import { forwardRef, useImperativeHandle } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUndo, faRedo, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { RenameOperation } from './ActionSidebar';
+import { faUndo, faRedo, faTrash, faTimes } from '@fortawesome/free-solid-svg-icons';
+import type { RenameOperation } from './ActionSidebar';
 import { useResizableSidebar } from '../hooks/useResizableSidebar';
 
 interface HistorySidebarProps {
@@ -16,19 +17,31 @@ interface HistorySidebarProps {
   onResizeEnd: () => void;
 }
 
-const HistorySidebar = ({ undoStack, redoStack, onClose, onUndo, onRedo, onClearHistory, otherSidebarOpen, onResizeStart, onResizeMove, onResizeEnd }: HistorySidebarProps) => {
-  const { sidebarWidth, handleMouseDown } = useResizableSidebar({
+export interface HistorySidebarRef {
+  setWidth: (width: number) => void;
+  getWidth: () => number;
+}
+
+const HistorySidebar = forwardRef<HistorySidebarRef, HistorySidebarProps>((props, ref) => {
+  const { otherSidebarOpen, onResizeMove, onResizeStart, onResizeEnd, undoStack, redoStack, onClose, onUndo, onRedo, onClearHistory } = props;
+
+  const { sidebarWidth, setSidebarWidth, handleMouseDown } = useResizableSidebar({
     initialWidth: 384,
     minWidth: 320,
-    otherSidebarOpen,
-    onResizeMove,
-    onResizeStart,
-    onResizeEnd,
+    otherSidebarOpen: otherSidebarOpen,
+    onResizeMove: onResizeMove,
+    onResizeStart: onResizeStart,
+    onResizeEnd: onResizeEnd,
   });
+
+  useImperativeHandle(ref, () => ({
+    setWidth: (newWidth: number) => setSidebarWidth(Math.max(newWidth, 320)),
+    getWidth: () => sidebarWidth,
+  }));
 
   return (
     <aside
-      className="bg-slate-100 border-l border-slate-200 flex flex-col h-full relative"
+      className="bg-slate-50 border-l border-slate-200 flex flex-col h-full relative select-none"
       style={{ width: `${sidebarWidth}px` }}
     >
       <div
@@ -52,8 +65,8 @@ const HistorySidebar = ({ undoStack, redoStack, onClose, onUndo, onRedo, onClear
           onClick={onClose}
           className="text-slate-400 bg-transparent hover:bg-slate-200 hover:text-slate-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
           aria-label="Close history sidebar"
-        >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+        > 
+          <FontAwesomeIcon icon={faTimes} className="w-5 h-5" />
         </button>
       </div>
 
@@ -61,7 +74,7 @@ const HistorySidebar = ({ undoStack, redoStack, onClose, onUndo, onRedo, onClear
         {undoStack.length === 0 && redoStack.length === 0 ? (
           <p className="text-slate-500">No activities yet.</p>
         ) : (
-          <div className="overflow-y-auto border-t border-slate-200">
+          <div className="overflow-y-auto">
             <table className="w-full text-sm text-left text-slate-500 table-fixed">
               <thead className="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0">
                 <tr>
@@ -109,6 +122,6 @@ const HistorySidebar = ({ undoStack, redoStack, onClose, onUndo, onRedo, onClear
       </div>
     </aside>
   );
-};
+});
 
 export default HistorySidebar;

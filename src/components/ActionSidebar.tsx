@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo, useState } from 'react';
+import { useRef, useEffect, useMemo, useState, forwardRef, useImperativeHandle } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../store/store';
 import { setSelectedAction, setActionFrom, setActionTo, resetActionState } from '../store/actionsSlice';
@@ -23,9 +23,15 @@ interface FormattedMissingSequence extends IMissingSequence {
   missingCount: number;
 }
 
+export interface ActionSidebarRef {
+  setWidth: (width: number) => void;
+  getWidth: () => number;
+}
+
 interface BaseActionSidebarProps {
   selectedFiles: Set<string>;
   allFiles: { name: string; isDirectory: boolean; }[];
+  onClose: () => void;
   onExecute: (operations: RenameOperation[]) => void;
   onExecuteDelete: (operations: { fileName: string; timestamp: string }[]) => void;
   startIndex: string;
@@ -34,7 +40,6 @@ interface BaseActionSidebarProps {
   onEndIndexChange: (value: string) => void;
   setIndexOffset: (value: number) => void;
   otherSidebarOpen: boolean;
-  onClose: () => void;
   onResizeStart: () => void;
   onResizeMove: (direction: 'left' | 'right') => void;
   onResizeEnd: () => void;
@@ -47,7 +52,7 @@ const availableActions = [
   { value: 'detect-missing', label: 'Detect Missing Files' }
 ];
 
-const ActionSidebar = ({
+const ActionSidebar = forwardRef<ActionSidebarRef, BaseActionSidebarProps>(({
   selectedFiles,
   allFiles,
   onClose,
@@ -62,7 +67,7 @@ const ActionSidebar = ({
   onResizeStart,
   onResizeMove,
   onResizeEnd,
-}: BaseActionSidebarProps) => {
+}, ref) => {
 
   const dispatch: AppDispatch = useDispatch();
   const {
@@ -77,7 +82,7 @@ const ActionSidebar = ({
   const sidebarRef = useRef<HTMLElement>(null);
   const resizerRef = useRef<HTMLDivElement>(null);
   
-  const { sidebarWidth, maxWidth, handleMouseDown } = useResizableSidebar({
+  const { sidebarWidth, setSidebarWidth, maxWidth, handleMouseDown } = useResizableSidebar({
     initialWidth: 384,
     minWidth: 320,
     otherSidebarOpen,
@@ -86,6 +91,13 @@ const ActionSidebar = ({
     onResizeEnd,
     maxWidth: '50vw', // You can still customize it here if needed
   });
+
+  useImperativeHandle(ref, () => ({
+    setWidth: (newWidth: number) => {
+      setSidebarWidth(Math.max(newWidth, 320)); // Ensure not smaller than minWidth
+    },
+    getWidth: () => sidebarWidth,
+  }));
 
   const maxFileNameLength = useMemo(() => {
     if (selectedFiles.size === 0) {
@@ -352,6 +364,6 @@ const ActionSidebar = ({
       </div>
     </aside>
   );
-};
+});
 
 export default ActionSidebar;

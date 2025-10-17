@@ -6,10 +6,12 @@ interface NavigationBarProps {
   onHistoryClick: () => void;
   isHistorySidebarOpen: boolean;
   showResizeButtons: boolean;
+  onResizeMouseDown: (direction: 'left' | 'right') => void;
+  onResizeMouseUp: () => void;
   resizeDirection: 'left' | 'right' | null;
 }
 
-function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen, showResizeButtons, resizeDirection }: NavigationBarProps) {
+function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen, showResizeButtons, resizeDirection, onResizeMouseDown, onResizeMouseUp }: NavigationBarProps) {
   const handleExternalLink = (url: string) => {
     window.ipcRenderer.send('open-external-link', url);
   };
@@ -23,6 +25,9 @@ function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen, show
           {showResizeButtons && (
             <div className="flex items-center">
               <button
+                onMouseDown={() => onResizeMouseDown('left')}
+                onMouseUp={onResizeMouseUp}
+                onMouseLeave={onResizeMouseUp}
                 className={`text-blue-600 px-2 py-1 rounded-l-md text-xs transition-colors ${
                   resizeDirection === 'left' ? 'bg-blue-200' : 'bg-white hover:bg-blue-100'
                 }`}
@@ -30,6 +35,9 @@ function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen, show
                 <FontAwesomeIcon icon={faChevronLeft} />
               </button>
               <button
+                onMouseDown={() => onResizeMouseDown('right')}
+                onMouseUp={onResizeMouseUp}
+                onMouseLeave={onResizeMouseUp}
                 className={`text-blue-600 px-2 py-1 rounded-r-md border-l border-blue-200 text-xs transition-colors ${
                   resizeDirection === 'right' ? 'bg-blue-200' : 'bg-white hover:bg-blue-100'
                 }`}
