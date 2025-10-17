@@ -1,10 +1,13 @@
-import { useState, useRef, CSSProperties, useCallback } from 'react';
+import { useState, useRef, CSSProperties, useCallback, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 
 interface ActionButtonsProps {
   selectedFileCount: number;
   onExecuteClick: () => void;
   onSelectAll?: () => void;
   onDeselectAll?: () => void;
+  onDetectMissingFiles?: () => void;
   isNavbarVersion?: boolean; // To differentiate between the main and navbar versions
 }
 
@@ -13,13 +16,29 @@ const ActionButtons = ({
   onExecuteClick,
   onSelectAll,
   onDeselectAll,
+  onDetectMissingFiles,
   isNavbarVersion = false
 }: ActionButtonsProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [buttonStyle, setButtonStyle] = useState<CSSProperties>({});
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const leftContentRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (isHovered && containerRef.current && leftContentRef.current && buttonRef.current) {
@@ -47,10 +66,29 @@ const ActionButtons = ({
 
   if (isNavbarVersion) {
     return (
-      <div className="flex items-center space-x-4">
-        <button onClick={onSelectAll} className="text-sm font-medium text-blue-100 hover:text-white cursor-pointer">Select All</button>
-        <button onClick={onDeselectAll} className="text-sm font-medium text-blue-100 hover:text-white cursor-pointer">Deselect All</button>
+      <div className="flex items-center space-x-4 text-white">
+        <button onClick={onSelectAll} className="text-sm font-medium text-blue-100 hover:text-white">Select All</button>
+        <button onClick={onDeselectAll} className="text-sm font-medium text-blue-100 hover:text-white">Deselect All</button>
         <span className="text-sm font-medium">{selectedFileCount} file(s) selected</span>
+        <div ref={dropdownRef} className="relative">
+          <button
+            onClick={() => setIsDropdownOpen(prev => !prev)}
+            className="p-2 rounded-md hover:bg-blue-700"
+            aria-label="More options"
+          >
+            <FontAwesomeIcon icon={faEllipsisV} />
+          </button>
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 text-slate-800">
+              <button
+                onClick={() => { onDetectMissingFiles?.(); setIsDropdownOpen(false); }}
+                className="block w-full text-left px-4 py-2 text-sm hover:bg-slate-100"
+              >
+                Detect Missing Files
+              </button>
+            </div>
+          )}
+        </div>
         <button
           onClick={onExecuteClick}
           className="px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
@@ -72,7 +110,7 @@ const ActionButtons = ({
       onMouseLeave={() => setIsHovered(false)}
       className="relative flex items-center justify-between w-full h-full"
     >
-      <div ref={leftContentRef} className="flex items-center gap-4">
+      <div ref={leftContentRef} className="flex items-center gap-4 z-10">
         <span className="text-sm font-medium text-slate-700">{selectedFileCount} file(s) selected</span>
         <div className="flex items-center gap-2">
           <button

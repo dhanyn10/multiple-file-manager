@@ -287,6 +287,8 @@ function App() {
               selectedFileCount={selectedFiles.size}
               onExecuteClick={handleExecuteClick}
               isNavbarVersion={true}
+              onSelectAll={handleSelectAll}
+              onDeselectAll={handleDeselectAll}
             />
           ) : null
         }
@@ -368,6 +370,7 @@ function App() {
         {isModalOpen && (
           <ActionSidebar
             selectedFiles={selectedFiles}
+            allFiles={files}
             onClose={handleCloseModal}
             onExecute={handleExecuteRename}
             onExecuteDelete={handleExecuteDelete}

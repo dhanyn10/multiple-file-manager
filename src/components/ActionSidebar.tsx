@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useClickOutside } from '../hooks/useClickOutside';
 import RangeSlider from './RangeSlider';
+import { detectMissingFiles, MissingSequence as IMissingSequence } from '../utils/fileUtils';
 
 export interface RenameOperation {
   originalName: string;
@@ -8,8 +9,15 @@ export interface RenameOperation {
   timestamp?: string;
 }
 
+interface MissingSequence extends IMissingSequence {
+  start: string;
+  end: string;
+  missingCount: number;
+}
+
 interface ActionSidebarProps {
   selectedFiles: Set<string>;
+  allFiles: { name: string; isDirectory: boolean; }[];
   onClose: () => void;
   onExecute: (operations: RenameOperation[]) => void;
   actionFrom: string;
@@ -30,15 +38,17 @@ const availableActions = [
   { value: 'rename', label: 'Rename by name' },
   { value: 'rename-by-index', label: 'Rename by index' },
   { value: 'insert-at-index', label: 'Insert text at index' },
-  { value: 'delete-duplicated', label: 'Delete Duplicates' }
+  { value: 'delete-duplicated', label: 'Delete Duplicates' },
+  { value: 'detect-missing', label: 'Detect Missing Files' }
 ];
 
 const ActionSidebar = ({
   selectedFiles,
+  allFiles,
   onClose,
   onExecute,
-  actionFrom,
   onExecuteDelete,
+  actionFrom,
   onActionFromChange,
   actionTo,
   onActionToChange,
@@ -56,6 +66,7 @@ const ActionSidebar = ({
   const sidebarRef = useRef<HTMLElement>(null);
 
   const [isResizing, setIsResizing] = useState(false);
+  const [missingFilesReport, setMissingFilesReport] = useState<MissingSequence[] | null>(null);
   const [sidebarWidth, setSidebarWidth] = useState(384); // Corresponds to w-96
   const initialPos = useRef({ x: 0, width: 0 });
 
@@ -67,6 +78,27 @@ const ActionSidebar = ({
   }, [selectedFiles]);
 
   useClickOutside(actionDropdownRef, () => setIsActionDropdownOpen(false));
+
+  // Effect to handle special actions from the dropdown
+  useEffect(() => {
+    if (selectedAction === 'detect-missing') {
+      const rawReport = detectMissingFiles(allFiles.map(f => f.name));
+      const report: MissingSequence[] = rawReport.map(seq => {
+        const firstMissing = String(seq.missingNumbers[0]).padStart(seq.paddingLength, '0');
+        const lastMissing = String(seq.missingNumbers[seq.missingNumbers.length - 1]).padStart(seq.paddingLength, '0');
+        
+        return {
+          ...seq,
+          start: `${seq.prefix}${firstMissing}${seq.suffix}`,
+          end: `${seq.prefix}${lastMissing}${seq.suffix}`,
+          missingCount: seq.missingNumbers.length,
+        };
+      });
+      setMissingFilesReport(report);
+    } else {
+      setMissingFilesReport(null);
+    }
+  }, [selectedAction, allFiles]);
 
   // Effect to sync endIndex with startIndex
   useEffect(() => {
@@ -368,17 +400,44 @@ const ActionSidebar = ({
 
         {/* Files Table */}
         <div className="p-4 flex flex-col overflow-hidden flex-grow">
-          <h4 className="text-md font-semibold text-slate-800 mb-2 flex-shrink-0">Preview Changes ({selectedFiles.size} files)</h4>
+          <h4 className="text-md font-semibold text-slate-800 mb-2 flex-shrink-0">{selectedAction === 'detect-missing' ? 'Missing Files Report' : `Preview Changes (${selectedFiles.size} files)`}</h4>
           <div className="overflow-y-auto border-t border-slate-200">
             <table className="w-full text-sm text-left text-slate-500 table-fixed">
               <thead className="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0">
-                <tr>
-                  <th scope="col" className="px-4 py-2">Original Name</th>
-                  <th scope="col" className="px-4 py-2">{selectedAction === 'delete-duplicated' ? 'Status' : 'New Name'}</th>
-                </tr>
+                {selectedAction === 'detect-missing' ? (
+                  <tr>
+                    <th scope="col" className="px-4 py-2">Description</th>
+                    <th scope="col" className="px-4 py-2">Range</th>
+                  </tr>
+                ) : (
+                  <tr>
+                    <th scope="col" className="px-4 py-2">Original Name</th>
+                    <th scope="col" className="px-4 py-2">{selectedAction === 'delete-duplicated' ? 'Status' : 'New Name'}</th>
+                  </tr>
+                )}
               </thead>
               <tbody>
-                {Array.from(selectedFiles).map(file => {
+                {selectedAction === 'detect-missing' && missingFilesReport && (
+                  missingFilesReport.length > 0 ? (
+                    missingFilesReport.map((seq, index) => (
+                      <tr key={index} className="bg-white border-b border-slate-200/60">
+                        <td className="px-4 py-2 font-medium text-slate-900 break-all">
+                          Missing {seq.missingCount} file(s)
+                        </td>
+                        <td className="px-4 py-2 break-all text-red-500">
+                          Between {seq.start} and {seq.end}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className="bg-white border-b border-slate-200/60">
+                      <td colSpan={2} className="px-4 py-2 text-center text-green-600 font-semibold">
+                        No missing files detected in sequence.
+                      </td>
+                    </tr>
+                  )
+                )}
+                {selectedAction !== 'detect-missing' && Array.from(selectedFiles).map(file => {
                   let newName = file;
                   let status = '';
 
@@ -433,7 +492,7 @@ const ActionSidebar = ({
       </div>
 
       {/* Footer with Execute Button */}
-      <div className="p-4 border-t border-slate-200 flex-shrink-0">
+      <div className={`p-4 border-t border-slate-200 flex-shrink-0 ${selectedAction === 'detect-missing' ? 'hidden' : ''}`}>
         {selectedAction === 'delete-duplicated' ? (
           <button
             onClick={handleDeleteDuplicates}
