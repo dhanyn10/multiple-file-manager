@@ -39,7 +39,7 @@ export const useResizableSidebar = ({
     if (isResizing) {      
       const deltaX = e.clientX - startX.current;
       const newWidth = startWidth.current - deltaX;
-      const direction = deltaX < 0 ? 'right' : 'left'; // Corrected logic: deltaX < 0 means mouse moved left, newWidth increases (resizing right)
+      const direction = deltaX > 0 ? 'right' : 'left';
       onResizeMove?.(direction);
       if (newWidth >= minWidth) {
         setSidebarWidth(newWidth);

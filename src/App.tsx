@@ -159,7 +159,7 @@ function App() {
 
   const handleResizeClick = (direction: 'left' | 'right') => {
     const step = 10; // Smaller step for smoother continuous resize
-    const multiplier = direction === 'left' ? -1 : 1; // 'left' should decrease width, 'right' should increase it.
+    const multiplier = direction === 'left' ? 1 : -1;
     const change = step * multiplier;
 
     if (isModalOpen && actionSidebarRef.current) {
