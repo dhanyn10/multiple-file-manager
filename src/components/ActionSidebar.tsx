@@ -1,4 +1,7 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../store/store';
+import { setSelectedAction, setActionFrom, setActionTo, resetActionState } from '../store/actionsSlice';
 import { useClickOutside } from '../hooks/useClickOutside';
 import { detectMissingFiles, MissingSequence as IMissingSequence } from '../utils/fileUtils';
 import { useResizableSidebar } from '../hooks/useResizableSidebar';
@@ -23,22 +26,16 @@ interface FormattedMissingSequence extends IMissingSequence {
 interface BaseActionSidebarProps {
   selectedFiles: Set<string>;
   allFiles: { name: string; isDirectory: boolean; }[];
-  onClose: () => void;
   onExecute: (operations: RenameOperation[]) => void;
   onExecuteDelete: (operations: { fileName: string; timestamp: string }[]) => void;
-  otherSidebarOpen: boolean;
-}
-
-interface ActionSidebarProps extends BaseActionSidebarProps {
-  selectedAction: string;
-  onSelectedActionChange: (action: string) => void;
   startIndex: string;
-  onStartIndexChange: (index: string) => void;
+  onStartIndexChange: (value: string) => void;
   endIndex: string;
-  onEndIndexChange: (index: string) => void;
-  setIndexOffset: (offset: number) => void;
+  onEndIndexChange: (value: string) => void;
+  setIndexOffset: (value: number) => void;
+  otherSidebarOpen: boolean;
+  onClose: () => void;
 }
-
 const availableActions = [
   { value: 'rename', label: 'Rename by name' },
   { value: 'rename-by-index', label: 'Rename by index' },
@@ -54,16 +51,19 @@ const ActionSidebar = ({
   onExecute,
   onExecuteDelete,
   otherSidebarOpen,
-  selectedAction,
-  onSelectedActionChange,
   startIndex,
   onStartIndexChange,
   endIndex,
   onEndIndexChange,
   setIndexOffset,
-}: ActionSidebarProps) => {
-  const [actionFrom, setActionFrom] = useState('');
-  const [actionTo, setActionTo] = useState('');
+}: BaseActionSidebarProps) => {
+  const dispatch: AppDispatch = useDispatch();
+  const {
+    selectedAction,
+    actionFrom,
+    actionTo
+  } = useSelector((state: RootState) => state.actions);
+
   const [isActionDropdownOpen, setIsActionDropdownOpen] = useState(false);
   const actionDropdownRef = useRef<HTMLDivElement>(null);
   const [missingFilesReport, setMissingFilesReport] = useState<FormattedMissingSequence[] | null>(null);
@@ -108,13 +108,7 @@ const ActionSidebar = ({
 
   const handleClose = () => {
     onClose();
-    // Reset local state on close
-    onSelectedActionChange('');
-    setActionFrom('');
-    setActionTo('');
-    onStartIndexChange('');
-    onEndIndexChange('');
-    setIndexOffset(0); // Reset offset on close
+    dispatch(resetActionState());
     setIsActionDropdownOpen(false);
   };
 
@@ -249,7 +243,7 @@ const ActionSidebar = ({
                   <div className="absolute z-10 mt-1 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg focus:outline-none sm:text-sm max-h-60">
                     <div
                       key="default-action"
-                      onClick={() => { onSelectedActionChange(''); setIsActionDropdownOpen(false); }}
+                      onClick={() => { dispatch(setSelectedAction('')); setIsActionDropdownOpen(false); }}
                       className="text-slate-500 relative cursor-pointer select-none py-2 pl-3 pr-9 hover:bg-blue-600 hover:text-white"
                     >
                       <span className="font-normal block truncate">-- Select Action --</span>
@@ -257,7 +251,7 @@ const ActionSidebar = ({
                     {availableActions.map((action) => (
                       <div
                         key={action.value}
-                        onClick={() => { onSelectedActionChange(action.value); setIsActionDropdownOpen(false); }}
+                        onClick={() => { dispatch(setSelectedAction(action.value)); setIsActionDropdownOpen(false); }}
                         className="text-slate-900 relative cursor-pointer select-none py-2 pl-3 pr-9 hover:bg-blue-600 hover:text-white"
                       >
                         <span className="font-normal block truncate">{action.label}</span>
@@ -271,9 +265,9 @@ const ActionSidebar = ({
               <>
                 <RenameByNameForm
                   actionFrom={actionFrom}
-                  onActionFromChange={setActionFrom}
+                  onActionFromChange={(value) => dispatch(setActionFrom(value))}
                   actionTo={actionTo}
-                  onActionToChange={setActionTo}
+                  onActionToChange={(value) => dispatch(setActionTo(value))}
                 />
               </>
             )}
@@ -285,7 +279,7 @@ const ActionSidebar = ({
                   endIndex={endIndex}
                   onEndIndexChange={onEndIndexChange}
                   actionTo={actionTo}
-                  onActionToChange={setActionTo}
+                  onActionToChange={(value) => dispatch(setActionTo(value))}
                   maxFileNameLength={maxFileNameLength}
                   setIndexOffset={setIndexOffset}
                 />
@@ -297,7 +291,7 @@ const ActionSidebar = ({
                   startIndex={startIndex}
                   onStartIndexChange={onStartIndexChange}
                   actionTo={actionTo}
-                  onActionToChange={setActionTo}
+                  onActionToChange={(value) => dispatch(setActionTo(value))}
                   maxFileNameLength={maxFileNameLength}
                 />
               </>

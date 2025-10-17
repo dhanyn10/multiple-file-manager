@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import NavigationBar from './components/NavigationBar';
 import FileList from './components/FileList';
 import FilePagination from './components/FilePagination';
@@ -7,6 +8,7 @@ import ActionSidebar, { RenameOperation } from './components/ActionSidebar';
 import HistorySidebar from './components/HistorySidebar';
 import { useIpcListeners } from './hooks/useIpcListeners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { RootState } from './store/store';
 import { faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import './App.css';
  
@@ -33,11 +35,16 @@ function App() {
   const [undoStack, setUndoStack] = useState<RenameOperation[]>([]);
   const [redoStack, setRedoStack] = useState<RenameOperation[]>([]);
   const [recentlyRenamed, setRecentlyRenamed] = useState<Set<string>>(new Set());
-  const [selectedAction, setSelectedAction] = useState('');
   const [startIndex, setStartIndex] = useState('');
   const [endIndex, setEndIndex] = useState('');
   const [indexOffset, setIndexOffset] = useState<number>(0);
 
+  // Use the selectedAction from Redux store as the single source of truth
+  const selectedAction = useSelector((state: RootState) => state.actions.selectedAction);
+  const handleSelectedActionChange = (action: string) => {
+    // This function is now a placeholder if we need to dispatch changes from App.tsx
+    // For now, ActionSidebar handles dispatching.
+  };
   const actionsToolbarRef = useRef<HTMLDivElement>(null);
 
   const handleDirectorySelected = useCallback((path: string) => {
@@ -90,7 +97,7 @@ function App() {
 
   // Effect to sync endIndex with startIndex
   useEffect(() => {
-    if (startIndex === '') {
+    if (startIndex === '' || selectedAction !== 'rename-by-index') {
       setEndIndex('');
       return;
     }
@@ -98,7 +105,7 @@ function App() {
     if (!isNaN(startNum)) {
       setEndIndex(String(startNum + indexOffset));
     }
-  }, [startIndex, indexOffset]);
+  }, [startIndex, indexOffset, selectedAction]);
 
 
 
@@ -134,7 +141,6 @@ function App() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     // Reset action-specific state when closing the sidebar
-    setSelectedAction('');
     setStartIndex('');
     setEndIndex('');
     setIndexOffset(0);
@@ -382,8 +388,7 @@ function App() {
         </main>
         {isModalOpen && (
           <ActionSidebar
-            selectedAction={selectedAction}
-            onSelectedActionChange={setSelectedAction}
+            // selectedAction is now managed by Redux and read from the store inside ActionSidebar
             selectedFiles={selectedFiles}
             allFiles={files}
             onClose={handleCloseModal}
