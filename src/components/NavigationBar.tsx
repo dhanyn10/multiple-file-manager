@@ -20,14 +20,14 @@ function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen, show
         <div className="flex items-center space-x-4">
           {actionsSlot}
           {showResizeButtons && (
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center">
               <button
-                className="text-blue-100 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="bg-white text-blue-600 hover:bg-blue-100 px-2 py-1 rounded-l-md text-xs"
               >
                 <FontAwesomeIcon icon={faChevronLeft} />
               </button>
               <button
-                className="text-blue-100 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="bg-white text-blue-600 hover:bg-blue-100 px-2 py-1 rounded-r-md border-l border-blue-200 text-xs"
               >
                 <FontAwesomeIcon icon={faChevronRight} />
               </button>
