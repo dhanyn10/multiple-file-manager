@@ -33,11 +33,11 @@ function App() {
   const [undoStack, setUndoStack] = useState<RenameOperation[]>([]);
   const [redoStack, setRedoStack] = useState<RenameOperation[]>([]);
   const [recentlyRenamed, setRecentlyRenamed] = useState<Set<string>>(new Set());
-  const [actionFrom, setActionFrom] = useState('');
-  const [actionTo, setActionTo] = useState('');
   const [selectedAction, setSelectedAction] = useState('');
   const [startIndex, setStartIndex] = useState('');
   const [endIndex, setEndIndex] = useState('');
+  const [indexOffset, setIndexOffset] = useState<number>(0);
+
   const actionsToolbarRef = useRef<HTMLDivElement>(null);
 
   const handleDirectorySelected = useCallback((path: string) => {
@@ -88,6 +88,20 @@ function App() {
     fetchHistory();
   }, []);
 
+  // Effect to sync endIndex with startIndex
+  useEffect(() => {
+    if (startIndex === '') {
+      setEndIndex('');
+      return;
+    }
+    const startNum = parseInt(startIndex, 10);
+    if (!isNaN(startNum)) {
+      setEndIndex(String(startNum + indexOffset));
+    }
+  }, [startIndex, indexOffset]);
+
+
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -119,12 +133,11 @@ function App() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    // Reset action form state when sidebar closes
-    setActionFrom('');
-    setActionTo('');
+    // Reset action-specific state when closing the sidebar
     setSelectedAction('');
     setStartIndex('');
     setEndIndex('');
+    setIndexOffset(0);
   };
 
   const handleExecuteRename = (operations: RenameOperation[]) => {
@@ -352,8 +365,8 @@ function App() {
                   highlightedFiles={recentlyRenamed}
                   onFileSelect={handleFileSelect}
                   activeAction={selectedAction}
-                  startIndex={startIndex !== '' ? parseInt(startIndex, 10) : null}
-                  endIndex={endIndex !== '' ? parseInt(endIndex, 10) : null}
+                  startIndex={parseInt(startIndex, 10)}
+                  endIndex={parseInt(endIndex, 10)}
                 />
               </div>
               <FilePagination
@@ -369,22 +382,17 @@ function App() {
         </main>
         {isModalOpen && (
           <ActionSidebar
+            selectedAction={selectedAction}
+            onSelectedActionChange={setSelectedAction}
             selectedFiles={selectedFiles}
             allFiles={files}
             onClose={handleCloseModal}
             onExecute={handleExecuteRename}
             onExecuteDelete={handleExecuteDelete}
-            actionFrom={actionFrom}
-            onActionFromChange={setActionFrom}
-            actionTo={actionTo}
-            onActionToChange={setActionTo}
-            selectedAction={selectedAction}
-            onSelectedActionChange={setSelectedAction}
-            startIndex={startIndex}
-            onStartIndexChange={setStartIndex}
-            endIndex={endIndex}
-            onEndIndexChange={setEndIndex}
             otherSidebarOpen={isHistorySidebarOpen}
+            startIndex={startIndex} onStartIndexChange={setStartIndex}
+            endIndex={endIndex} onEndIndexChange={setEndIndex}
+            setIndexOffset={setIndexOffset}
           />
         )}
         {isHistorySidebarOpen && (

@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useClickOutside } from '../hooks/useClickOutside';
-import RangeSlider from './RangeSlider';
 import { detectMissingFiles, MissingSequence as IMissingSequence } from '../utils/fileUtils';
+import { useResizableSidebar } from '../hooks/useResizableSidebar';
+import RenameByNameForm from '../actions/RenameByNameForm';
+import RenameByIndexForm from '../actions/RenameByIndexForm';
+import InsertAtIndexForm from '../actions/InsertAtIndexForm';
+import MissingFilesReport from '../actions/MissingFilesReport';
+import ActionPreview from '../actions/ActionPreview';
 
 export interface RenameOperation {
   originalName: string;
@@ -9,29 +14,29 @@ export interface RenameOperation {
   timestamp?: string;
 }
 
-interface MissingSequence extends IMissingSequence {
+interface FormattedMissingSequence extends IMissingSequence {
   start: string;
   end: string;
   missingCount: number;
 }
 
-interface ActionSidebarProps {
+interface BaseActionSidebarProps {
   selectedFiles: Set<string>;
   allFiles: { name: string; isDirectory: boolean; }[];
   onClose: () => void;
   onExecute: (operations: RenameOperation[]) => void;
-  actionFrom: string;
-  onActionFromChange: (value: string) => void;
-  actionTo: string;
-  onActionToChange: (value: string) => void;
   onExecuteDelete: (operations: { fileName: string; timestamp: string }[]) => void;
-  selectedAction: string;
-  onSelectedActionChange: (value: string) => void;
-  startIndex: string;
-  onStartIndexChange: (value: string) => void;
-  endIndex: string;
-  onEndIndexChange: (value: string) => void;
   otherSidebarOpen: boolean;
+}
+
+interface ActionSidebarProps extends BaseActionSidebarProps {
+  selectedAction: string;
+  onSelectedActionChange: (action: string) => void;
+  startIndex: string;
+  onStartIndexChange: (index: string) => void;
+  endIndex: string;
+  onEndIndexChange: (index: string) => void;
+  setIndexOffset: (offset: number) => void;
 }
 
 const availableActions = [
@@ -48,27 +53,28 @@ const ActionSidebar = ({
   onClose,
   onExecute,
   onExecuteDelete,
-  actionFrom,
-  onActionFromChange,
-  actionTo,
-  onActionToChange,
+  otherSidebarOpen,
   selectedAction,
   onSelectedActionChange,
   startIndex,
   onStartIndexChange,
   endIndex,
   onEndIndexChange,
-  otherSidebarOpen,
+  setIndexOffset,
 }: ActionSidebarProps) => {
-  const [indexOffset, setIndexOffset] = useState<number>(0);
+  const [actionFrom, setActionFrom] = useState('');
+  const [actionTo, setActionTo] = useState('');
   const [isActionDropdownOpen, setIsActionDropdownOpen] = useState(false);
   const actionDropdownRef = useRef<HTMLDivElement>(null);
+  const [missingFilesReport, setMissingFilesReport] = useState<FormattedMissingSequence[] | null>(null);
   const sidebarRef = useRef<HTMLElement>(null);
-
-  const [isResizing, setIsResizing] = useState(false);
-  const [missingFilesReport, setMissingFilesReport] = useState<MissingSequence[] | null>(null);
-  const [sidebarWidth, setSidebarWidth] = useState(384); // Corresponds to w-96
-  const initialPos = useRef({ x: 0, width: 0 });
+  const resizerRef = useRef<HTMLDivElement>(null);
+  
+  const { sidebarWidth, handleMouseDown } = useResizableSidebar({
+    initialWidth: 384,
+    minWidth: 320,
+    otherSidebarOpen,
+  });
 
   const maxFileNameLength = useMemo(() => {
     if (selectedFiles.size === 0) {
@@ -83,7 +89,7 @@ const ActionSidebar = ({
   useEffect(() => {
     if (selectedAction === 'detect-missing') {
       const rawReport = detectMissingFiles(allFiles.map(f => f.name));
-      const report: MissingSequence[] = rawReport.map(seq => {
+      const report: FormattedMissingSequence[] = rawReport.map(seq => {
         const firstMissing = String(seq.missingNumbers[0]).padStart(seq.paddingLength, '0');
         const lastMissing = String(seq.missingNumbers[seq.missingNumbers.length - 1]).padStart(seq.paddingLength, '0');
         
@@ -98,55 +104,15 @@ const ActionSidebar = ({
     } else {
       setMissingFilesReport(null);
     }
-  }, [selectedAction, allFiles]);
-
-  // Effect to sync endIndex with startIndex
-  useEffect(() => {
-    if (startIndex === '') {
-      onEndIndexChange('');
-      return;
-    }
-    const startNum = parseInt(startIndex, 10);
-    if (!isNaN(startNum)) {
-      onEndIndexChange(String(startNum + indexOffset));
-    }
-  }, [startIndex, indexOffset]);
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsResizing(true);
-    initialPos.current = { x: e.clientX, width: sidebarWidth };
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isResizing) {
-        const dx = e.clientX - initialPos.current.x;
-        const newWidth = initialPos.current.width - dx;
-        const maxWidth = otherSidebarOpen ? window.innerWidth * 0.75 : window.innerWidth * 0.5;
-        if (newWidth > 320 && newWidth < maxWidth) { // Min 320px
-          setSidebarWidth(newWidth);
-        }
-      }
-    };
-
-    const handleMouseUp = () => setIsResizing(false);
-
-    if (isResizing) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
-      document.body.classList.add('resizing-sidebar');
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-      document.body.classList.remove('resizing-sidebar');
-    };
-  }, [isResizing, otherSidebarOpen]);
+  }, [selectedAction, allFiles, setMissingFilesReport]);
 
   const handleClose = () => {
     onClose();
+    // Reset local state on close
+    onSelectedActionChange('');
+    setActionFrom('');
+    setActionTo('');
+    onStartIndexChange('');
     onEndIndexChange('');
     setIndexOffset(0); // Reset offset on close
     setIsActionDropdownOpen(false);
@@ -235,12 +201,13 @@ const ActionSidebar = ({
   return (
     <aside
       ref={sidebarRef}
-      className="bg-slate-50 border-l border-slate-200 flex flex-col h-full relative"
+      className="bg-slate-50 border-l border-slate-200 flex flex-col h-full relative select-none"
       style={{ width: `${sidebarWidth}px` }}
     >
       <div
+        ref={resizerRef}
         onMouseDown={handleMouseDown}
-        className="absolute top-0 left-0 -ml-1 w-2 h-full cursor-col-resize z-30"
+        className="absolute top-0 left-0 -ml-1 w-2 h-full cursor-col-resize z-30 group"
         title="Resize sidebar"
       />
 
@@ -264,7 +231,7 @@ const ActionSidebar = ({
               <div className="relative" ref={actionDropdownRef}>
                 <button
                   type="button"
-                  onClick={() => setIsActionDropdownOpen(!isActionDropdownOpen)}
+                  onClick={() => setIsActionDropdownOpen(prev => !prev)}
                   className="relative w-full cursor-default rounded-md bg-white py-2 pl-3 pr-10 text-left text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6"
                 >
                   <span className="block truncate">
@@ -302,97 +269,37 @@ const ActionSidebar = ({
             </div>
             {selectedAction === 'rename' && (
               <>
-                <div>
-                  <label htmlFor="action-from" className="block mb-1 text-sm font-medium text-slate-900">From</label>
-                  <input
-                    type="text"
-                    id="action-from"
-                    value={actionFrom}
-                    onChange={(e) => onActionFromChange(e.target.value)}
-                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="text to replace"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="action-to" className="block mb-1 text-sm font-medium text-slate-900">To</label>
-                  <input
-                    type="text"
-                    id="action-to"
-                    value={actionTo}
-                    onChange={(e) => onActionToChange(e.target.value)}
-                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="new text"
-                  />
-                </div>
+                <RenameByNameForm
+                  actionFrom={actionFrom}
+                  onActionFromChange={setActionFrom}
+                  actionTo={actionTo}
+                  onActionToChange={setActionTo}
+                />
               </>
             )}
             {selectedAction === 'rename-by-index' && (
               <>
-                <div>
-                  <label htmlFor="start-index" className="block mb-1 text-sm font-medium text-slate-900">Start Index</label>
-                  <RangeSlider
-                    id="start-index"
-                    min={0}
-                    max={maxFileNameLength}
-                    value={startIndex}
-                    onChange={(e) => onStartIndexChange(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="end-index" className="block mb-1 text-sm font-medium text-slate-900">End Index (optional)</label>
-                  <RangeSlider
-                    id="end-index"
-                    min={parseInt(startIndex, 10) || 0}
-                    max={maxFileNameLength + 1}
-                    value={endIndex}
-                    onChange={(e) => {
-                      const newEndValue = parseInt(e.target.value, 10);
-                      const startValue = parseInt(startIndex, 10) || 0;
-
-                      // Ensure newEndValue is not less than startValue
-                      const newEndIndex = isNaN(newEndValue) ? startValue : Math.max(startValue, newEndValue);
-
-                      onEndIndexChange(String(newEndIndex));
-                      setIndexOffset(newEndIndex - startValue);
-                    }}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="action-to-index" className="block mb-1 text-sm font-medium text-slate-900">To</label>
-                  <input
-                    type="text"
-                    id="action-to-index"
-                    value={actionTo}
-                    onChange={(e) => onActionToChange(e.target.value)}
-                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="new text"
-                  />
-                </div>
+                <RenameByIndexForm
+                  startIndex={startIndex}
+                  onStartIndexChange={onStartIndexChange}
+                  endIndex={endIndex}
+                  onEndIndexChange={onEndIndexChange}
+                  actionTo={actionTo}
+                  onActionToChange={setActionTo}
+                  maxFileNameLength={maxFileNameLength}
+                  setIndexOffset={setIndexOffset}
+                />
               </>
             )}
             {selectedAction === 'insert-at-index' && (
               <>
-                <div>
-                  <label htmlFor="insert-index" className="block mb-1 text-sm font-medium text-slate-900">Insertion Index</label>
-                  <RangeSlider
-                    id="insert-index"
-                    min={0}
-                    max={maxFileNameLength}
-                    value={startIndex}
-                    onChange={(e) => onStartIndexChange(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="action-to-insert" className="block mb-1 text-sm font-medium text-slate-900">Text to Insert</label>
-                  <input
-                    type="text"
-                    id="action-to-insert"
-                    value={actionTo}
-                    onChange={(e) => onActionToChange(e.target.value)}
-                    className="bg-white border border-slate-300 text-slate-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="e.g., _copy"
-                  />
-                </div>
+                <InsertAtIndexForm
+                  startIndex={startIndex}
+                  onStartIndexChange={onStartIndexChange}
+                  actionTo={actionTo}
+                  onActionToChange={setActionTo}
+                  maxFileNameLength={maxFileNameLength}
+                />
               </>
             )}
           </div>
@@ -402,91 +309,18 @@ const ActionSidebar = ({
         <div className="p-4 flex flex-col overflow-hidden flex-grow">
           <h4 className="text-md font-semibold text-slate-800 mb-2 flex-shrink-0">{selectedAction === 'detect-missing' ? 'Missing Files Report' : `Preview Changes (${selectedFiles.size} files)`}</h4>
           <div className="overflow-y-auto border-t border-slate-200">
-            <table className="w-full text-sm text-left text-slate-500 table-fixed">
-              <thead className="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0">
-                {selectedAction === 'detect-missing' ? (
-                  <tr>
-                    <th scope="col" className="px-4 py-2">Description</th>
-                    <th scope="col" className="px-4 py-2">Range</th>
-                  </tr>
-                ) : (
-                  <tr>
-                    <th scope="col" className="px-4 py-2">Original Name</th>
-                    <th scope="col" className="px-4 py-2">{selectedAction === 'delete-duplicated' ? 'Status' : 'New Name'}</th>
-                  </tr>
-                )}
-              </thead>
-              <tbody>
-                {selectedAction === 'detect-missing' && missingFilesReport && (
-                  missingFilesReport.length > 0 ? (
-                    missingFilesReport.map((seq, index) => (
-                      <tr key={index} className="bg-white border-b border-slate-200/60">
-                        <td className="px-4 py-2 font-medium text-slate-900 break-all">
-                          Missing {seq.missingCount} file(s)
-                        </td>
-                        <td className="px-4 py-2 break-all text-red-500">
-                          Between {seq.start} and {seq.end}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr className="bg-white border-b border-slate-200/60">
-                      <td colSpan={2} className="px-4 py-2 text-center text-green-600 font-semibold">
-                        No missing files detected in sequence.
-                      </td>
-                    </tr>
-                  )
-                )}
-                {selectedAction !== 'detect-missing' && Array.from(selectedFiles).map(file => {
-                  let newName = file;
-                  let status = '';
-
-                  if (selectedAction === 'delete-duplicated') {
-                    const duplicatePattern = /(.+?)(?:_(\d+)|_copy|\s*\((\d+)\))?(\.\w+)$/;
-                    const match = file.match(duplicatePattern);
-                    if (match) {
-                      const baseName = match[1];
-                      const extension = match[4];
-                      const fullBaseName = `${baseName}${extension}`;
-                      if (file !== fullBaseName && selectedFiles.has(fullBaseName)) {
-                        status = 'Will be deleted';
-                      } else {
-                        status = 'Will be kept';
-                      }
-                    } else {
-                      status = 'Will be kept';
-                    }
-                  } else {
-                    if (selectedAction === 'rename' && actionFrom) {
-                      newName = file.replace(actionFrom, actionTo);
-                    } else if (selectedAction === 'rename-by-index' && startIndex !== '') {
-                      const start = parseInt(startIndex, 10);
-                      const end = endIndex !== '' ? parseInt(endIndex, 10) : start + 1;
-                      if (!isNaN(start) && !isNaN(end) && start < end) {
-                        const lastDotIndex = file.lastIndexOf('.');
-                        const effectiveEnd = (lastDotIndex > start && end > lastDotIndex) ? lastDotIndex : end;
-                        newName = file.slice(0, start) + actionTo + file.slice(effectiveEnd);
-                      }
-                    } else if (selectedAction === 'insert-at-index' && startIndex !== '') {
-                      const insertIndex = parseInt(startIndex, 10);
-                      if (!isNaN(insertIndex)) {
-                        newName = file.slice(0, insertIndex) + actionTo + file.slice(insertIndex);
-                      }
-                    }
-                  }
-                  return (
-                    <tr key={file} className="bg-white border-b border-slate-200/60 hover:bg-slate-50">
-                      <td className="px-4 py-2 font-medium text-slate-900 break-all">{file}</td>
-                      {selectedAction === 'delete-duplicated' ? (
-                        <td className={`px-4 py-2 break-all ${status === 'Will be deleted' ? 'text-red-500 font-semibold' : 'text-green-600'}`}>{status}</td>
-                      ) : (
-                        <td className={`px-4 py-2 break-all ${newName !== file ? 'text-blue-500 font-semibold' : ''}`}>{newName}</td>
-                      )}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            {selectedAction === 'detect-missing' ? (
+              <MissingFilesReport report={missingFilesReport} />
+            ) : (
+              <ActionPreview
+                selectedFiles={selectedFiles}
+                selectedAction={selectedAction}
+                actionFrom={actionFrom}
+                actionTo={actionTo}
+                startIndex={startIndex}
+                endIndex={endIndex}
+              />
+            )}
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUndo, faRedo, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { RenameOperation } from './ActionSidebar';
+import { useResizableSidebar } from '../hooks/useResizableSidebar';
 
 interface HistorySidebarProps {
   undoStack: RenameOperation[];
@@ -14,47 +14,14 @@ interface HistorySidebarProps {
 }
 
 const HistorySidebar = ({ undoStack, redoStack, onClose, onUndo, onRedo, onClearHistory, otherSidebarOpen }: HistorySidebarProps) => {
-  const sidebarRef = useRef<HTMLElement>(null);
-  const [isResizing, setIsResizing] = useState(false);
-  const [sidebarWidth, setSidebarWidth] = useState(384); // Corresponds to w-96
-  const initialPos = useRef({ x: 0, width: 0 });
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsResizing(true);
-    initialPos.current = { x: e.clientX, width: sidebarWidth };
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (isResizing) {
-        const dx = e.clientX - initialPos.current.x;
-        const newWidth = initialPos.current.width - dx;
-        const maxWidth = otherSidebarOpen ? window.innerWidth * 0.75 : window.innerWidth * 0.5;
-        if (newWidth > 320 && newWidth < maxWidth) { // Min 320px
-          setSidebarWidth(newWidth);
-        }
-      }
-    };
-
-    const handleMouseUp = () => setIsResizing(false);
-
-    if (isResizing) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
-      document.body.classList.add('resizing-sidebar');
-    }
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-      document.body.classList.remove('resizing-sidebar');
-    };
-  }, [isResizing, otherSidebarOpen]);
+  const { sidebarWidth, handleMouseDown } = useResizableSidebar({
+    initialWidth: 384,
+    minWidth: 320,
+    otherSidebarOpen,
+  });
 
   return (
     <aside
-      ref={sidebarRef}
       className="bg-slate-100 border-l border-slate-200 flex flex-col h-full relative"
       style={{ width: `${sidebarWidth}px` }}
     >

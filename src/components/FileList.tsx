@@ -12,7 +12,7 @@ interface FileListProps {
   currentFiles: FileEntry[];
   selectedFiles: Set<string>;
   highlightedFiles: Set<string>;
-  activeAction: string;
+  activeAction: string; // Now just a generic indicator
   startIndex: number | null;
   endIndex: number | null;
   onFileSelect: (fileName: string, isShiftClick: boolean) => void;
@@ -35,7 +35,10 @@ const FileList = ({
     onFileSelect(file.name, e.shiftKey);
   };
 
-  const showCursor = activeAction === 'rename-by-index' || activeAction === 'insert-at-index';
+  const showCursor =
+    activeAction === 'rename-by-index' ||
+    activeAction === 'insert-at-index';
+
 
   return (
     <div className="h-full overflow-y-auto bg-white rounded-md border border-gray-200">
@@ -63,10 +66,8 @@ const FileList = ({
             ) : (
               <FileNameWithCursor
                 fileName={file.name}
-                startIndex={
-                  showCursor && selectedFiles.has(file.name) ? startIndex : null
-                }
-                endIndex={showCursor && selectedFiles.has(file.name) ? endIndex : null}
+                startIndex={showCursor ? startIndex : null}
+                endIndex={showCursor ? endIndex : null}
               />
             )}
           </li>
