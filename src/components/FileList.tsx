@@ -66,8 +66,8 @@ const FileList = ({
             ) : (
               <FileNameWithCursor
                 fileName={file.name}
-                startIndex={showCursor ? startIndex : null}
-                endIndex={showCursor ? endIndex : null}
+                startIndex={showCursor && selectedFiles.has(file.name) ? startIndex : null}
+                endIndex={showCursor && selectedFiles.has(file.name) ? endIndex : null}
               />
             )}
           </li>
