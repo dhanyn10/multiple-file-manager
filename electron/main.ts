@@ -174,7 +174,7 @@ app.whenReady().then(() => {
     }
   });
 
-  ipcMain.on('open-external-link', (event, url) => {
+  ipcMain.on('open-external-link', (_event, url) => {
     shell.openExternal(url);
   });
 })
