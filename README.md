@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="src/assets/mfm-icon.png" width="128" alt="Multiple File Manager Icon">
+  <img src="assets/mfm-icon.ico" width="128" alt="Multiple File Manager Icon">
 </p>
 <h1 align="center">Multiple File Manager</h1>
 
 A desktop application built with Electron, Vite, React, and TypeScript, designed to simplify bulk file operations. This application provides an intuitive interface to rename, delete, and manage multiple files at once based on various patterns and criteria.
 
-![Multiple File Manager Preview](public/mfm.png)
+![Multiple File Manager Preview](assets/mfm.png)
 
 ## Features
 
