@@ -4,109 +4,94 @@ import NavigationBar from './components/NavigationBar';
 import FileList from './components/FileList';
 import FilePagination from './components/FilePagination';
 import ActionButtons from './components/ActionButtons';
-import ActionSidebar, { RenameOperation, ActionSidebarRef } from './components/ActionSidebar';
+import ActionSidebar, { ActionSidebarRef } from './components/ActionSidebar';
 import HistorySidebar, { HistorySidebarRef } from './components/HistorySidebar';
 import { useIpcListeners } from './hooks/useIpcListeners';
+import { useFileManagement, FileEntry } from './hooks/useFileManagement';
+import { useSidebarState } from './hooks/useSidebarState';
+import { useResize } from './hooks/useResize';
+import { useOperationHistory } from './hooks/useOperationHistory';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RootState } from './store/store';
 import { faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import './App.css';
  
-interface FileEntry {
-  name: string;
-  isDirectory: boolean;
-}
-
-interface ClearHistoryResult {
-  success: boolean;
-  error?: string;
-}
-
 function App() {
-  const [directory, setDirectory] = useState('');
-  const [files, setFiles] = useState<FileEntry[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
-  const [lastSelectedFile, setLastSelectedFile] = useState<string | null>(null);
   const [showActionsInNavbar, setShowActionsInNavbar] = useState(false); // This state can be repurposed or removed if sidebar is always open when files are selected
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isResizing, setIsResizing] = useState(false);
-  const [showResizeButtons, setShowResizeButtons] = useState(false);
-  const [isCloseResizeButtonHovered, setIsCloseResizeButtonHovered] = useState(false);
-  const [resizeDirection, setResizeDirection] = useState<'left' | 'right' | null>(null);
-  const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
-  const [undoStack, setUndoStack] = useState<RenameOperation[]>([]);
-  const [redoStack, setRedoStack] = useState<RenameOperation[]>([]);
-  const [recentlyRenamed, setRecentlyRenamed] = useState<Set<string>>(new Set());
   const [startIndex, setStartIndex] = useState('');
   const [endIndex, setEndIndex] = useState('');
   const [indexOffset, setIndexOffset] = useState<number>(0);
+
+  const {
+    directory,
+    files,
+    selectedFiles,
+    recentlyRenamed,
+    handleDirectorySelected,
+    handleDirectoryContents,
+    handleFileSelect,
+    handleSelectAll,
+    handleDeselectAll,
+    setSelectedFiles,
+    setLastSelectedFile,
+    setRecentlyRenamed,
+  } = useFileManagement();
+
+  const {
+    isModalOpen,
+    isHistorySidebarOpen,
+    setIsHistorySidebarOpen,
+    handleExecuteClick,
+    handleCloseModal,
+    handleHistoryClick
+  } = useSidebarState(setStartIndex, setEndIndex, setIndexOffset);
 
   // Use the selectedAction from Redux store as the single source of truth
   const selectedAction = useSelector((state: RootState) => state.actions.selectedAction);
   const actionsToolbarRef = useRef<HTMLDivElement>(null);
   const actionSidebarRef = useRef<ActionSidebarRef>(null);
   const historySidebarRef = useRef<HistorySidebarRef>(null);
-  const resizeIntervalRef = useRef<number | null>(null);
-
-  const handleDirectorySelected = useCallback((path: string) => {
-    setDirectory(path);
-    window.ipcRenderer.send('get-directory-contents', path);
-    setSelectedFiles(new Set()); // Reset selection on directory change
-    setLastSelectedFile(null);
-  }, []);
   
+  const handleLocalDirectoryContents = useCallback((fileList: FileEntry[]) => {
+    handleDirectoryContents(fileList);
+    setCurrentPage(1); // Reset to the first page every time the directory changes
+  }, [handleDirectoryContents]);
+
   const handleRenameComplete = useCallback(() => {
-    // Refresh directory contents after rename
     if (directory) {
       window.ipcRenderer.send('get-directory-contents', directory);
     }
-    // Clear selection and modal state, but keep recentlyRenamed for highlighting
     setSelectedFiles(new Set());
     setLastSelectedFile(null);
-    setIsModalOpen(false); // Also reset modal state
-  }, [directory, setIsModalOpen]);
+    handleCloseModal();
+  }, [directory, setSelectedFiles, setLastSelectedFile, handleCloseModal]);
 
-  // Ref to hold the latest handleRenameComplete function
-  // This solves the stale closure issue when the directory changes while the sidebar is open.
-  const renameCompleteHandlerRef = useRef<() => void>();
-  useEffect(() => {
-    renameCompleteHandlerRef.current = handleRenameComplete;
-  }, [handleRenameComplete]);
-
-  const handleDirectoryContents = useCallback((fileList: FileEntry[]) => {
-    // Filter out directories and only show files
-    const onlyFiles = fileList.filter(file => !file.isDirectory);
-    setFiles(onlyFiles);
-    setCurrentPage(1); // Reset to the first page every time the directory changes
-    // After the file list is updated, clear the highlight after a delay
-    setTimeout(() => {
-      setRecentlyRenamed(new Set());
-    }, 5000); // Highlight will last for 5 seconds
-  }, []);
-
-  // Define the actual rename complete handler separately
   useIpcListeners({
     onDirectorySelected: handleDirectorySelected,
-    onDirectoryContents: handleDirectoryContents,
-    // Use the ref to ensure the latest version of the handler is always called
-    onRenameComplete: () => {
-      renameCompleteHandlerRef.current?.();
-    },
+    onDirectoryContents: handleLocalDirectoryContents,
+    onRenameComplete: handleRenameComplete,
   });
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      const savedHistory = await window.ipcRenderer.invoke('get-rename-history');
-      // When the app loads, all history is considered "undoable"
-      if (Array.isArray(savedHistory)) {
-        setUndoStack(savedHistory as RenameOperation[]);
-        setRedoStack([]); // Ensure the redo stack is empty at the start
-      }
-    };
-    void fetchHistory();
-  }, [setUndoStack, setRedoStack]);
+  const {
+    setIsResizing, showResizeButtons, isCloseResizeButtonHovered, setIsCloseResizeButtonHovered, resizeDirection, setResizeDirection, handleResizeMouseDown, handleResizeMouseUp, handleCloseResizeButtons
+  } = useResize(isModalOpen, isHistorySidebarOpen, actionSidebarRef, historySidebarRef);
+
+  const {
+    undoStack,
+    redoStack,
+    handleExecuteRename,
+    handleExecuteDelete,
+    handleUndo,
+    handleRedo,
+    handleClearHistory,
+  } = useOperationHistory(
+    directory,
+    selectedFiles, setSelectedFiles,
+    setLastSelectedFile, setRecentlyRenamed,
+    setIsHistorySidebarOpen
+  );
 
   // Effect to sync endIndex with startIndex
   useEffect(() => {
@@ -119,34 +104,6 @@ function App() {
       setEndIndex(String(startNum + indexOffset));
     }
   }, [startIndex, indexOffset, selectedAction]);
-
-  // Add a class to the body while resizing to prevent unwanted interactions
-  useEffect(() => {
-    if (isResizing) {
-      document.body.classList.add('resizing-sidebar');
-    } else {
-      document.body.classList.remove('resizing-sidebar');
-    }
-  }, [isResizing]);
-
-  // Show resize buttons when resizing starts, and hide them when both sidebars are closed.
-  useEffect(() => {
-    if (isResizing) {
-      setShowResizeButtons(true);
-    }
-  }, [isResizing]);
-
-  useEffect(() => {
-    if (!isModalOpen && !isHistorySidebarOpen) {
-      setShowResizeButtons(false);
-    }
-  }, [isModalOpen, isHistorySidebarOpen]);
-
-  useEffect(() => {
-    if (!isResizing) {
-      setResizeDirection(null);
-    }
-  }, [isResizing]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -168,204 +125,8 @@ function App() {
     return () => observer.disconnect();
   }, [selectedFiles.size]); // Re-observe if the toolbar appears/disappears
 
-  const handleResizeClick = (direction: 'left' | 'right') => {
-    const step = 10; // Smaller step for smoother continuous resize
-    const multiplier = direction === 'left' ? 1 : -1;
-    const change = step * multiplier;
-
-    if (isModalOpen && actionSidebarRef.current) {
-      const currentWidth = actionSidebarRef.current.getWidth();
-      actionSidebarRef.current.setWidth(currentWidth + change);
-    }
-
-    if (isHistorySidebarOpen && historySidebarRef.current) {
-      const currentWidth = historySidebarRef.current.getWidth();
-      historySidebarRef.current.setWidth(currentWidth + change);
-    }
-  };
-
-  const handleResizeMouseDown = (direction: 'left' | 'right') => {
-    // Clear any existing interval first
-    if (resizeIntervalRef.current) {
-      clearInterval(resizeIntervalRef.current);
-    }
-    // Immediately resize once
-    handleResizeClick(direction);
-    // Then start resizing continuously
-    resizeIntervalRef.current = window.setInterval(() => {
-      handleResizeClick(direction);
-    }, 50); // Adjust interval for speed, e.g., 50ms
-  };
-
-  const handleResizeMouseUp = () => {
-    if (resizeIntervalRef.current) {
-      clearInterval(resizeIntervalRef.current);
-      resizeIntervalRef.current = null;
-    }
-  };
-
-  const handleCloseResizeButtons = () => {
-    setShowResizeButtons(false);
-  };
-
   const handleBrowseClick = () => {
     window.ipcRenderer.send('open-directory-dialog');
-  };
-
-  const handleExecuteClick = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = useCallback(() => {
-    setIsModalOpen(false);
-    // Reset action-specific state when closing the sidebar
-    setStartIndex('');
-    setEndIndex('');
-    setIndexOffset(0);
-  }, [setIsModalOpen, setStartIndex, setEndIndex, setIndexOffset]);
-
-  const handleExecuteRename = (operations: RenameOperation[]) => {
-    if (operations.length > 0) {
-      window.ipcRenderer.send('execute-rename', directory, operations);
-      // Add to undo stack and clear redo stack
-      setUndoStack(prev => [...operations, ...prev]);
-      setRedoStack([]); // A new action will clear the redo possibility
-      const newNames = new Set(operations.map(op => op.newName));
-      setRecentlyRenamed(newNames);
-      setIsHistorySidebarOpen(true);
-    }
-  };
-
-  const handleExecuteDelete = (operations: { fileName: string; timestamp: string }[]) => {
-    if (operations.length > 0) {
-      const filesToDelete = operations.map(op => op.fileName);
-      window.ipcRenderer.send('execute-delete', directory, filesToDelete);
-
-      // Adapt delete operations to look like rename operations for the undo stack
-      const undoOps: RenameOperation[] = operations.map(op => ({
-        originalName: op.fileName,
-        newName: `DELETED_${op.timestamp}`, // Placeholder for deleted state
-        timestamp: op.timestamp,
-      }));
-
-      setUndoStack(prev => [...undoOps, ...prev]);
-      setRedoStack([]);
-
-      // No need to highlight deleted files, so we can clear recent changes
-      setRecentlyRenamed(new Set());
-      setIsHistorySidebarOpen(true);
-
-      // We also need to clear the selection as the files are gone
-      const newSelectedFiles = new Set(selectedFiles);
-      filesToDelete.forEach(file => newSelectedFiles.delete(file));
-      setSelectedFiles(newSelectedFiles);
-      setLastSelectedFile(null);
-    }
-  };
-
-  const handleUndo = (operationToUndo: RenameOperation) => {
-    // Remove the operation from the undoStack
-    const newUndoStack = undoStack.filter(op => op.timestamp !== operationToUndo.timestamp);
-    if (newUndoStack.length === undoStack.length) return; // Operation not found
-
-    // Create the reverse operation
-    if (operationToUndo.newName.startsWith('DELETED_')) {
-      // This is an undo for a delete operation. We pass the directory.
-      window.ipcRenderer.send('execute-restore', directory, [operationToUndo.originalName]);
-      // Move the undone operation to the redoStack
-      setUndoStack(newUndoStack);
-      setRedoStack(prev => [operationToUndo, ...prev]);
-    } else {
-      // This is an undo for a rename operation
-      const reversedOp: RenameOperation = {
-        originalName: operationToUndo.newName,
-        newName: operationToUndo.originalName,
-        timestamp: new Date().toISOString() // Give a new timestamp for this reverse operation
-      };
-
-      // Execute the reverse operation
-      window.ipcRenderer.send('execute-rename', directory, [reversedOp]);
-
-      // Move the undone operation to the redoStack
-      setUndoStack(newUndoStack);
-      setRedoStack(prev => [operationToUndo, ...prev]);
-    }
-  };
-
-  const handleRedo = (operationToRedo: RenameOperation) => {
-    // Remove the operation from the redoStack
-    const newRedoStack = redoStack.filter(op => op.timestamp !== operationToRedo.timestamp);
-    if (newRedoStack.length === redoStack.length) return; // Operation not found
-
-    if (operationToRedo.newName.startsWith('DELETED_')) {
-      // This is a redo for a delete operation
-      window.ipcRenderer.send('execute-delete', directory, [operationToRedo.originalName]);
-      setRedoStack(newRedoStack);
-      setUndoStack(prev => [operationToRedo, ...prev]);
-    } else {
-      // Re-execute the original rename operation
-      window.ipcRenderer.send('execute-rename', directory, [operationToRedo]);
-      setRedoStack(newRedoStack);
-      setUndoStack(prev => [operationToRedo, ...prev]);
-    }
-  };
-
-  const handleClearHistory = async () => {
-    const result: ClearHistoryResult = await window.ipcRenderer.invoke('clear-rename-history');
-    if (result.success) {
-      setUndoStack([]);
-      setRedoStack([]);
-      // Optionally, close the history sidebar after clearing
-      // setIsHistorySidebarOpen(false);
-    }
-  };
-
-  const handleFileSelect = (fileName: string, isShiftClick: boolean) => {
-    const newSelectedFiles = new Set(selectedFiles);
-
-    // Logic for Shift-click
-    if (isShiftClick && lastSelectedFile) {
-      const lastIndex = files.findIndex(f => f.name === lastSelectedFile);
-      const currentIndex = files.findIndex(f => f.name === fileName);
-
-      if (lastIndex !== -1 && currentIndex !== -1) {
-        const start = Math.min(lastIndex, currentIndex);
-        const end = Math.max(lastIndex, currentIndex);
-
-        for (let i = start; i <= end; i++) {
-          if (!files[i].isDirectory) {
-            newSelectedFiles.add(files[i].name);
-          }
-        }
-      } else {
-        // Fallback if one of the files is not found (e.g., on a different page)
-        if (newSelectedFiles.has(fileName)) {
-          newSelectedFiles.delete(fileName);
-        } else {
-          newSelectedFiles.add(fileName);
-        }
-      }
-    } else {
-      // Logic for single click (toggle)
-      if (newSelectedFiles.has(fileName)) {
-        newSelectedFiles.delete(fileName);
-      } else {
-        newSelectedFiles.add(fileName);
-      }
-    }
-    setSelectedFiles(newSelectedFiles);
-    setLastSelectedFile(fileName);
-  };
-
-  const handleSelectAll = () => {
-    const allFileNames = new Set(files.map(f => f.name));
-    setSelectedFiles(allFileNames);
-    setLastSelectedFile(null); // Reset last selected after bulk action
-  };
-
-  const handleDeselectAll = () => {
-    setSelectedFiles(new Set());
-    setLastSelectedFile(null);
   };
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -394,7 +155,7 @@ function App() {
             />
           ) : null
         }
-        onHistoryClick={() => setIsHistorySidebarOpen(prevState => !prevState)}
+        onHistoryClick={handleHistoryClick}
       />
       <div className="flex flex-row flex-grow overflow-hidden">
         <main className="flex flex-col flex-grow p-4 min-w-0">
