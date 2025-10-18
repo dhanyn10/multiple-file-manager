@@ -1,10 +1,18 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+
 interface NavigationBarProps {
   actionsSlot?: React.ReactNode;
   onHistoryClick: () => void;
   isHistorySidebarOpen: boolean;
+  showResizeButtons: boolean;
+  onResizeMouseDown: (direction: 'left' | 'right') => void;
+  onResizeMouseUp: () => void;
+  isCloseResizeButtonHovered: boolean;
+  resizeDirection: 'left' | 'right' | null;
 }
 
-function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen }: NavigationBarProps) {
+function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen, showResizeButtons, resizeDirection, onResizeMouseDown, onResizeMouseUp, isCloseResizeButtonHovered }: NavigationBarProps) {
   const handleExternalLink = (url: string) => {
     window.ipcRenderer.send('open-external-link', url);
   };
@@ -15,6 +23,30 @@ function NavigationBar({ actionsSlot, onHistoryClick, isHistorySidebarOpen }: Na
         <a href="#" className="font-bold text-xl">File Manager</a>
         <div className="flex items-center space-x-4">
           {actionsSlot}
+          {showResizeButtons && (
+            <div className={`flex items-center rounded-md transition-all duration-200 ${isCloseResizeButtonHovered ? 'ring-2 ring-red-400' : ''}`}>
+              <button
+                onMouseDown={() => onResizeMouseDown('left')}
+                onMouseUp={onResizeMouseUp}
+                onMouseLeave={onResizeMouseUp}
+                className={`text-blue-600 px-2 py-1 rounded-l-md text-xs transition-all duration-200 ${
+                  resizeDirection === 'left' ? 'bg-blue-200' : 'bg-white hover:bg-blue-100'
+                }`}
+              >
+                <FontAwesomeIcon icon={faChevronLeft} />
+              </button>
+              <button
+                onMouseDown={() => onResizeMouseDown('right')}
+                onMouseUp={onResizeMouseUp}
+                onMouseLeave={onResizeMouseUp}
+                className={`text-blue-600 px-2 py-1 rounded-r-md border-l border-blue-200 text-xs transition-all duration-200 ${
+                  resizeDirection === 'right' ? 'bg-blue-200' : 'bg-white hover:bg-blue-100'
+                }`}
+              >
+                <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+            </div>
+          )}
           <button
             onClick={onHistoryClick}
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
