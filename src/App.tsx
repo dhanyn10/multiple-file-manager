@@ -56,7 +56,7 @@ function App() {
     setSelectedFiles(new Set()); // Reset selection on directory change
     setLastSelectedFile(null);
   }, []);
-
+  
   const handleRenameComplete = useCallback(() => {
     // Refresh directory contents after rename
     if (directory) {
@@ -65,8 +65,15 @@ function App() {
     // Clear selection and modal state, but keep recentlyRenamed for highlighting
     setSelectedFiles(new Set());
     setLastSelectedFile(null);
-    setIsModalOpen(false);
-  }, [directory]);
+    setIsModalOpen(false); // Also reset modal state
+  }, [directory, setIsModalOpen]);
+
+  // Ref to hold the latest handleRenameComplete function
+  // This solves the stale closure issue when the directory changes while the sidebar is open.
+  const renameCompleteHandlerRef = useRef<() => void>();
+  useEffect(() => {
+    renameCompleteHandlerRef.current = handleRenameComplete;
+  }, [handleRenameComplete]);
 
   const handleDirectoryContents = useCallback((fileList: FileEntry[]) => {
     // Filter out directories and only show files
@@ -83,7 +90,10 @@ function App() {
   useIpcListeners({
     onDirectorySelected: handleDirectorySelected,
     onDirectoryContents: handleDirectoryContents,
-    onRenameComplete: handleRenameComplete, // onRenameComplete no longer reloads the history
+    // Use the ref to ensure the latest version of the handler is always called
+    onRenameComplete: () => {
+      renameCompleteHandlerRef.current?.();
+    },
   });
 
   useEffect(() => {
@@ -95,8 +105,8 @@ function App() {
         setRedoStack([]); // Ensure the redo stack is empty at the start
       }
     };
-    fetchHistory();
-  }, []);
+    void fetchHistory();
+  }, [setUndoStack, setRedoStack]);
 
   // Effect to sync endIndex with startIndex
   useEffect(() => {
@@ -206,13 +216,13 @@ function App() {
     setIsModalOpen(true);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
     // Reset action-specific state when closing the sidebar
     setStartIndex('');
     setEndIndex('');
     setIndexOffset(0);
-  };
+  }, [setIsModalOpen, setStartIndex, setEndIndex, setIndexOffset]);
 
   const handleExecuteRename = (operations: RenameOperation[]) => {
     if (operations.length > 0) {
