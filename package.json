@@ -2,6 +2,8 @@
   "name": "mfm",
   "private": true,
   "version": "5.0.0",
+  "description": "A simple file manager to handle multiple files at once.",
+  "author": "Dhany Nurdiansyah <dhanyn.dhan@gmail.com>",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -39,5 +41,17 @@
     "vite-plugin-electron": "^0.28.6",
     "vite-plugin-electron-renderer": "^0.14.5"
   },
-  "main": "dist-electron/main.js"
+  "main": "dist-electron/main.js",
+  "build": {
+    "appId": "com.mfm.app",
+    "productName": "Multiple File Manager",
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*"
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "release"
+    }
+  }
 }

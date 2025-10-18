@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo, useState } from 'react';
+import { useRef, useEffect, useMemo, useState, forwardRef, useImperativeHandle } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../store/store';
 import { setSelectedAction, setActionFrom, setActionTo, resetActionState } from '../store/actionsSlice';
@@ -6,6 +6,8 @@ import { useClickOutside } from '../hooks/useClickOutside';
 import { detectMissingFiles, MissingSequence as IMissingSequence } from '../utils/fileUtils';
 import { useResizableSidebar } from '../hooks/useResizableSidebar';
 import RenameByNameForm from '../actions/RenameByNameForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import RenameByIndexForm from '../actions/RenameByIndexForm';
 import InsertAtIndexForm from '../actions/InsertAtIndexForm';
 import MissingFilesReport from '../actions/MissingFilesReport';
@@ -23,9 +25,15 @@ interface FormattedMissingSequence extends IMissingSequence {
   missingCount: number;
 }
 
+export interface ActionSidebarRef {
+  setWidth: (width: number) => void;
+  getWidth: () => number;
+}
+
 interface BaseActionSidebarProps {
   selectedFiles: Set<string>;
   allFiles: { name: string; isDirectory: boolean; }[];
+  onClose: () => void;
   onExecute: (operations: RenameOperation[]) => void;
   onExecuteDelete: (operations: { fileName: string; timestamp: string }[]) => void;
   startIndex: string;
@@ -34,7 +42,12 @@ interface BaseActionSidebarProps {
   onEndIndexChange: (value: string) => void;
   setIndexOffset: (value: number) => void;
   otherSidebarOpen: boolean;
-  onClose: () => void;
+  onResizeStart: () => void;
+  onResizeMove: (direction: 'left' | 'right') => void;
+  onResizeEnd: () => void;
+  showResizeButtons: boolean;
+  onCloseResizeButtons: () => void;
+  onResizeCloseHover: (isHovered: boolean) => void;
 }
 const availableActions = [
   { value: 'rename', label: 'Rename by name' },
@@ -44,7 +57,7 @@ const availableActions = [
   { value: 'detect-missing', label: 'Detect Missing Files' }
 ];
 
-const ActionSidebar = ({
+const ActionSidebar = forwardRef<ActionSidebarRef, BaseActionSidebarProps>(({
   selectedFiles,
   allFiles,
   onClose,
@@ -56,7 +69,14 @@ const ActionSidebar = ({
   endIndex,
   onEndIndexChange,
   setIndexOffset,
-}: BaseActionSidebarProps) => {
+  onResizeStart,
+  onResizeMove,
+  onResizeEnd,
+  showResizeButtons,
+  onCloseResizeButtons,
+  onResizeCloseHover,
+}, ref) => {
+
   const dispatch: AppDispatch = useDispatch();
   const {
     selectedAction,
@@ -70,11 +90,22 @@ const ActionSidebar = ({
   const sidebarRef = useRef<HTMLElement>(null);
   const resizerRef = useRef<HTMLDivElement>(null);
   
-  const { sidebarWidth, handleMouseDown } = useResizableSidebar({
+  const { sidebarWidth, setSidebarWidth, maxWidth, handleMouseDown } = useResizableSidebar({
     initialWidth: 384,
     minWidth: 320,
     otherSidebarOpen,
+    onResizeStart,
+    onResizeMove,
+    onResizeEnd,
+    maxWidth: '50vw', // You can still customize it here if needed
   });
+
+  useImperativeHandle(ref, () => ({
+    setWidth: (newWidth: number) => {
+      setSidebarWidth(Math.max(newWidth, 320)); // Ensure not smaller than minWidth
+    },
+    getWidth: () => sidebarWidth,
+  }));
 
   const maxFileNameLength = useMemo(() => {
     if (selectedFiles.size === 0) {
@@ -196,24 +227,37 @@ const ActionSidebar = ({
     <aside
       ref={sidebarRef}
       className="bg-slate-50 border-l border-slate-200 flex flex-col h-full relative select-none"
-      style={{ width: `${sidebarWidth}px` }}
+      style={{ width: `${sidebarWidth}px`, maxWidth: maxWidth }}
     >
       <div
         ref={resizerRef}
         onMouseDown={handleMouseDown}
-        className="absolute top-0 left-0 -ml-1 w-2 h-full cursor-col-resize z-30 group"
+        className="absolute top-0 left-0 -ml-2 w-4 h-full cursor-col-resize z-30 flex items-center justify-center"
         title="Resize sidebar"
-      />
+      >
+        <button
+          onClick={(e) => { e.stopPropagation(); onCloseResizeButtons(); }}
+          onMouseEnter={() => onResizeCloseHover(true)}
+          onMouseLeave={() => onResizeCloseHover(false)}
+          className={`bg-red-500 text-white hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center transition-opacity duration-200 ${showResizeButtons ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          aria-label="Close resize controls"
+          title="Close resize controls"
+        >
+          <FontAwesomeIcon icon={faTimes} className="w-2 h-2" />
+        </button>
+      </div>
 
       <div className="flex justify-between items-center p-4 border-b border-slate-200 flex-shrink-0">
         <h3 className="text-lg font-semibold text-slate-900">Actions</h3>
-        <button
-          onClick={handleClose}
-          className="text-slate-400 bg-transparent hover:bg-slate-200 hover:text-slate-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
-          aria-label="Close sidebar"
-        >
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-        </button>
+        <div className="flex items-center">
+          <button
+            onClick={handleClose}
+            className="text-slate-400 bg-transparent hover:bg-slate-200 hover:text-slate-900 rounded-lg text-sm p-1.5 ml-2 inline-flex items-center"
+            aria-label="Close sidebar"
+          >
+            <FontAwesomeIcon icon={faTimes} className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       {/* Scrollable Content Area */}
@@ -341,6 +385,6 @@ const ActionSidebar = ({
       </div>
     </aside>
   );
-};
+});
 
 export default ActionSidebar;

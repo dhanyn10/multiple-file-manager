@@ -40,9 +40,15 @@
 
 /* Prevent layout reflows and text selection during sidebar resize */
 body.resizing-sidebar main {
-  pointer-events: none;
-  user-select: none;
+  pointer-events: none; /* Prevents interaction with main content */
+  user-select: none; /* Prevents text selection */
 }
 body.resizing-sidebar {
-  cursor: col-resize;
+  cursor: col-resize; /* Shows resize cursor globally */
+}
+
+/* Ensure the main content area is interactive by default */
+main {
+  pointer-events: auto;
+  user-select: auto;
 }
