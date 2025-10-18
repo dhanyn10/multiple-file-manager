@@ -33,6 +33,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [showResizeButtons, setShowResizeButtons] = useState(false);
+  const [isCloseResizeButtonHovered, setIsCloseResizeButtonHovered] = useState(false);
   const [resizeDirection, setResizeDirection] = useState<'left' | 'right' | null>(null);
   const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   const [undoStack, setUndoStack] = useState<RenameOperation[]>([]);
@@ -370,7 +371,8 @@ function App() {
         showResizeButtons={showResizeButtons}
         onResizeMouseDown={handleResizeMouseDown}
         onResizeMouseUp={handleResizeMouseUp}
-        resizeDirection={resizeDirection}
+        resizeDirection={resizeDirection} 
+        isCloseResizeButtonHovered={isCloseResizeButtonHovered}
         actionsSlot={
           showActionsInNavbar && selectedFiles.size > 0 ? ( // This logic seems to be for the navbar version
             <ActionButtons
@@ -476,6 +478,7 @@ function App() {
             onResizeEnd={() => setIsResizing(false)}
             showResizeButtons={showResizeButtons}
             onCloseResizeButtons={handleCloseResizeButtons}
+            onResizeCloseHover={setIsCloseResizeButtonHovered}
           />
         )}
         {isHistorySidebarOpen && (
@@ -493,6 +496,7 @@ function App() {
             onResizeEnd={() => setIsResizing(false)}
             showResizeButtons={showResizeButtons}
             onCloseResizeButtons={handleCloseResizeButtons}
+            onResizeCloseHover={setIsCloseResizeButtonHovered}
           />
         )}
       </div>

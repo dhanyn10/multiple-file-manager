@@ -17,6 +17,7 @@ interface HistorySidebarProps {
   onResizeEnd: () => void;
   showResizeButtons: boolean;
   onCloseResizeButtons: () => void;
+  onResizeCloseHover: (isHovered: boolean) => void;
 }
 
 export interface HistorySidebarRef {
@@ -25,7 +26,7 @@ export interface HistorySidebarRef {
 }
 
 const HistorySidebar = forwardRef<HistorySidebarRef, HistorySidebarProps>((props, ref) => {
-  const { otherSidebarOpen, onResizeMove, onResizeStart, onResizeEnd, undoStack, redoStack, onClose, onUndo, onRedo, onClearHistory, showResizeButtons, onCloseResizeButtons } = props;
+  const { otherSidebarOpen, onResizeMove, onResizeStart, onResizeEnd, undoStack, redoStack, onClose, onUndo, onRedo, onClearHistory, showResizeButtons, onCloseResizeButtons, onResizeCloseHover } = props;
 
   const { sidebarWidth, setSidebarWidth, handleMouseDown } = useResizableSidebar({
     initialWidth: 384,
@@ -53,6 +54,8 @@ const HistorySidebar = forwardRef<HistorySidebarRef, HistorySidebarProps>((props
       >
         <button
           onClick={(e) => { e.stopPropagation(); onCloseResizeButtons(); }}
+          onMouseEnter={() => onResizeCloseHover(true)}
+          onMouseLeave={() => onResizeCloseHover(false)}
           className={`bg-red-500 text-white hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center transition-opacity duration-200 ${showResizeButtons ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           aria-label="Close resize controls"
           title="Close resize controls"

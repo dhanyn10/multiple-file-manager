@@ -47,6 +47,7 @@ interface BaseActionSidebarProps {
   onResizeEnd: () => void;
   showResizeButtons: boolean;
   onCloseResizeButtons: () => void;
+  onResizeCloseHover: (isHovered: boolean) => void;
 }
 const availableActions = [
   { value: 'rename', label: 'Rename by name' },
@@ -73,6 +74,7 @@ const ActionSidebar = forwardRef<ActionSidebarRef, BaseActionSidebarProps>(({
   onResizeEnd,
   showResizeButtons,
   onCloseResizeButtons,
+  onResizeCloseHover,
 }, ref) => {
 
   const dispatch: AppDispatch = useDispatch();
@@ -235,6 +237,8 @@ const ActionSidebar = forwardRef<ActionSidebarRef, BaseActionSidebarProps>(({
       >
         <button
           onClick={(e) => { e.stopPropagation(); onCloseResizeButtons(); }}
+          onMouseEnter={() => onResizeCloseHover(true)}
+          onMouseLeave={() => onResizeCloseHover(false)}
           className={`bg-red-500 text-white hover:bg-red-600 rounded-full w-4 h-4 flex items-center justify-center transition-opacity duration-200 ${showResizeButtons ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           aria-label="Close resize controls"
           title="Close resize controls"
