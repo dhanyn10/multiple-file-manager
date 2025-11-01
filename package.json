@@ -13,14 +13,14 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
-    "@fortawesome/free-solid-svg-icons": "^7.2.0",
-    "@fortawesome/react-fontawesome": "^3.2.0",
-    "@reduxjs/toolkit": "^2.10.0",
-    "@tailwindcss/vite": "^4.2.1",
-    "electron-store": "^11.1.0",
+    "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "@fortawesome/react-fontawesome": "^3.1.0",
+    "@reduxjs/toolkit": "^2.9.1",
+    "@tailwindcss/vite": "^4.1.14",
+    "electron-store": "^11.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^9.2.1"
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.64",
@@ -28,18 +28,18 @@
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.22",
-    "electron": "^31.2.1",
+    "autoprefixer": "^10.4.21",
+    "electron": "^39.0.0",
     "electron-builder": "^24.13.3",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "postcss": "^8.5.7",
-    "tailwindcss": "^4.2.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.14",
     "typescript": "^5.2.2",
-    "vite": "^5.4.2",
-    "vite-plugin-electron": "^0.28.8",
-    "vite-plugin-electron-renderer": "^0.14.6"
+    "vite": "^7.1.12",
+    "vite-plugin-electron": "^0.28.6",
+    "vite-plugin-electron-renderer": "^0.14.5"
   },
   "main": "dist-electron/main.js",
   "build": {
